@@ -1,0 +1,169 @@
+<!--meta
+{"out": "abyssal/index.html", "title": "ABYSSAL — honest probability for finding what is lost — Rory Millard", "desc": "A nine-part series on ABYSSAL, a local-first Bayesian search workbench: guided tours, the mathematics of negative evidence and correlated sources, value of information, physics-screened detectors, live operating pictures, historical backtests, and the rules that keep it honest.", "active": "overview", "layout": "page", "hero_cls": "", "image": "demo-live.webp", "crumb": "", "kicker": "<span>A series in nine parts</span><span class=\"lv\">tours · mathematics · physics · essays · {{NLABS}} interactive labs</span>", "h1": "ABYSSAL: honest probability for finding what is lost", "dek": "A local-first Bayesian workbench for searching for aircraft, ships and people: it keeps a probability map that cannot overclaim, explains every change in bits, says where to look next and what that is worth, and records who decided to trust each piece of evidence.", "meta": "<span><b>{{TOTAL_WORDS}}</b> words · <b>{{NLABS}}</b> labs you can play with · every figure from the running software</span><span>Rory Millard · November 2026</span>", "cta": "<a class=\"btn primary\" href=\"01-a-tour.html\">Start with the tour →</a><a class=\"btn ghost\" href=\"03-the-arithmetic-of-not-finding.html\">Straight to the maths</a><a class=\"btn ghost\" href=\"engines.html\">Inside the machine</a><a class=\"btn ghost\" href=\"#labs\">Play with the labs</a>", "peek": "demo-live.webp", "peek_alt": "The ABYSSAL workspace over real terrain"}
+-->
+<div class="lede-block reveal">
+  <p>When something is lost, the hardest part of the search is rarely the hardware. It is reasoning: hearing "we covered 80% of the area" as "we are 80% done", counting five retellings of one sighting as five witnesses, repeating a failing sensor over the same ground, and forgetting that every empty search inside the box makes it likelier the box was wrong.</p>
+  <p>ABYSSAL replaces those habits with explicit arithmetic, unbroken provenance and human-admitted evidence. This series explains it from every side: what it looks like, the mathematics under every pixel, the physics of its detectors, the decisions it supports, and the times it refused to give an answer.</p>
+</div>
+
+<div class="section-title"><h2>In one minute</h2><span>three steps, repeated until the target is found; <a href="#story">try them below</a></span></div>
+<ol class="minute reveal">
+  <li>
+    <svg viewBox="0 0 120 70" aria-hidden="true"><ellipse cx="44" cy="38" rx="30" ry="20" class="c1"/><ellipse cx="44" cy="38" rx="17" ry="11" class="c2"/><ellipse cx="88" cy="26" rx="18" ry="13" class="c1"/><ellipse cx="88" cy="26" rx="8" ry="6" class="c2"/></svg>
+    <span class="n">01 · Believe</span>
+    <b>Where could it be?</b>
+    <p>Start with a probability map built from what is known: the last position, how the target moves, the terrain or the sea.</p>
+    <code>p₀(x)</code>
+  </li>
+  <li>
+    <svg viewBox="0 0 120 70" aria-hidden="true"><ellipse cx="44" cy="38" rx="30" ry="20" class="c1"/><rect x="20" y="22" width="40" height="32" class="sw"/><ellipse cx="88" cy="26" rx="20" ry="15" class="c1"/><ellipse cx="88" cy="26" rx="10" ry="8" class="c2"/></svg>
+    <span class="n">02 · Update</span>
+    <b>Learn from everything, including nothing.</b>
+    <p>Each search, sighting or sensor reading reshapes the map. An empty search lowers belief where it looked, by exactly its chance of having missed.</p>
+    <code>p(x) ∝ p₀(x) · ∏ᵢ Lᵢ(x),  L = 1 − POD(x)</code>
+  </li>
+  <li>
+    <svg viewBox="0 0 120 70" aria-hidden="true"><ellipse cx="88" cy="30" rx="22" ry="16" class="c1"/><ellipse cx="88" cy="30" rx="11" ry="8" class="c2"/><path d="M10 60 C40 58 60 40 78 33" class="ar"/><circle cx="80" cy="32" r="3" class="dt"/></svg>
+    <span class="n">03 · Decide</span>
+    <b>Where next, and is it worth it?</b>
+    <p>Spend the next hour where it buys the most probability, and stop when the expected value of looking falls below its cost.</p>
+    <code>EV = P(find) · V − C</code>
+  </li>
+</ol>
+
+<div class="lab story" data-lab="story" id="story">
+  <div class="lab-head"><span class="t">Try it · from evidence to a decision</span><span class="s">add evidence in any order and watch the map</span></div>
+  <div class="lab-body">
+    <div class="story-panels">
+      <figure><canvas data-panel="prior" aria-label="The map before the latest evidence"></canvas><figcaption>Before <span class="eqn">p(x)</span></figcaption></figure>
+      <span class="op" aria-hidden="true">×</span>
+      <figure><canvas data-panel="lik" aria-label="The likelihood of the latest evidence at each place"></canvas><figcaption>Likelihood <span class="eqn">L(x)</span></figcaption></figure>
+      <span class="op" aria-hidden="true">÷ Z →</span>
+      <figure><canvas data-panel="post" aria-label="The map after the evidence; the dashed box is the best next search"></canvas><figcaption>After <span class="eqn">p(x) L(x) / Z</span></figcaption></figure>
+    </div>
+    <div class="btns story-ev">
+      <button type="button" data-ev="sighting">+ A sighting near the ridge</button>
+      <button type="button" data-ev="nofind">+ A search there finds nothing</button>
+      <button type="button" data-ev="retell">+ The same witness, retold</button>
+      <button type="button" data-ev="second">+ An independent second sighting</button>
+      <button type="button" data-act="reset">Start again</button>
+    </div>
+    <label class="story-toggle"><input type="checkbox" name="double"> Count the retelling as if it were independent (the mistake)</label>
+    <div class="ledger" aria-hidden="true"></div>
+    <div class="legend"><span><i style="background:#3fae84"></i>unsearched</span><span><i style="background:#e8962e"></i>searched and missed</span><span><i style="background:#a678d8"></i>not on this map</span></div>
+    <div class="readout">
+      <div><small>Unsearched</small><b data-read="un">—</b></div>
+      <div><small>Searched &amp; missed</small><b data-read="miss">—</b></div>
+      <div><small>Not on this map</small><b data-read="out">—</b></div>
+      <div><small>Last step moved the map</small><b data-read="bits">—</b></div>
+      <div><small>Normaliser, Z</small><b data-read="Z">—</b></div>
+      <div><small>Best next search finds it</small><b data-read="next">—</b></div>
+    </div>
+    <p class="lab-status" data-read="story" aria-live="polite"></p>
+    <div class="story-steps" aria-label="The evidence so far"></div>
+    <p class="note">A fictional hiker on a 24 &times; 14 grid. Every step is one line of Bayes' rule: multiply the map by how likely the evidence would be at each place, then divide by the total, <i>Z</i>, so it sums to one again (with "not on this map" as one more place). Witness reliability, the 70% probability of detection and the dashed next-search block (6 &times; 4 cells, searched ground discounted) are stated assumptions. In ABYSSAL a person admits each piece of evidence first; here the buttons stand in for that person.</p>
+  </div>
+</div>
+
+<div class="stats reveal">
+  <div><b>{{NPARTS}}</b><small>parts: tours, derivations, physics, case studies and essays</small></div>
+  <div><b>{{NLABS}}</b><small>interactive labs running the real formulas in your browser</small></div>
+  <div><b>16</b><small>physics-based signal engines behind one calibration gate</small></div>
+  <div><b>0</b><small>map changes without a person admitting the evidence</small></div>
+</div>
+
+<div class="section-title" id="proven"><h2>What is proven, and how</h2><span>ABYSSAL is broad; each layer is held to its own standard</span></div>
+<div class="ladder reveal">
+  <div class="rung ok"><span class="st">Tested</span><div><b>The belief engine</b><p>Bayes in log space over space and time, checked against closed-form answers (oracle tests) and frozen posterior hashes that may never be edited. Six model versions, each documented in an engine audit.</p></div><a href="03-the-arithmetic-of-not-finding.html">Part 3 →</a></div>
+  <div class="rung ok"><span class="st">Tested</span><div><b>Planning and value</b><p>Optimal allocation against known optima (water-filling under exponential detection), expected value and stopping rules against hand-worked cases.</p></div><a href="05-where-next-and-when-to-stop.html">Part 5 →</a></div>
+  <div class="rung ok"><span class="st">Tested</span><div><b>The interface</b><p>Browser journeys that drive the real app and assert exact numbers on screen, so that what you see is what was computed.</p></div><a href="01-a-tour.html">Part 1 →</a></div>
+  <div class="rung cal"><span class="st">Calibrated</span><div><b>Sixteen signal engines</b><p>Each one scored against simulated answer keys: detection rate, false alarms per km², interval coverage, with Wilson and Poisson bounds. Simulation proves the mathematics, not a real sensor.</p></div><a href="engines.html#board">Board →</a></div>
+  <div class="rung real"><span class="st">Measured on real data</span><div><b>Six engines against independent truth</b><p>Radar wind against 11 NOAA buoys (RMSE 1.7 m/s over 152 passes); ships against real AIS (47 of 51 over 100 m detected); oil platforms against nautical charts (15 of 16, to within 33 m); seabed anomalies against charted wrecks (41 of 85, to within 9 m); small targets planted in real Sentinel-2 scenes (a 20 m² tent found 123 of 125 times); and the ARA San Juan rebuilt from public facts. Held-out backtest on AF447.</p></div><a href="#proof">Results →</a></div>
+  <div class="rung next"><span class="st">Not yet</span><div><b>A live search</b><p>No real operation has used it. That needs detectors calibrated on real sensors and practitioners on real or replayed cases; until then every probability of detection is labelled an analyst assumption.</p></div><a href="../contact.html">Try it →</a></div>
+</div>
+
+<div class="section-title" id="proof"><h2>Proven on real data</h2><span>the same engine code, scored against something it never saw</span></div>
+<div class="split reveal">
+  <div>
+    <div class="proofs">
+      <div><b>1.7 m/s</b><span>Wind from the radar vs <strong>11 NOAA buoys</strong>, 152 passes (r = 0.91)</span></div>
+      <div><b>47 / 51</b><span>Ships over 100 m found in the radar, checked against <strong>real AIS</strong></span></div>
+      <div><b>15 / 16</b><span>Oil platforms found in every pass, to within <strong>33 m</strong> of the chart</span></div>
+      <div><b>41 / 85</b><span>Charted wrecks found in NOAA bathymetry, to within <strong>9 m</strong></span></div>
+      <div><b>98%</b><span>A <strong>20 m² orange tent</strong> planted in real Sentinel-2 scenes, found by the land engine</span></div>
+      <div><b>−34%</b><span>ARA San Juan: search area cut by the collapse-depth constraint, <strong>wreck kept</strong></span></div>
+    </div>
+    <p>Every number has receipts: the exact radar windows, satellite scenes, buoy files, AIS days and chart records it came from, and a script that re-runs it. The limits are measured too: the ship detector raises too many unexplained echoes on rough seas, half the charted wrecks are too low or buried to stand out of a 4 m grid, and on land one satellite scene raises about eight other unusual objects per km². Comparing with an earlier pass and keeping only what is new cuts that to under one, where the earlier pass saw the ground clearly.</p>
+    <p><a class="btn primary" href="evidence.html">All seven studies, with charts →</a></p>
+  </div>
+  <figure class="shot"><img src="../assets/abyssal/evidence-real.webp" alt="ABYSSAL's evidence page: radar wind against buoy wind, and detection rate by ship length against real AIS" loading="lazy"><figcaption><b>The evidence page in the app.</b> Radar wind against buoy wind, one dot per pass, and detection rate by ship length against real AIS.</figcaption></figure>
+</div>
+
+<div class="section-title"><h2>Read it your way</h2><span>four paths through the series</span></div>
+<div class="paths reveal">
+  <a href="01-a-tour.html"><span class="k">Five minutes</span><b>The tour</b><span>What it looks like and what it refuses to do.</span><em>Part 1</em></a>
+  <a href="03-the-arithmetic-of-not-finding.html"><span class="k">The mathematics</span><b>Negative evidence, echoes, value</b><span>Derivations with labs you can play with.</span><em>Parts 3 · 4 · 5</em></a>
+  <a href="06-signals-from-the-deep.html"><span class="k">The physics</span><b>Wakes, ring waves, sound in the ocean</b><span>From first principles to calibrated detectors.</span><em>Part 6 · Inside the machine</em></a>
+  <a href="08-three-cases-two-refusals.html"><span class="k">If you search for a living</span><b>Three real cases, two refusals</b><span>MH370, AF447 and a 1641 shipwreck, read honestly.</span><em>Parts 7 · 8</em></a>
+</div>
+
+<div class="split reveal">
+  <div>
+    <div class="eyebrow-k">Inside the machine</div>
+    <h2>One contract, sixteen engines</h2>
+    <p>The whole of ABYSSAL on one sheet: inputs with receipts, sixteen physics-based signal engines, the admission gate, the log-space belief engine and the decisions on top. Then every engine (real Sentinel-1 radar, wind from the radar, persistence across passes, implosion forensics, a lost-submarine drill) with screenshots, maths and what each one measured.</p>
+    <p><a class="btn primary" href="engines.html">See the architecture →</a></p>
+  </div>
+  <figure class="shot"><img src="../assets/abyssal/eng-persistence.webp" alt="Eight Sentinel-1 passes over the Santa Barbara Channel with two fixed platforms" loading="lazy"></figure>
+</div>
+
+<div class="section-title"><h2>The series</h2><span>Read in order, or jump to what you care about</span></div>
+<div class="parts">
+        {{PARTS}}
+</div>
+
+<div class="section-title"><h2>The ideas, in six lines</h2><span>Each one is a part of the series</span></div>
+<div class="pillars reveal">
+  <div class="pillar"><b>Not finding is evidence</b><p>An empty search lowers belief exactly as much as its probability of detection says, never to zero, and an unmeasured sensor is not allowed to clear ground at all.</p></div>
+  <div class="pillar"><b>The box is a belief too</b><p>Every empty search inside the boundary moves probability outside it. The Search Ledger shows unsearched, searched-and-missed and outside, always.</p></div>
+  <div class="pillar"><b>Echoes count once</b><p>Reports are pooled by provenance root, so five copies of one sighting carry one sighting's worth of information, and the influence of whole sources is shown in bits.</p></div>
+  <div class="pillar"><b>Humans admit</b><p>Imports, detectors, live feeds and AI extraction produce context and drafts. Only a named person's decision moves the map, and every decision can be undone exactly.</p></div>
+  <div class="pillar"><b>Bits, then money</b><p>Optimal effort is water poured into a probability landscape; expected value and information per pound say where the next hour goes and when to stop.</p></div>
+  <div class="pillar"><b>Physics before detections</b><p>Wakes, ring waves and sound arrival times are modelled from first principles, and no detector's output becomes evidence until its detection rates are measured.</p></div>
+</div>
+
+<div class="section-title" id="labs"><h2>Interactive labs</h2><span>Every one runs the formulas from its article, live</span></div>
+<div class="labs-grid">
+        {{LABS}}
+</div>
+
+<div class="section-title"><h2>Feature atlas</h2><span>Click through to where each is explained</span></div>
+<div class="atlas">
+  <a class="reveal" href="01-a-tour.html"><img src="../assets/abyssal/demo-workspace.webp" alt="" loading="lazy"><span><b>The workspace</b><em>Belief map, credible regions, Search Ledger, archive</em></span></a>
+  <a class="reveal" href="04-five-echoes-one-witness.html"><img src="../assets/abyssal/evidence-map-live.webp" alt="" loading="lazy"><span><b>Evidence Map</b><em>Influence of every item and every source, in bits</em></span></a>
+  <a class="reveal" href="04-five-echoes-one-witness.html"><img src="../assets/abyssal/provenance-live.webp" alt="" loading="lazy"><span><b>Provenance graph</b><em>Sources, claims, observations and the map</em></span></a>
+  <a class="reveal" href="02-a-map-that-refuses-to-lie.html"><img src="../assets/abyssal/sketch-crop.webp" alt="" loading="lazy"><span><b>Sketch evidence</b><em>Bearings, rings and corridors with live dimensions</em></span></a>
+  <a class="reveal" href="01-a-tour.html"><img src="../assets/abyssal/live-search-loop.webp" alt="" loading="lazy"><span><b>Live search loop</b><em>Mark searched, update, re-rank, undo</em></span></a>
+  <a class="reveal" href="05-where-next-and-when-to-stop.html"><img src="../assets/abyssal/plan-studio.webp" alt="" loading="lazy"><span><b>Plan Studio</b><em>Multi-asset allocation and tasking exports</em></span></a>
+  <a class="reveal" href="05-where-next-and-when-to-stop.html"><img src="../assets/abyssal/plan-studio-ev.webp" alt="" loading="lazy"><span><b>Expected value</b><em>Break-even, bits per pound, search to exhaustion</em></span></a>
+  <a class="reveal" href="01-a-tour.html"><img src="../assets/abyssal/search-health.webp" alt="" loading="lazy"><span><b>Search Health</b><em>Seven named traps, checked continuously</em></span></a>
+  <a class="reveal" href="01-a-tour.html"><img src="../assets/abyssal/movement.webp" alt="" loading="lazy"><span><b>Movement &amp; time</b><em>Walking priors over terrain, drift at sea</em></span></a>
+  <a class="reveal" href="02-a-map-that-refuses-to-lie.html"><img src="../assets/abyssal/surface-3d.webp" alt="" loading="lazy"><span><b>3D probability surface</b><em>Density as height</em></span></a>
+  <a class="reveal" href="06-signals-from-the-deep.html"><img src="../assets/abyssal/signal-dark-vessels.webp" alt="" loading="lazy"><span><b>Dark vessels</b><em>SAR detection, wakes and AIS association</em></span></a>
+  <a class="reveal" href="06-signals-from-the-deep.html"><img src="../assets/abyssal/signal-acoustic.webp" alt="" loading="lazy"><span><b>Acoustic localiser</b><em>Hydrophone time differences to a fix</em></span></a>
+  <a class="reveal" href="06-signals-from-the-deep.html"><img src="../assets/abyssal/signal-rings.webp" alt="" loading="lazy"><span><b>Ring finder</b><em>Debris rings, crater rims, slicks</em></span></a>
+  <a class="reveal" href="07-the-operating-picture.html"><img src="../assets/abyssal/ops-live-air-sea-orbit.webp" alt="" loading="lazy"><span><b>Live air and sea</b><em>ADS-B, AIS, orbit detection</em></span></a>
+  <a class="reveal" href="07-the-operating-picture.html"><img src="../assets/abyssal/ops-globe-satellites.webp" alt="" loading="lazy"><span><b>Globe and satellites</b><em>SGP4 orbits, swaths, next passes</em></span></a>
+  <a class="reveal" href="07-the-operating-picture.html"><img src="../assets/abyssal/ops-leeway-drift.webp" alt="" loading="lazy"><span><b>Leeway drift</b><em>Monte Carlo of objects in the water</em></span></a>
+  <a class="reveal" href="07-the-operating-picture.html"><img src="../assets/abyssal/ops-shadow-chronolocation.webp" alt="" loading="lazy"><span><b>Shadow clock</b><em>Where a photo could have been taken</em></span></a>
+  <a class="reveal" href="07-the-operating-picture.html"><img src="../assets/abyssal/ops-satellite-view.webp" alt="" loading="lazy"><span><b>Satellite view</b><em>Thirty days of imagery over the view</em></span></a>
+  <a class="reveal" href="07-the-operating-picture.html"><img src="../assets/abyssal/watchlist-live.webp" alt="" loading="lazy"><span><b>Watchlist</b><em>Twelve dark vessels, four sensors</em></span></a>
+  <a class="reveal" href="08-three-cases-two-refusals.html"><img src="../assets/abyssal/merchant-royal-live.webp" alt="" loading="lazy"><span><b><em style="font-style:italic;color:inherit">Merchant Royal</em>, 1641</b><em>What is a league?</em></span></a>
+  <a class="reveal" href="08-three-cases-two-refusals.html"><img src="../assets/abyssal/mh370-live.webp" alt="" loading="lazy"><span><b>MH370</b><em>Satellite arcs and a refusal</em></span></a>
+  <a class="reveal" href="08-three-cases-two-refusals.html"><img src="../assets/abyssal/af447-live.webp" alt="" loading="lazy"><span><b>AF447</b><em>A held-out backtest, read honestly</em></span></a>
+  <a class="reveal" href="07-the-operating-picture.html"><img src="../assets/abyssal/ops-3d-terrain.webp" alt="" loading="lazy"><span><b>3D terrain</b><em>The belief map on real relief</em></span></a>
+  <a class="reveal" href="engines.html#eng-persist"><img src="../assets/abyssal/eng-persistence.webp" alt="" loading="lazy"><span><b>Persistence</b><em>Eight radar passes, two platforms</em></span></a>
+</div>
+
+
+<div style="height:60px"></div>

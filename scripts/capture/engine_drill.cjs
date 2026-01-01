@@ -1,0 +1,36 @@
+const { chromium } = require('playwright');
+const OUT = process.argv[2];
+(async () => {
+  const browser = await chromium.launch();
+  const page = await browser.newPage({ viewport: { width: 1600, height: 1000 }, deviceScaleFactor: 2, colorScheme: 'dark' });
+  page.on('pageerror', e => console.log('PAGEERROR', e.message));
+  await page.goto(`${process.env.ABYSSAL_URL || 'http://127.0.0.1:8501'}/`);
+  await page.waitForTimeout(2500);
+  await page.getByText('See the Evidence Map: one witness, five echoes').click();
+  await page.waitForTimeout(6000);
+  await require('./prep.cjs')(page);
+  // Centre the map over open water (Bay of Biscay) so scenario scenes sit on the sea, not on land.
+  const share = Buffer.from(JSON.stringify({ v: 1, cam: { center: [-9.5, 47.2], zoom: 7, bearing: 0, pitch: 0 }, live: [] })).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  await page.evaluate((h) => { window.location.hash = h; }, `#ops=${share}`);
+  const ops = page.locator('button.rail-btn', { hasText: 'Ops console' });
+  if (await ops.count()) await ops.first().click();
+  await page.waitForTimeout(3000);
+  await page.mouse.click(573, 204);
+  await page.mouse.click(247, 122);
+  await page.locator('button.rail-btn', { hasText: 'Signal Lab' }).first().click();
+  await page.waitForTimeout(1000);
+  await page.getByText('Lost-submarine drill').click();
+  await page.getByRole('button', { name: 'Run the drill' }).click();
+  await page.waitForSelector('text=/Where that is possible/', { timeout: 90000 });
+  await page.waitForTimeout(2500);
+  await page.screenshot({ path: OUT + '/drill-1.png' });
+  await page.getByText('Dark vessels · SAR + AIS').click();
+  await page.getByRole('button', { name: /Went dark/ }).click();
+  await page.waitForSelector('text=/Who could the dark contacts be/', { timeout: 90000 });
+  await page.waitForTimeout(2500);
+  await page.evaluate(() => { const b = document.querySelector('.sl-body'); const c = [...document.querySelectorAll('.sl-card')].find(x => x.textContent.includes('Who could')); if (b && c) b.scrollTop = c.offsetTop - 80; });
+  await page.waitForTimeout(600);
+  await page.screenshot({ path: OUT + '/identity-1.png' });
+  console.log('errors', await page.locator('.sl-error').allTextContents());
+  await browser.close();
+})();

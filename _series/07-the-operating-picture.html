@@ -1,0 +1,137 @@
+<!--meta
+{"slug": "07-the-operating-picture", "title": "The operating picture", "level": "Showcase · live data & field tools", "hero": "ops-globe-satellites.webp", "hero_alt": "The Ops console showing a 3D globe with satellite orbits over the Merchant Royal case", "dek": "Live aircraft and ships, satellites and their swaths, wind, rain and earthquakes, a globe you can fly in from orbit, and a kit of field tools: what a search tool looks like when someone has to live in it all day.", "desc": "A tour of ABYSSAL's Ops console: live ADS-B and AIS, dark-vessel and orbiting-aircraft flags, SGP4 satellites, environmental layers, leeway drift, bearings fixes, shadow chronolocation, track-gap reach ellipses, and the multi-target watchlist."}
+-->
+<p class="lede">The first version of ABYSSAL was a calculator with a map attached. You brought it evidence, it gave you a distribution. That is the right core, but it is not how anyone works. A search coordinator, a maritime analyst or a duty officer sits in front of a screen for twelve hours and needs to know, continuously, what is moving, what the weather is doing, which satellites will pass overhead, and whether anything just changed. If the tool cannot show them that, they keep it in a background tab and live in something else.</p>
+
+<p>So over the past fortnight I borrowed shamelessly from the tools people do live in: flight radars, ship trackers, earth.nullschool's wind maps, Google Earth, the open-source God's Eye View globe, and the situational-awareness consoles that defence companies build. The result is the <strong>Ops console</strong>, opened from the rail or with <span class="keys">O</span>. Everything in it obeys one rule from the rest of the product: <em>it is context</em>. Nothing in the Ops console changes a belief map. Its tools can open a pre-filled draft for a person to review; that is all.</p>
+
+<h2><span class="num">01</span>What is moving</h2>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/ops-live-air-sea-orbit.webp" alt="Ops console with live aircraft drawn with heading icons and trails, ships, and an orbiting helicopter flagged" loading="lazy"><figcaption><b>Air and sea.</b> Aircraft from public ADS-B feeds with heading icons, altitude colours, trails, smooth dead reckoning between updates and a follow camera. Emergency squawks (7500 hijack, 7600 radio failure, 7700 emergency) raise alerts. Ships come from public AIS.</figcaption></figure>
+
+<p><strong>Aircraft</strong> arrive from public ADS-B aggregators through the local backend, with a fallback feed. Each is drawn with its heading, altitude band and recent trail, and positions are dead-reckoned between updates so the picture moves smoothly instead of jumping every few seconds.</p>
+
+<p>One small feature here says a lot about how ABYSSAL thinks. An aircraft that turns through more than 300° while low and slow is flagged <strong>⟳ ORBITING</strong>. That is the signature of someone searching, surveying or holding. And someone else's search is evidence: if a helicopter has been orbiting a headland for twenty minutes and nothing was reported, that headland is somewhat less likely. One click proposes the orbit as a <em>draft completed search</em>, a disc of the orbit's radius plus an assumed one-kilometre sweep, for a person to confirm with a probability of detection. Negative evidence from a sensor you do not own, made explicit and reviewable.</p>
+
+<p><strong>Ships</strong> come from public AIS. A vessel that has been silent for more than fifteen minutes is marked <strong>DARK</strong>, and around its last position grows a <em>reach ring</em>: the disc it could have covered at its last known speed since it went quiet. The ring can be proposed as a draft area.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/ops-detect-roster.webp" alt="The contacts roster listing nearby aircraft, ships and satellites, with detection brackets drawn around each contact on the map" loading="lazy"><figcaption><b>Contacts roster and detection boxes.</b> Every aircraft, ship, satellite and earthquake near the view, nearest first. Arrow keys step through them; Enter tracks; <span class="keys">C</span> rides along in the cockpit at the contact's altitude and heading. Screen-space brackets and IDs label everything in view, with a lock ring on the tracked target. (SCENARIO traffic shown; the build sandbox cannot reach the live feeds.)</figcaption></figure>
+
+<h2><span class="num">02</span>What is overhead</h2>
+
+<p>Satellites are propagated with SGP4, the standard model for public two-line element sets, and drawn with their ground tracks and sensor swaths. A time warp runs from real time to ×300. For the centre of the current view, the console lists the next satellite passes in the coming six hours: when the next radar or optical satellite will be able to see the search area.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/ops-globe-satellites.webp" alt="A 3D globe with satellite orbits and the Merchant Royal search area" loading="lazy"><figcaption><b>Globe and orbits.</b> Below zoom 5.5 the map becomes a globe with atmosphere and stars; above it, flat, where the belief map draws. "Fly in from orbit" and "Orbit cam" are for briefings. Five clearly fictional SCENARIO satellites are shown until real orbital elements are fetched.</figcaption></figure>
+
+<p>There is a story behind those five fictional satellites that I tell in <a href="09-building-it-honestly.html">Part 9</a>: the first version shipped with orbital elements under real satellite names that had been typed by hand and failed their checksums. Now ABYSSAL has no built-in real orbits at all. "Fetch real orbits" is an explicit, opt-in request to CelesTrak, one satellite at a time; every element set is checksum- and epoch-age-validated and cached with a receipt; and until that happens, the satellites on screen are labelled as invented.</p>
+
+<p>The <strong>Satellite view</strong> is the other half of "what is overhead": a strip of the last thirty days of NASA imagery (Sentinel-2 and Landsat at 30 m through NASA's harmonised product, and a daily 250 m overview), with cloud cover and coverage of the current view for each day, a "best clear day" button, and an A/B crossfade between two days. It is the fastest way to answer "was that sandbar there last week?".</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/ops-satellite-view.webp" alt="A thirty-day strip of satellite imagery thumbnails with cloud and coverage percentages per day" loading="lazy"><figcaption><b>Satellite view.</b> Thirty days of dated imagery over whatever the map shows. Requests go from the browser straight to NASA for the tiles on screen; nothing about the case is sent anywhere.</figcaption></figure>
+
+<h2><span class="num">03</span>What the world is doing</h2>
+
+<div class="duo reveal">
+  <figure class="shot"><img src="../assets/abyssal/ops-wind-currents.webp" alt="Wind and ocean current particles flowing over the sea" loading="lazy"><figcaption><b>Wind and currents</b> as flowing particles, in the style of earth.nullschool and Windy.</figcaption></figure>
+  <figure class="shot"><img src="../assets/abyssal/ops-sea-survival.webp" alt="Sea and survival panel: tide, waves, sea temperature, wind, visibility, and a cold-water survival clock" loading="lazy"><figcaption><b>Sea &amp; survival.</b> Tide, waves, sea temperature, wind and visibility at the view centre, with a cold-water survival guide and an elapsed-time bar.</figcaption></figure>
+</div>
+
+<p>Environmental layers are the ones that change a coordinator's day: <strong>wind and surface currents</strong> as particle flow; <strong>rain radar</strong> for the past two hours; <strong>earthquakes</strong> from the USGS feed, pulsing for three hours after they happen; <strong>fires and Earth observation</strong> layers from NASA (active fires, sea-surface temperature, night lights, snow); <strong>sea and survival</strong> conditions with a cold-water survival clock that turns elapsed time into an honest sense of urgency; and <strong>light and moon</strong>: civil, nautical and astronomical twilight, sunrise and sunset, moonrise and illumination, because whether a night-vision search is worth flying depends on the moon.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/ops-rain-radar.webp" alt="Rain radar replay over the map" loading="lazy"><figcaption><b>Rain radar</b>, replayed over the past two hours, where national radar networks cover the area. (Mock tiles in the build sandbox, which cannot reach the live service.)</figcaption></figure>
+
+<div class="duo reveal">
+  <figure class="shot"><img src="../assets/abyssal/ops-global-context-quakes.webp" alt="Global context view: globe with orbits and earthquakes" loading="lazy"><figcaption><b>Global context</b> stages the planetary picture (orbits, day and night, earthquakes) with one switch and returns to the exact view with another.</figcaption></figure>
+  <figure class="shot"><img src="../assets/abyssal/ops-light-moon.webp" alt="Light and moon panel with twilight times and moon illumination" loading="lazy"><figcaption><b>Light &amp; moon.</b> Twilight bands and moon illumination for planning night searches.</figcaption></figure>
+</div>
+
+<h2><span class="num">04</span>Field tools</h2>
+
+<p>The field tools are small calculators that experienced searchers do on paper, made visual and made to produce drafts instead of numbers on a napkin.</p>
+
+<h3>Leeway drift</h3>
+
+<p>Something in the water drifts with the current and is pushed by the wind, by an amount that depends on what it is: a person in the water barely catches the wind; a life raft with a canopy catches a lot, and veers left or right of downwind. Click the last known position, choose the object, and ABYSSAL runs a Monte Carlo of 700 particles for up to 72 hours, with leeway coefficients after the classic Allen and Plourde study and randomised left and right divergence. The 90% region can be proposed as a draft area. The tool is open about what it ignores: Stokes drift, the evolution of the wind and current forecast over the drift, and coastline physics beyond stopping where the current field ends.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/ops-leeway-drift.webp" alt="Leeway drift Monte Carlo: hundreds of particles spreading downwind and downcurrent from a clicked last known position, with a 90% circle" loading="lazy"><figcaption><b>Leeway drift.</b> Particles spread from the last known position under current plus object-specific leeway. Distinct colours separate left- and right-diverging rafts, which is why drift clouds so often have two lobes.</figcaption></figure>
+
+<h3>Bearings-only fix</h3>
+
+<p>Three people hear a distress call, or see a flare, and each reports a direction. Each bearing becomes a wedge with its stated uncertainty; their intersection, by Monte Carlo, gives a fix with a 95% ellipse. Two bearings that cross at a shallow angle give a long, thin, honest ellipse rather than a falsely precise point.</p>
+
+<div class="duo reveal">
+  <figure class="shot"><img src="../assets/abyssal/ops-bearings-fix.webp" alt="Three bearing wedges crossing with a 95% fix ellipse" loading="lazy"><figcaption><b>Bearings fix.</b> Wedges, crossing points and the 95% ellipse.</figcaption></figure>
+  <figure class="shot"><img src="../assets/abyssal/ops-iamsar-pattern.webp" alt="A parallel sweep search pattern drawn over the belief peak" loading="lazy"><figcaption><b>IAMSAR patterns.</b> Expanding square, sector and parallel sweep, with time at speed, the share of belief inside the sweep, and GPX export.</figcaption></figure>
+</div>
+
+<h3>The shadow clock</h3>
+
+<p>A photograph shows a pole and its shadow. Where on Earth was it taken? This is chronolocation, a staple of open-source investigation. The ratio of an object's height \(H\) to its shadow length \(S\) gives the sun's elevation, \(\tan e = H/S\). At a given UTC time, every place on Earth where the sun stands at elevation \(e\) lies on a small circle centred on the <em>subsolar point</em> (where the sun is directly overhead) with angular radius \(90^\circ - e\). So one measurement and one timestamp give a circle on the globe; add the shadow's compass direction and the circle collapses to a few candidate places.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/ops-shadow-chronolocation.webp" alt="Shadow chronolocation: a circle of equal sun elevation across the globe, with marked azimuth matches" loading="lazy"><figcaption><b>Shadow clock.</b> Object height, shadow length and UTC time give the circle of equal sun elevation; the shadow's direction picks out matching points. A photo's EXIF data (GPS, camera direction, field-of-view cone, capture time) can feed it directly.</figcaption></figure>
+
+<h3>Horizons, MGRS and the rest</h3>
+
+<p>The <strong>horizon</strong> tool draws visual and radar horizon rings for an observer at height \(h\): geometrically \(d = \sqrt{2Rh} \approx 3.57\sqrt{h}\) km for \(h\) in metres, stretched by atmospheric refraction to about \(4.1\sqrt{h}\) for radar. A lookout at 20 m sees about 16 km; a target is only visible if its own horizon ring overlaps. The cursor readout and the go-to box speak <strong>MGRS</strong>, the grid reference system search and military teams actually use, and the go-to box accepts <code>geo:</code> URIs.</p>
+
+<h2><span class="num">05</span>Where could it have gone while it was dark?</h2>
+
+<p>A ship's AIS track goes silent for nine hours, then resumes 140 km away. Where could it have been in between? If its speed is at most \(v\), every point it could have visited satisfies</p>
+
+<div class="eq"><span class="tag">reachable set</span>
+\[ \lVert x - A\rVert + \lVert x - B\rVert \;\le\; v\,\Delta t, \]
+</div>
+
+<p>where \(A\) and \(B\) are the last fix before the gap and the first after it. That is an ellipse with foci at the two fixes, semi-major axis \(a = v\Delta t/2\) and semi-minor axis \(b = \sqrt{a^2 - c^2}\), where \(2c = \lVert A - B\rVert\). If \(\lVert A - B\rVert > v\Delta t\), the ellipse does not exist: the jump is impossible at that speed, which means either the speed cap is wrong or one of the positions is false. That second possibility is how spoofed AIS positions get caught.</p>
+
+<div class="lab wide" data-lab="gap">
+  <div class="lab-head"><span class="t">Lab · the reach ellipse</span><span class="s">drag the two fixes</span></div>
+  <div class="lab-body">
+    <canvas aria-label="Two fixes on a chart with the ellipse of places a vessel could have visited during a gap in its track"></canvas>
+    <div class="controls">
+      <label class="ctl"><span>Gap, \(\Delta t\) <output data-for="gap">8 h</output></span><input type="range" name="gap" min="1" max="48" value="8"></label>
+      <label class="ctl"><span>Maximum speed, \(v\) <output data-for="v">9 kn</output></span><input type="range" name="v" min="2" max="30" value="9"></label>
+    </div>
+    <div class="readout">
+      <div><small>Speed needed for a straight run</small><b data-read="need">—</b></div>
+      <div><small>Verdict</small><b data-read="verdict">—</b></div>
+      <div><small>Ellipse axes</small><b data-read="axes">—</b></div>
+      <div><small>Area it could have visited</small><b data-read="area">—</b></div>
+    </div>
+    <p class="note">Shorten the gap or lower the speed until the jump becomes impossible. ABYSSAL's default speed cap is 1.25 × the track's own 90th-percentile speed outside gaps, an assumption it states, not a fact.</p>
+  </div>
+</div>
+
+<p>ABYSSAL's <strong>Track gaps</strong> tool does this for every silent gap in an imported track at once, flags impossible jumps, and proposes any ellipse as a draft area. It ignores land, currents and routing, and says so.</p>
+
+<h2><span class="num">06</span>Many targets at once</h2>
+
+<p>Everything above is about one lost thing. A coast guard, a navy or a compliance desk watches hundreds. The <strong>watchlist</strong> is the first slice of that: twelve invented vessels that have gone dark at different times in the central Mediterranean, and four invented sensors that each get one look.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/watchlist.webp" alt="Watchlist: twelve vessels with growing belief regions on a dark sea chart, a roster ranked by value and spread, and the best use of four sensors" loading="lazy"><figcaption><b>The watchlist.</b> Each vessel's belief grows from its last fix: a loiter blob plus a transit ring at typical speed, hard-capped at maximum speed. The roster shows how long each has been dark and how far its belief has spread; "lost" means it has spread past usefulness. Bottom: the best single look for each sensor, chosen by value-weighted expected information gain.</figcaption></figure>
+
+<p>Each target's belief is a mixture: a <em>loiter</em> component (a slow-drifting Gaussian, for a vessel that stopped or is waiting) and a <em>transit</em> ring at its typical speed times the time since its last fix, optionally concentrated around a known course. Outside the maximum-speed radius plus four standard deviations of fix error, the probability is exactly zero, not a small number. Each sensor's look is a footprint with a probability of detection, and its value for a given target is the exact expected information gain in bits:</p>
+
+<div class="eq"><span class="tag">value of a look</span>
+\[ \mathbb{E}[\Delta H] = H(\text{prior}) - \mathbb{E}_{y}\big[H(\text{posterior}\mid y)\big], \]
+</div>
+
+<p>averaged over the two outcomes, detection and miss. Sensors are then assigned to targets one-to-one by the Hungarian algorithm on value-weighted gain. An uncalibrated sensor with POD zero earns zero gain, as everywhere else in ABYSSAL. And a target spread over half a million square kilometres gets no sensor until something narrows it down, which I think is right, and which the interface explains rather than hides.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/watchlist-light.webp" alt="The watchlist in the light theme, eight hours later on the scenario clock" loading="lazy"><figcaption><b>Eight hours later, light theme.</b> The clock slider advances every target at once; rings widen and some targets cross from "tracked" to "lost".</figcaption></figure>
+
+<div class="callout honest">
+  <div class="t">What the watchlist is not, yet</div>
+  <p>It is a stateless model, not a tracker: it does not fuse new sightings, targets are independent (a convoy would be over-counted), each sensor gets one look with no travel time or weather, and speeds, loiter weights and PODs are analyst assumptions. Only the fictional pack exists in the interface, though the API accepts real targets. Turning it into a proper multi-target tracker, with dark-vessel detections from successive radar passes feeding it, is the next piece of engine work.</p>
+</div>
+
+<h2><span class="num">07</span>Making it feel like an instrument</h2>
+
+<p>None of this is worth much if it stutters. A performance pass measured what a person actually waits for: hovering the map had main-thread stalls of up to 1.3 seconds because the 3D layer was doing a synchronous GPU read on every mouse move (now throttled to 25 Hz and never during a drag); the coastline request on first load took 7.4 seconds cold because of a polygon intersection against continent-sized shapes (now 12 ms with a rectangle clip, about a hundred times faster, and cached by the source file's hash); every panel that needed the posterior recomputed it (now memoised on the exact state, so Search Health after inference fell from 4.1 s to 40 ms). The first JavaScript bundle halved by splitting 31 panels into chunks prefetched in idle time. Keyboard shortcuts cover the common tools (<span class="keys">?</span> lists them), share links carry the camera, layers and tracked target, and a scene director records camera shots for briefings.</p>
+
+<div class="duo reveal">
+  <figure class="shot"><img src="../assets/abyssal/ops-3d-terrain.webp" alt="3D terrain with the belief map draped on top" loading="lazy"><figcaption><b>3D terrain</b> from open elevation tiles, with the belief map on top.</figcaption></figure>
+  <figure class="shot"><img src="../assets/abyssal/ops-cockpit.webp" alt="Cockpit view riding along with a vessel" loading="lazy"><figcaption><b>Cockpit cam.</b> Ride along with a contact at its altitude and heading.</figcaption></figure>
+</div>
+
+<p>Next, the last part: <a href="09-building-it-honestly.html">the rules that keep all of this honest</a>, the mistakes they were written to prevent, and where calibrated probability is worth paying for.</p>

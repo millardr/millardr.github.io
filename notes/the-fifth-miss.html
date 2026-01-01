@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en" class="site">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>The Fifth Miss — Rory Millard</title>
+  <meta name="description" content="A small experiment in negative evidence: how shared sensor failures change what repeated misses tell you, with an interactive model.">
+  <link rel="canonical" href="https://millardr.github.io/notes/the-fifth-miss.html">
+  <meta name="author" content="Rory Millard">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta property="og:site_name" content="Rory Millard">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://millardr.github.io/notes/the-fifth-miss.html">
+  <meta property="og:title" content="The Fifth Miss — Rory Millard">
+  <meta property="og:description" content="A small experiment in negative evidence: how shared sensor failures change what repeated misses tell you, with an interactive model.">
+  <meta property="og:image" content="https://millardr.github.io/assets/cards/notes-the-fifth-miss.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The Fifth Miss: Rory Millard">
+  <meta property="article:published_time" content="2026-11-21">
+  <meta property="article:modified_time" content="2026-11-21">
+  <meta property="article:author" content="https://millardr.github.io/about.html">
+  <meta property="article:tag" content="Bayesian search">
+  <meta property="article:tag" content="probability of detection">
+  <meta property="article:tag" content="search theory">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Fifth Miss — Rory Millard">
+  <meta name="twitter:description" content="A small experiment in negative evidence: how shared sensor failures change what repeated misses tell you, with an interactive model.">
+  <meta name="twitter:image" content="https://millardr.github.io/assets/cards/notes-the-fifth-miss.jpg">
+  <meta name="twitter:image:alt" content="The Fifth Miss: Rory Millard">
+  <link rel="alternate" type="application/rss+xml" title="Rory Millard — writing" href="https://millardr.github.io/feed.xml">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://millardr.github.io/notes/the-fifth-miss.html#webpage","url":"https://millardr.github.io/notes/the-fifth-miss.html","name":"The Fifth Miss — Rory Millard","isPartOf":{"@id":"https://millardr.github.io/#website"},"breadcrumb":{"@id":"https://millardr.github.io/notes/the-fifth-miss.html#breadcrumb"},"inLanguage":"en-GB"},{"@type":"TechArticle","@id":"https://millardr.github.io/notes/the-fifth-miss.html#article","headline":"The Fifth Miss","name":"The Fifth Miss","description":"A small experiment in negative evidence: how shared sensor failures change what repeated misses tell you, with an interactive model.","url":"https://millardr.github.io/notes/the-fifth-miss.html","mainEntityOfPage":{"@id":"https://millardr.github.io/notes/the-fifth-miss.html#webpage"},"image":["https://millardr.github.io/assets/cards/notes-the-fifth-miss.jpg"],"datePublished":"2026-11-21","dateModified":"2026-11-21","author":[{"@type":"Person","@id":"https://millardr.github.io/#person","name":"Rory Millard","url":"https://millardr.github.io/about.html"}],"publisher":{"@id":"https://millardr.github.io/#person"},"inLanguage":"en-GB","isAccessibleForFree":true,"keywords":["Bayesian search","probability of detection","search theory"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Rory Millard","item":"https://millardr.github.io/"},{"@type":"ListItem","position":2,"name":"Writing","item":"https://millardr.github.io/writing.html"},{"@type":"ListItem","position":3,"name":"The Fifth Miss"}],"@id":"https://millardr.github.io/notes/the-fifth-miss.html#breadcrumb"}]}</script>
+  <meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="../assets/rm.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem('theme-main');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+  <link rel="preload" href="../assets/fonts/inter-normal-latin-6ab57b19.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/fonts/fonts.css">
+  <link rel="stylesheet" href="../assets/vendor/katex/katex.min.css">
+  <script defer src="../assets/vendor/katex/katex.min.js"></script>
+  <script defer src="../assets/vendor/katex/contrib/auto-render.min.js"></script>
+  <link rel="stylesheet" href="../assets/series.css">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script defer src="../assets/series.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <header class="topbar">
+    <div class="in">
+      <a class="brand" href="../index.html">Rory Millard</a>
+      <span class="crumb"><a href="../writing.html">Writing</a> / 001</span>
+      <nav aria-label="Main navigation" id="site-nav"><a href="../projects.html">Work</a><a href="../writing.html" aria-current="page">Writing</a><a href="../about.html">About</a><a href="../contact.html">Contact</a></nav>
+      <button class="theme-btn" type="button" aria-label="Toggle theme"></button>
+      <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
+    </div>
+  </header>
+  <section class="mast band">
+    <canvas class="flow" data-flow="band" aria-hidden="true"></canvas>
+    <div class="in">
+      <div class="label"><span>Working note · 001</span><span class="lv">Bayesian inference · an interactive example</span></div>
+      <h1>The Fifth Miss</h1>
+      <p class="dek">You search the same patch of ground with the same sensor five times and find nothing. How confident should you be that the thing isn't there? It depends less on how good the sensor is than on how it fails.</p>
+      
+      
+    </div>
+  </section>
+  <main class="page" id="main">
+    <div class="article-grid">
+      <aside class="toc" aria-label="On this page"></aside>
+      <article class="prose">
+<p class="lede">Suppose you're looking for a lost scientific instrument. You search the same patch of ground, using the same sensor, five times. Nothing appears. How confident should you be that the instrument isn't there?</p>
+
+<p>The answer depends not just on how good the sensor is, but on <strong>how it fails</strong>.</p>
+
+<h2>A deliberately small model</h2>
+
+<p>Let \(H\) mean that the instrument is present. We begin with \(P(H) = 1/2\). When the sensor works, it detects the instrument with probability \(d\). But there is a probability \(f\) that a persistent condition (the wrong soil, an acoustic shadow, a miscalibrated gain) makes it ineffective for <em>every</em> pass.</p>
+
+<p>For simplicity, assume there are no false positives. The sensor's latent working state is fixed over the sequence, and detection attempts are independent <strong>conditional</strong> on that state.</p>
+
+<p>If we incorrectly average over the sensor's working state anew on every pass, the likelihood of \(n\) misses given presence is</p>
+
+<div class="eq"><span class="tag">independent</span>
+\[ L_\text{independent}(n) = \big(1 - (1-f)\,d\big)^n . \]
+</div>
+
+<p>If instead the failure state persists across all passes,</p>
+
+<div class="eq"><span class="tag">shared failure</span>
+\[ L_\text{shared}(n) = f + (1-f)(1-d)^n . \]
+</div>
+
+<p>Since a missing instrument yields a miss with probability one, Bayes' rule with even prior odds gives</p>
+
+<div class="eq"><span class="tag">posterior</span>
+\[ P(H \mid n \text{ misses}) = \frac{L(n)}{1 + L(n)} . \]
+</div>
+
+<p>Both models agree before any searches and after the first one. After repeated misses they can disagree sharply: the shared-failure likelihood never falls below \(f\), however many times you look.</p>
+
+<h2>Try it</h2>
+
+<p>The calculation is analytic, not simulated; the numbers describe this toy model and <strong>not measured sensor performance</strong>.</p>
+
+<div class="lab wide" data-lab="fifthmiss">
+  <div class="lab-head"><span class="t">Lab · how much does another miss mean?</span><span class="s">posterior probability of presence after n misses</span></div>
+  <div class="lab-body">
+    <canvas aria-label="Probability the instrument is present against the number of misses, for independent passes and for a shared failure state"></canvas>
+    <div class="legend"><span><i style="background:#c0397a"></i>treating passes as independent</span><span><i style="background:#e8962e"></i>shared failure state</span></div>
+    <div class="controls">
+      <label class="ctl"><span>Consecutive misses, \(n\) <output data-for="n">5</output></span><input type="range" name="n" min="0" max="12" value="5"></label>
+      <label class="ctl"><span>Persistent failure probability, \(f\) <output data-for="f">20%</output></span><input type="range" name="f" min="0" max="60" value="20" step="5"></label>
+      <label class="ctl"><span>Detection if working, \(d\) <output data-for="d">80%</output></span><input type="range" name="d" min="20" max="100" value="80" step="5"></label>
+    </div>
+    <div class="readout">
+      <div><small>Independent-pass posterior</small><b data-read="ind">—</b></div>
+      <div><small>Shared-failure posterior</small><b data-read="sh">—</b></div>
+      <div><small>Next detection: same sensor</small><b data-read="retry">—</b></div>
+      <div><small>Next detection: a new, independent sensor</small><b data-read="switch">—</b></div>
+    </div>
+    <p class="note">The new sensor is assumed to have the same prior-average detection probability but an independent failure condition. All results condition on the previous misses.</p>
+  </div>
+</div>
+
+<h2>The fifth miss is not like the first</h2>
+
+<p>A run of misses can mean the instrument is absent. It can also mean the method isn't effective under these conditions. Once those alternatives are represented jointly, another failed attempt doesn't necessarily eliminate much probability: the history has itself become evidence about the sensor.</p>
+
+<p>The immediate practical question is then no longer just where to search. It is whether the next observation should come from the same source at all. Push \(n\) to 12 in the lab: the same sensor's chance of finding the instrument on the next pass collapses, while a different sensor's barely moves.</p>
+
+<p>This note became the seed of ABYSSAL's repeat-credit accounting and of its Search Health trap T6, <em>repeating a failing method</em>; <a href="../abyssal/03-the-arithmetic-of-not-finding.html">Part 3 of the ABYSSAL series</a> shows how the idea scales to overlapping searches on a map.</p>
+
+<h2>A direction for further research</h2>
+
+<p>The example above assumes we already know \(f\) and \(d\). In a real system they are often uncertain too. How much data would distinguish persistent unreliability from absence? What observation would best resolve the ambiguity? How badly do decisions suffer when we pretend the measurements are independent? Those questions lead from a toy Bayesian calculation towards experimental design, calibrated inference and the evaluation of intelligent agents.</p>
+
+<hr>
+
+<p><em>This is a working explanatory note, not a novel research result. The underlying phenomenon is well known in Bayesian modelling of imperfect detection.</em></p>
+
+      </article>
+      <div></div>
+    </div>
+  </main>
+  <footer class="foot">
+    <div class="in">
+      <div>
+        <b>Rory Millard</b>
+        <span>Engineer working where probability meets the physical world.</span>
+      </div>
+      <nav aria-label="Footer">
+        <a href="../projects.html">Work</a>
+        <a href="../abyssal/index.html">ABYSSAL</a>
+        <a href="../writing.html">Writing</a>
+        <a href="../about.html">About</a>
+        <a href="mailto:j7yma3egrrm9nxaa.16ls4@aleeas.com">Email</a>
+        <a href="https://www.linkedin.com/in/rorymillard1/" rel="noopener noreferrer">LinkedIn</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

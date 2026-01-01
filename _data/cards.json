@@ -1,0 +1,135 @@
+[
+ {
+  "slug": "abyssal-01-a-tour",
+  "title": "Finding what is lost: a tour of ABYSSAL",
+  "desc": "A guided, screenshot-led tour of ABYSSAL, a local-first Bayesian search workbench for finding lost aircraft, ships and people.",
+  "kicker": "ABYSSAL · Part 1 of 9",
+  "theme": "abyssal"
+ },
+ {
+  "slug": "abyssal-02-a-map-that-refuses-to-lie",
+  "title": "A map that refuses to lie",
+  "desc": "The design of ABYSSAL's map: the context/evidence firewall, perceptually ordered colour, credible regions, honest resolution, sketching evidence on the map, certain area statements and offline audit packs.",
+  "kicker": "ABYSSAL · Part 2 of 9",
+  "theme": "abyssal"
+ },
+ {
+  "slug": "abyssal-03-the-arithmetic-of-not-finding",
+  "title": "The arithmetic of not finding",
+  "desc": "The mathematics of Bayesian search in ABYSSAL: log-space grid updates, negative evidence, the coverage fallacy, contamination likelihoods, repeat credit, KL divergence in bits and minimum-KL area statements.",
+  "kicker": "ABYSSAL · Part 3 of 9",
+  "theme": "abyssal"
+ },
+ {
+  "slug": "abyssal-04-five-echoes-one-witness",
+  "title": "Five echoes, one witness",
+  "desc": "An essay on correlated evidence and provenance in ABYSSAL: geometric pooling of same-source reports, per-item versus whole-source influence in bits, and why humans must admit evidence.",
+  "kicker": "ABYSSAL · Part 4 of 9",
+  "theme": "abyssal"
+ },
+ {
+  "slug": "abyssal-05-where-next-and-when-to-stop",
+  "title": "Where next, and when to stop",
+  "desc": "Optimal search allocation (water-filling), expected value of information, mutual information per pound, the search-to-exhaustion curve and stopping rules in ABYSSAL's Where-next and Plan Studio.",
+  "kicker": "ABYSSAL · Part 5 of 9",
+  "theme": "abyssal"
+ },
+ {
+  "slug": "abyssal-06-signals-from-the-deep",
+  "title": "Signals from the deep",
+  "desc": "The physics behind ABYSSAL's Signal Lab: SAR ship detection, Kelvin wakes and the azimuth shift, AIS association and dark vessels, hydroacoustic TDOA localisation, ring detection, calibration, and impact ring waves as a dispersive clock.",
+  "kicker": "ABYSSAL · Part 6 of 9",
+  "theme": "abyssal"
+ },
+ {
+  "slug": "abyssal-07-the-operating-picture",
+  "title": "The operating picture",
+  "desc": "A tour of ABYSSAL's Ops console: live ADS-B and AIS, dark-vessel and orbiting-aircraft flags, SGP4 satellites, environmental layers, leeway drift, bearings fixes, shadow chronolocation, track-gap reach ellipses, and the multi-target watchlist.",
+  "kicker": "ABYSSAL · Part 7 of 9",
+  "theme": "abyssal"
+ },
+ {
+  "slug": "abyssal-08-three-cases-two-refusals",
+  "title": "Three cases, two refusals",
+  "desc": "ABYSSAL's three reference cases: the Merchant Royal (1641) and the uncertainty of a seventeenth-century league, MH370's satellite arcs and a particle filter that refused to publish, and a chronological held-out backtest of the AF447 search with its hindsight-bias traps.",
+  "kicker": "ABYSSAL · Part 8 of 9",
+  "theme": "abyssal"
+ },
+ {
+  "slug": "abyssal-09-building-it-honestly",
+  "title": "Building it honestly",
+  "desc": "The rules that keep ABYSSAL honest: invariants, the engine audit, the calibration gate, the mistakes they were written to prevent, and where calibrated probability over space and time is worth paying for.",
+  "kicker": "ABYSSAL · Part 9 of 9",
+  "theme": "abyssal"
+ },
+ {
+  "slug": "abyssal-index",
+  "title": "ABYSSAL — honest probability for finding what is lost",
+  "desc": "A nine-part series on ABYSSAL, a local-first Bayesian search workbench: guided tours, the mathematics of negative evidence and correlated sources, value of information, physics-screened detectors, live operating pictures, historical backtests, and the rules that keep it honest.",
+  "kicker": "ABYSSAL",
+  "theme": "abyssal"
+ },
+ {
+  "slug": "404",
+  "title": "Page not found",
+  "desc": "This page does not exist. Find ABYSSAL, the writing and the real-data results from here.",
+  "kicker": "",
+  "theme": "site"
+ },
+ {
+  "slug": "about",
+  "title": "Mathematics, where it meets real systems.",
+  "desc": "About Rory Millard: Engineering Science at the University of Oxford (First Class, ranked first of about 180), working on Bayesian inference, physics-based sensing and decisions under uncertainty.",
+  "kicker": "Rory Millard · About",
+  "theme": "site"
+ },
+ {
+  "slug": "abyssal-engines",
+  "title": "Inside ABYSSAL: one contract, sixteen engines",
+  "desc": "The whole of ABYSSAL in one chart: inputs with receipts, sixteen physics-based signal engines that share one contract, an admission gate, a log-space belief engine and the decisions on top. Plus every engine, with screenshots, maths and calibration.",
+  "kicker": "ABYSSAL",
+  "theme": "abyssal"
+ },
+ {
+  "slug": "abyssal-evidence",
+  "title": "ABYSSAL on real data: seven studies, with receipts",
+  "desc": "ABYSSAL's engines run on real satellite radar, survey bathymetry, Sentinel-2 imagery and public records, scored against truth they never saw: buoys, ship transponders, nautical charts and a real wreck.",
+  "kicker": "ABYSSAL",
+  "theme": "abyssal"
+ },
+ {
+  "slug": "contact",
+  "title": "Get in touch",
+  "desc": "Contact Rory Millard about roles, research collaborations, or a hard search problem.",
+  "kicker": "Rory Millard · Contact",
+  "theme": "site"
+ },
+ {
+  "slug": "home",
+  "title": "Engineer working where probability meets the physical world.",
+  "desc": "Rory Millard is an engineer working where probability meets the physical world: Bayesian search, physics-based sensing and decisions under uncertainty. Home of ABYSSAL, a Bayesian workbench for finding lost aircraft, ships and people.",
+  "kicker": "Rory Millard · Engineer",
+  "theme": "site"
+ },
+ {
+  "slug": "notes-the-fifth-miss",
+  "title": "The Fifth Miss",
+  "desc": "A small experiment in negative evidence: how shared sensor failures change what repeated misses tell you, with an interactive model.",
+  "kicker": "Working note",
+  "theme": "site"
+ },
+ {
+  "slug": "projects",
+  "title": "Work",
+  "desc": "Work by Rory Millard: ABYSSAL, a Bayesian workbench for finding lost aircraft, ships and people, and directions in AI evaluation, multi-agent autonomy and design optimisation.",
+  "kicker": "Rory Millard · Work",
+  "theme": "site"
+ },
+ {
+  "slug": "writing",
+  "title": "Writing",
+  "desc": "Essays, derivations, interactive models and walkthroughs by Rory Millard, including the nine-part ABYSSAL series.",
+  "kicker": "Rory Millard · Writing",
+  "theme": "site"
+ }
+]

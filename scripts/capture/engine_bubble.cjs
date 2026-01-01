@@ -1,0 +1,25 @@
+const { chromium } = require('playwright');
+const OUT = process.argv[2];
+(async () => {
+  const browser = await chromium.launch();
+  const page = await browser.newPage({ viewport: { width: 1600, height: 1000 }, deviceScaleFactor: 2, colorScheme: 'dark' });
+  page.on('pageerror', e => console.log('PAGEERROR', e.message));
+  await page.goto(`${process.env.ABYSSAL_URL || 'http://127.0.0.1:8501'}/`);
+  await page.waitForTimeout(2500);
+  await page.getByText('See the Evidence Map: one witness, five echoes').click();
+  await page.waitForTimeout(6000);
+  await require('./prep.cjs')(page);
+  await page.mouse.click(247, 122);
+  await page.locator('button.rail-btn', { hasText: 'Signal Lab' }).first().click();
+  await page.waitForTimeout(1000);
+  await page.getByText('Implosion forensics').click();
+  await page.getByRole('button', { name: 'Run SCENARIO' }).click();
+  await page.waitForSelector('text=/against depth/', { timeout: 60000 });
+  await page.waitForTimeout(1200);
+  await page.screenshot({ path: OUT + '/bubble-1.png' });
+  await page.evaluate(() => { const b = document.querySelector('.sl-body'); if (b) b.scrollTop = 520; });
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: OUT + '/bubble-2.png' });
+  console.log('errors', await page.locator('.sl-error').allTextContents());
+  await browser.close();
+})();

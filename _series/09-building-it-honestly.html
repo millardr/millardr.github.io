@@ -1,0 +1,103 @@
+<!--meta
+{"slug": "09-building-it-honestly", "title": "Building it honestly", "level": "Essay · engineering & strategy", "hero": "after-graphite.webp", "hero_alt": "The ABYSSAL workspace", "dek": "Ten invariants, an engine audit, a calibration gate and a file that lists what is unfinished. What it takes to keep a probabilistic system honest, and where honest probability is worth money.", "desc": "The rules that keep ABYSSAL honest: invariants, the engine audit, the calibration gate, the mistakes they were written to prevent, and where calibrated probability over space and time is worth paying for."}
+-->
+<p class="lede">A bug in a search map does not crash. It sends people to the wrong valley, with confidence. That is why the most important parts of ABYSSAL are not features but rules: what is allowed to change the map, what every number must carry with it, and what has to be measured before it is believed.</p>
+
+<p>This last part is about those rules, the mistakes they were written to prevent, how the work is organised so that a broad system stays coherent, and what I think the whole thing is for.</p>
+
+<h2><span class="num">01</span>Invariants are the real specification</h2>
+
+<p>The single most useful file in the repository is short, and most of it is ten invariants that no change may break without explicit approval:</p>
+
+<ol>
+  <li><strong>Admission.</strong> The map changes only through approved, enabled observations with nonzero reliability. Importing, detecting or an automated agent finding something never admits it.</li>
+  <li><strong>Scenario isolation.</strong> Synthetic and fictional data are tagged <code>SCENARIO</code> end to end and never enter a real case.</li>
+  <li><strong>Receipts.</strong> Every acquired file records URL, retrieval time, size, SHA-256 and licence.</li>
+  <li><strong>Reproducibility.</strong> Every computed result records the model version, code commit and input hashes.</li>
+  <li><strong>Probability semantics.</strong> Log space; prior support preserved; no silent renormalisation or uniform fallback; any change to what a likelihood means bumps the model version and is written into the engine audit.</li>
+  <li><strong>Calibration gate.</strong> Detectors create contacts; only calibrated detectors create admissible observations.</li>
+  <li><strong>Roles.</strong> Agents propose; deterministic code acquires; humans admit.</li>
+  <li><strong>Generality.</strong> No application code branches on a specific case or place.</li>
+  <li><strong>Law and safety.</strong> No exact coordinates of protected wrecks or war graves by default; no harvesting of personal location data.</li>
+  <li><strong>Golden results.</strong> Frozen posterior hashes are never edited.</li>
+</ol>
+
+<p>Why invariants rather than a long specification? Because in probabilistic software the danger is not code that fails, it is the large space of plausible-but-wrong implementations that pass every happy-path check. A specification describes the happy path. An invariant fences off a whole region of the space of possible programs: whatever you build, it may not silently renormalise, it may not let a synthetic number into a real case, it may not let a detector touch the map. Invariants are also testable, which means the test suite becomes the enforcement mechanism rather than my attention span.</p>
+
+<p>The second most useful file is <code>docs/roadmap/KNOWN_INCOMPLETE.md</code>, which is read before any change starts and updated in every pull request. It lists what is unfinished, unverified or deliberately imperfect, in plain sentences: which live services have never been reached in testing, which browser specs are marked as needing a rewrite, which numbers are analyst assumptions. It is the opposite of a marketing document, and it is the reason I trust the rest.</p>
+
+<h2><span class="num">02</span>The engine audit</h2>
+
+<p>The third file, <code>docs/ENGINE_AUDIT.md</code>, is the one a statistician would read. Every model version, every likelihood, every approximation and every known inconsistency between engines is written down there, with a date. When one engine treats repeated searches as max-only with interpolated repeat credit, another as a shared latent detectability, and a third as a working/failed mixture, the audit has a table saying so and forbids combining them without a declared joint model.</p>
+
+<p>It also records corrections, and I think that is the most important thing in it. Twice in November an adversarial review, whose only job was to find faults rather than to build, caught real bugs in the live model. On 17 November it found that model v5 had been silently applying the old v1 formula to positive clues whenever a quick search was present, skipping the prior normalisation described in <a href="03-the-arithmetic-of-not-finding.html">Part 3</a>. On 19 November it found that v5 was dropping the terrain context from the land walking prior whenever a search promoted a v4 case. Both were fixed with regression tests, and both entries say exactly which historical results could have changed and how to tell (the recorded code commit and input hashes distinguish them). A system that can be audited must include the record of when it was wrong.</p>
+
+<h2><span class="num">03</span>A gallery of mistakes</h2>
+
+<p>Here are some of the ways the project went wrong. I include them because each one taught a rule that is now written down.</p>
+
+<h3>Satellites that did not exist</h3>
+
+<p>An early version of the orbital tools shipped with two-line element sets for real, named satellites. They had been typed by hand. Every one failed its checksum. They looked exactly like real data and would have produced pass predictions with real-looking times. They were worse than no data, because they were false precision wearing a real name. Now there are no built-in real orbits: a person explicitly fetches them, each is validated, and until then the satellites are named as fictional. <em>Rule: never show invented data under a real name.</em></p>
+
+<h3>Filters on the truth</h3>
+
+<p>An early version had "tactical" display styles: thermal, night-vision green, amber CRT. They looked great. They were implemented as CSS filters on every canvas, which meant they also recoloured the probability ramp, so a night-vision view showed the posterior in shades of green whose ordering no longer meant anything. They were also named after real military sensor products, implying a capability that did not exist. Now they restyle only the basemap through the map library's paint properties, never the probability or evidence colours, and they are named for what they are. <em>Rule: decoration may never touch a number.</em></p>
+
+<h3>"Tail risk" that was not</h3>
+
+<p>The first version of the expected-value layer reported a "90% tail-risk interval". It was a band from uncertainty in the probability of detection alone, with an illustrative spread. It said nothing about uncertainty in the map, the value or the cost. It is now labelled exactly that: a POD-only sensitivity band, not a calibrated tail. <em>Rule: a label may not claim more than the computation.</em></p>
+
+<h3>The particle filter that did not converge</h3>
+
+<p>The MH370 flight-path prototype reported a healthy effective sample size while its particles had collapsed onto a handful of ancestral paths; its answer changed with the random seed. It publishes nothing. <a href="08-three-cases-two-refusals.html">Part 8</a> has the details and a lab that reproduces the failure. <em>Rule: a method that has not converged does not get to produce a map, however good the map would look.</em></p>
+
+<h2><span class="num">04</span>Honesty as an interface</h2>
+
+<p>Those rules show up on screen in ways that are easy to miss and that I think matter more than any feature.</p>
+
+<ul>
+  <li>When a quantity cannot be computed honestly, it is <strong>withheld</strong>, with a reason. The three-part Search Ledger bar disappears when imported searches and fitted area statements make its factorisation invalid; full entropy is withheld when the outside share is undeclared; Search Health checks that lack their inputs say <code>needs</code>, never a green tick.</li>
+  <li>Every assumption carries its <strong>status</strong>: analyst assumption, illustrative, calibrated, SCENARIO. The asset library's 29 modes all say "analyst assumption" because none has been measured.</li>
+  <li>Every panel computed from the map carries the <strong>posterior hash</strong> it was computed for and says when it is stale.</li>
+  <li>Exports (PDF dossier, an offline single-file HTML audit pack with a strict content-security policy and a machine-readable receipt) apply the same <strong>redaction</strong> rules as the screen: protected site coordinates are withheld by default, and fictional cases are stamped SCENARIO on every page.</li>
+</ul>
+
+<p>The AF447 backtest in <a href="08-three-cases-two-refusals.html">Part 8</a> is the clearest example: a sealed answer key, pre-discovery parameters only, a proper scoring rule, and a headline number followed immediately by six reasons not to cite it.</p>
+
+<h2><span class="num">05</span>How the work actually runs</h2>
+
+<p>The process is deliberately light. There is one <code>main</code> branch, and every change arrives as one reviewed pull request. Keeping parallel work coherent is the hard part of building something this broad, which is why the invariants, the engine audit and a plain list of what is unfinished are written down and read before any work starts. Tests exist to protect mathematics and invariants rather than for their own sake: about 2,500 Python tests, including slow oracle tests that check samplers against known answers and golden files that freeze exact posterior bytes; 330 frontend unit tests; and 118 browser journeys that drive the real app in a headless browser and assert exact numbers on screen. A local verifier runs everything on the exact head commit and writes a receipt.</p>
+
+<p>The single most effective practice is boring: <strong>after every change, run the app and use it</strong>. Most of the bugs in the gallery above were invisible in the code and obvious on screen. Review is necessary, and not sufficient: somebody has to look.</p>
+
+<h2><span class="num">06</span>Where honest probability is worth money</h2>
+
+<p>Search and rescue is the reason the project exists, and it is a noble and small market. The engine underneath it is more general: <em>honest, auditable, multi-source probability over space and time, with a ledger of why it moved and what the next observation is worth</em>. The question I keep coming back to is where that is worth paying for.</p>
+
+<p>My current answer is a test: <strong>does someone take a position whose payoff depends on the tail of a distribution over where or when a physical thing is?</strong> If they only need a yes-or-no decision, a good classifier will do and calibration is a luxury. If the distribution itself is priced, its shape is money.</p>
+
+<table>
+  <thead><tr><th>Where a spatial distribution is priced</th><th>Why the tails matter</th><th>Fit</th></tr></thead>
+  <tbody>
+    <tr><td>Marine and aviation insurance and reinsurance</td><td>Reserves and reinsurance layers are set on tails; recovery and location change the loss.</td><td>Direct: it is the original engine.</td></tr>
+    <tr><td>Physical commodity flows and sanctions compliance</td><td>Where a cargo is, when it arrives, whether a tanker went dark: arrival-time and position distributions move demurrage, freight and exposure.</td><td>Direct: the watchlist and the dark-vessel engine.</td></tr>
+    <tr><td>Salvage and recovery</td><td>Every sweep is a bet with a price and a payoff.</td><td>Direct, smaller.</td></tr>
+    <tr><td>Defence and security</td><td>Decisions are mostly thresholds; value is uncertainty removed per sensor-hour across many entities.</td><td>Partial: sells on audit and multi-target scale more than on calibration.</td></tr>
+  </tbody>
+</table>
+
+<p>That suggests two streams sharing one engine. The first turns the search workbench into an <strong>expected-value workbench</strong> for wrecks, aircraft and cargo, with a published <strong>calibration scoreboard</strong>: every look's predicted probability of detection logged against its outcome, every replayable historical case scored, reliability diagrams that a reinsurer or salvor can check. Nobody can fake that, and it is the only honest route to removing the words "analyst assumption" from the screen. The second points the same engine at <strong>many moving targets</strong>: vessels that go dark, tracked across successive satellite radar passes, with calibrated detection rates measured for free on the ships that do broadcast.</p>
+
+<p>The signal engines are the bridge between them: dark-vessel tracking across radar passes, Sentinel-1 scenes calibrated against the ships that do broadcast, impact detection from ring waves, long-range ocean acoustics, debris back-tracking, sonar and magnetic anomalies, small objects in satellite imagery on land, and who could have seen them. All sixteen are on <a href="engines.html">one page</a>, with what each one measured.</p>
+
+<h2><span class="num">07</span>What comes next</h2>
+
+<p>The next stage is evidence from outside the project: real calibrations for the detectors, measured on real sensors, and practitioners using ABYSSAL on real or replayed cases. Everything on these pages is built so that evidence can be admitted the moment it exists.</p>
+
+<p>If you search for things for a living, whether people, aircraft, ships, wrecks, cargo, or anything else that hides, I would like you to try it and tell me where it is wrong. That is the most valuable evidence the project can admit.</p>
+
+<div class="callout key">
+  <div class="t">The series</div>
+  <p><a href="01-a-tour.html">1 · A tour</a> · <a href="02-a-map-that-refuses-to-lie.html">2 · A map that refuses to lie</a> · <a href="03-the-arithmetic-of-not-finding.html">3 · The arithmetic of not finding</a> · <a href="04-five-echoes-one-witness.html">4 · Five echoes, one witness</a> · <a href="05-where-next-and-when-to-stop.html">5 · Where next, and when to stop</a> · <a href="06-signals-from-the-deep.html">6 · Signals from the deep</a> · <a href="07-the-operating-picture.html">7 · The operating picture</a> · <a href="08-three-cases-two-refusals.html">8 · Three cases, two refusals</a> · 9 · Building it honestly. All the interactive labs are collected on <a href="index.html#labs">the series page</a>.</p>
+</div>

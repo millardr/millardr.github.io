@@ -1,0 +1,111 @@
+<!--meta
+{"slug": "08-three-cases-two-refusals", "title": "Three cases, two refusals", "level": "Case studies · validation", "hero": "merchant-royal-live.webp", "hero_alt": "The Merchant Royal case: an Ember annulus off Land's End over real bathymetry", "dek": "A treasure ship reported in a 1641 pamphlet, an airliner that left only satellite handshakes, and a wreck found after two years. What each one tests, and why the most important results are the two places ABYSSAL declines to give an answer.", "desc": "ABYSSAL's three reference cases: the Merchant Royal (1641) and the uncertainty of a seventeenth-century league, MH370's satellite arcs and a particle filter that refused to publish, and a chronological held-out backtest of the AF447 search with its hindsight-bias traps."}
+-->
+<p class="lede">A probabilistic tool can be demonstrated on invented data forever, and the demonstrations will always look good, because the person who invented the data also invented the answer. ABYSSAL ships with three real historical cases for the opposite reason. Each is hard in a different way, each has public sources that can be checked, and in each the honest thing to say turns out to be less impressive than the tempting thing.</p>
+
+<p>None of the three is the product. They are data packs loaded by the same general code as any new case; a rule in the codebase forbids any line of application code from branching on a specific case or place. They are stress tests, and this part is about what they stress.</p>
+
+<h2><span class="num">01</span><em>Merchant Royal</em>, 1641: what is a league?</h2>
+
+<p>In September 1641 the English merchant ship <em>Merchant Royal</em>, returning from Spain and the Caribbean, foundered off the Cornish coast with a famous cargo of bullion. She has never been found. Almost everything known about where she went down rests on contemporary accounts, and ABYSSAL's case pack retains 114 of them: a London pamphlet titled <em>Sad news from the seas</em>, catalogue entries describing it in different libraries, calendars of state papers, later retellings, modern summaries.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/merchant-royal-live.webp" alt="The Merchant Royal case over real basemap tiles: an Ember annulus around Land's End, with the archive of 114 retained sources on the left" loading="lazy"><figcaption><b>The <em>Merchant Royal</em> workspace.</b> One admitted observation, the pamphlet's range claim, produces the annulus. The other 113 documents sit in the archive as context: catalogue records, editions and retellings that do not, on inspection, add independent location information.</figcaption></figure>
+
+<p>Most of those 114 documents are echoes, in exactly the sense of <a href="04-five-echoes-one-witness.html">Part 4</a>: they describe, catalogue or retell the same small number of original accounts. Only one admitted observation shapes the map: the pamphlet says the ship sank <em>ten leagues from Land's End</em>. It gives no bearing.</p>
+
+<p>Turning that phrase into a likelihood is where the honesty lies. A league in 1641 was not one fixed distance. Edmund Gunter's 1636 tables, retained in the case pack, give competing conventions, and the nautical league that later settled at three nautical miles was not yet standard. The case's interpretation, written into the observation itself, reads:</p>
+
+<blockquote>The original pamphlet says ten leagues without a bearing. English league conversion is uncertain: an analyst sensitivity of 2.0–3.1 nautical miles per league gives 20–31 nm. This default uses the midpoint 25.5 nm, an effective ±10.5 nm width (5.5 nm unit half-range plus 5 nm assumed reporting error), and a soft plateau. The error allowance and 75% trust are analyst choices, not measured or calibrated probabilities.<cite>Observation interpretation, <em>Merchant Royal</em> case pack</cite></blockquote>
+
+<p>The kernel is a ring centred on a stated headland reference, with a flat top across the plausible league conversions and soft shoulders for reporting error. With reliability \(r = 0.75\), the v2 contamination mixture from <a href="03-the-arithmetic-of-not-finding.html">Part 3</a> keeps a quarter of the prior untouched: the pamphlet might be wrong, or might be describing somewhere else. This case is where the difference between model v1 and v2 was first measured: the mass within one kernel scale of the claim went from 6.53% to 35.63%, and the 50% credible area from 570,052 km² to 14,713 km², for the same evidence and the same stated trust.</p>
+
+<p>The <em>Merchant Royal</em> also exercises the safety invariant. Historic wrecks can be protected sites and war graves; the export rules withhold exact coordinates of protected sites by default, and the case's seabed context (EMODnet bathymetry and the UK Hydrographic Office's wreck and survey records) is displayed as context, never as evidence that a particular charted wreck is this one.</p>
+
+<h2><span class="num">02</span>MH370: rings from a satellite</h2>
+
+<p>Malaysia Airlines flight 370 disappeared on 8 March 2014. After its transponder went silent and military radar lost it, the only systematic evidence of where it went came from a satellite communications terminal that kept answering hourly "handshakes" from an Inmarsat satellite in geostationary orbit. The timing of each reply (the burst timing offset) measures the round-trip time from ground station to satellite to aircraft and back, and so the aircraft's distance from the satellite. A fixed distance from a point in space intersects the Earth's surface in a ring. Seven handshakes gave seven rings; the last, the famous seventh arc, sweeps through the southern Indian Ocean.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-live.webp" alt="The MH370 case: a thin bright arc in the southern Indian Ocean on a real basemap" loading="lazy"><figcaption><b>The MH370 workspace.</b> Three admitted sources (the Inmarsat analysis published in the <em>Journal of Navigation</em>, the Malaysian safety investigation report and CSIRO's debris-drift analysis) produce a thin arc. Debris recovered on African and Indian Ocean coastlines drifts in from the drift studies as context.</figcaption></figure>
+
+<p>A ring is a one-dimensional constraint. Where along it? That depends on the flight path: speed, heading, altitude and turns between handshakes, all unobserved. The natural tool is a sequential Monte Carlo particle filter: simulate many possible flight paths, weight each by how well it matches each successive ring, resample, repeat. ABYSSAL has a research prototype that does exactly this.</p>
+
+<h3>The refusal</h3>
+
+<p>The prototype's diagnostics looked healthy. Its effective sample size, the standard measure of how many particles are doing useful work, recovered after every resampling step. It was lying. Resampling duplicates good particles and discards bad ones, so after several steps most of the surviving particles can be copies of copies of a handful of original paths. The effective sample size after resampling measures diversity <em>now</em>; it says nothing about how many independent histories the cloud descends from.</p>
+
+<p>Tracing each final particle back to its root ancestor exposed the problem. At 1,000 particles, the posterior weight of the southern route swung between 0.000 and 1.000 depending on the random seed. At 200,000 particles, two seeds still disagreed: 0.678 against 0.629. A posterior that changes its answer when you change the random seed has not converged, whatever its diagnostics say.</p>
+
+<div class="lab wide" data-lab="lineage">
+  <div class="lab-head"><span class="t">Lab · how a healthy ESS hides a dead filter</span><span class="s">a toy problem that, like a ring, is consistent with two routes</span></div>
+  <div class="lab-body">
+    <canvas aria-label="Stacked bands showing the share of particles descended from each original ancestor after each observation; most bands vanish and a few swell"></canvas>
+    <div class="controls">
+      <label class="ctl"><span>Observations <output data-for="T">7 pings</output></span><input type="range" name="T" min="1" max="7" value="7"></label>
+      <label class="ctl"><span>Random seed <output data-for="seed">#1</output></span><input type="range" name="seed" min="1" max="12" value="1"></label>
+      <label class="ctl"><span>Particles <output data-for="N">150</output></span><input type="range" name="N" min="50" max="600" value="150" step="50"></label>
+    </div>
+    <div class="readout">
+      <div><small>Original lineages still alive</small><b data-read="roots">—</b></div>
+      <div><small>Estimated "south" share</small><b data-read="south">—</b></div>
+      <div><small>ESS after resampling</small><b data-read="ess">—</b></div>
+      <div><small>ESS before the last resample</small><b data-read="pre">—</b></div>
+    </div>
+    <p class="note">The truth here is exactly 50/50: the observations fit a mirrored north and south route equally. Each band is one original particle's descendants; its thickness is the share of the cloud they occupy after each resampling step. Amber bands started on the southern route, violet on the northern; grey bands died out. Step the seed from #1 to #12: the "south" share swings between roughly 20% and 80% although nothing about the data changed, while the ESS looks healthy throughout. More particles help, but slowly.</p>
+  </div>
+</div>
+
+<p>So ABYSSAL refuses. The flight-path module stays in the product as a read-only context prototype, and it publishes no search prior. A better sampler (tempered SMC with move steps, or a different parameterisation) might converge, and the experimental v3 engine has some of that machinery. Until one demonstrably does, across seeds and particle counts, the case uses only the published arcs and analyses, with their stated assumptions.</p>
+
+<h2><span class="num">03</span>AF447: the case where the answer is known</h2>
+
+<p>Air France 447 was lost over the equatorial Atlantic on 1 June 2009, flying from Rio de Janeiro to Paris. Floating debris was recovered within days, but the wreck lay in deep, rugged terrain. Three search phases over two years (listening for the flight recorders' acoustic beacons, towed side-scan sonar, autonomous vehicles) found nothing. In 2011 a Bayesian reanalysis combined the earlier searches with an explicit allowance for the possibility that the beacons had failed, and the wreck was found within about a week of the resumed search, in an area near the top of the new map.</p>
+
+<p>That makes AF447 the one reference case with a known answer, and therefore the one place ABYSSAL can be <em>scored</em>. The temptation is obvious: replay the search, show that the map ranked the wreck highly, put the number on a slide. The backtest is built to make that temptation hard to act on.</p>
+
+<h3>How the backtest is kept honest</h3>
+
+<ul>
+  <li><strong>The answer is sealed.</strong> The published wreck reference lives in a separate file that is never passed to prior construction, detection choices or inference. It is read only after all four phase maps are frozen, and a mutation test changes the answer key and checks that nothing upstream changes.</li>
+  <li><strong>Only what was known at the time.</strong> Phase 2 uses the detection probability published before the discovery (0.83), not the higher retrospective value (0.90) published after it. Using a parameter revised in the light of the answer leaks the answer.</li>
+  <li><strong>A proper score.</strong> Each phase is scored by the log score, \(\log_2 p(\text{cell containing the wreck})\). It is a strictly proper scoring rule: in expectation it is maximised only by reporting your true beliefs, and it punishes confident misses without limit. Gains are differences in log score, in bits.</li>
+</ul>
+
+<table>
+  <thead><tr><th>Phase (as of)</th><th class="n">Mass on the wreck cell</th><th class="n">Log score</th><th class="n">Gain vs uniform</th><th class="n">Rank of 6,400</th><th class="n">Area searched first</th></tr></thead>
+  <tbody>
+    <tr><td>0 · Uniform prior (1 Jun 2009)</td><td class="n">0.000156</td><td class="n">−12.644</td><td class="n">+0.000</td><td class="n">4,112</td><td class="n">126,896 km²</td></tr>
+    <tr><td>1 · Last known position + 40 NM reach (5 Jun 2009)</td><td class="n">0.003448</td><td class="n">−8.180</td><td class="n">+4.464</td><td class="n">10</td><td class="n">309 km²</td></tr>
+    <tr><td>2 · After the towed sonar (18 Aug 2009)</td><td class="n">0.003647</td><td class="n">−8.099</td><td class="n">+4.545</td><td class="n">10</td><td class="n">309 km²</td></tr>
+    <tr><td>3 · After the AUV searches, approximate (24 May 2010)</td><td class="n">0.004171</td><td class="n">−7.905</td><td class="n">+4.738</td><td class="n">8</td><td class="n">247 km²</td></tr>
+  </tbody>
+</table>
+
+<p>Ranked eighth out of 6,400 cells. The 99.9th percentile. A marketing deck would stop there. The backtest report does not, and neither will I.</p>
+
+<h3>Six reasons not to cite that number</h3>
+
+<ol>
+  <li><strong>The rank is almost mechanical.</strong> Phase 1 is a Gaussian centred on the last known position, and the wreck happened to lie about 10 km from it, 0.27 standard deviations. Any sensible prior centred there would rank it highly. The uniform prior is a strawman; the fair comparison for later phases is Phase 1.</li>
+  <li><strong>The engine's own contribution was small.</strong> Against Phase 1, negative-search accounting added 0.08 bits in Phase 2 and 0.28 bits in Phase 3. Sweeping the assumed Phase 2 detection probability from 0.2 to 0.99 changes that by only 0.02 to 0.10 bits.</li>
+  <li><strong>No search covered the wreck.</strong> None of the pinned historical search polygons contains the wreck cell, so the searches only moved mass elsewhere. The backtest cannot say how well ABYSSAL handles a search that passed over the target and missed, which is the interesting case.</li>
+  <li><strong>The box was chosen.</strong> A 4° × 4° box around the last known position already excludes the rest of the Atlantic. Widen the box and the gain over uniform grows for no reason.</li>
+  <li><strong>Phase 3 is approximate.</strong> The published footprints lack georeferenced zones of different detection probability and the acoustic shadows of rugged terrain, so Phase 3 is a caveated sensitivity check at a uniform POD of 0.5.</li>
+  <li><strong>One case is not a calibration.</strong> A single outcome can be scored, but it cannot tell you whether 90% regions contain the truth 90% of the time. That needs many cases: planted-target trials, or the thousands of vessels that go dark and reappear on AIS every week.</li>
+</ol>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/af447-live.webp" alt="The AF447 reference workspace with the search box over the equatorial Atlantic and retained sources listed on the left" loading="lazy"><figcaption><b>The AF447 reference workspace.</b> The retained investigation sources are on the left; the wreck reference is deliberately absent from every model input. Admitting the historical searches into a live prior was a recorded NO-GO at the calibration gate: the public documents do not contain measured spatial detection probabilities.</figcaption></figure>
+
+<p>That last point is the second refusal. It would be easy to admit the three published search phases as negative evidence with the published detection probabilities and produce a dramatic map. ABYSSAL's calibration gate says no: the sources state planning PODs, not measured, spatially resolved ones, and a search with an unmeasured POD cannot be allowed to clear ground. The searches appear in the case as context and as a clearly labelled sensitivity analysis.</p>
+
+<h2><span class="num">04</span>What the three cases have in common</h2>
+
+<p>Each case tests a different layer of the system. The <em>Merchant Royal</em> tests evidence: reading old documents, recognising echoes, turning an ambiguous unit into an honest likelihood. MH370 tests inference: whether a sophisticated method has actually converged before its output is trusted. AF447 tests validation: whether a model can be scored against reality without fooling the person scoring it.</p>
+
+<p>And in each, the result I am proudest of is a limit. The pamphlet supports a ring, not a point. The particle filter publishes nothing. The backtest's headline is followed immediately by six reasons to distrust it. A tool that will tell you when not to believe it is more useful than one that is always confident, because the second kind cannot be trusted on the days it is right.</p>
+
+<div class="callout think">
+  <div class="t">Thought experiment · the planted target</div>
+  <p>Suppose you could hide a thousand targets at random positions drawn from a known distribution, search for each with a known plan, and ask ABYSSAL for a map every time. If its 90% regions contained the target about 900 times, the maps are calibrated. If they contained it 700 times, the maps are overconfident by a measurable amount, and you know how much to widen them. Nobody can do this with aircraft. It can be done with test objects on land and in shallow water, and it can be done for free with ships that switch off their transponders and later switch them back on. That is the calibration scoreboard described in <a href="09-building-it-honestly.html">Part 9</a>, and it is the most important thing ABYSSAL does not yet have.</p>
+</div>
+
+<p>Next, the last part: <a href="09-building-it-honestly.html">how all of this was built</a>, and where it goes.</p>

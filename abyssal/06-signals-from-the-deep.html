@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en" class="abyssal">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Signals from the deep — ABYSSAL, part 6 — Rory Millard</title>
+  <meta name="description" content="The physics behind ABYSSAL&#x27;s Signal Lab: SAR ship detection, Kelvin wakes and the azimuth shift, AIS association and dark vessels, hydroacoustic TDOA localisation, ring detection, calibration, and impact ring waves as a dispersive clock.">
+  <link rel="canonical" href="https://millardr.github.io/abyssal/06-signals-from-the-deep.html">
+  <meta name="author" content="Rory Millard">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta property="og:site_name" content="Rory Millard">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://millardr.github.io/abyssal/06-signals-from-the-deep.html">
+  <meta property="og:title" content="Signals from the deep — ABYSSAL, part 6 — Rory Millard">
+  <meta property="og:description" content="The physics behind ABYSSAL&#x27;s Signal Lab: SAR ship detection, Kelvin wakes and the azimuth shift, AIS association and dark vessels, hydroacoustic TDOA localisation, ring detection, calibration, and impact ring waves as a dispersive clock.">
+  <meta property="og:image" content="https://millardr.github.io/assets/cards/abyssal-06-signals-from-the-deep.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Signals from the deep: Rory Millard">
+  <meta property="article:published_time" content="2026-11-21">
+  <meta property="article:modified_time" content="2026-11-22">
+  <meta property="article:author" content="https://millardr.github.io/about.html">
+  <meta property="article:tag" content="ABYSSAL">
+  <meta property="article:tag" content="Bayesian search">
+  <meta property="article:tag" content="search theory">
+  <meta property="article:tag" content="search and rescue">
+  <meta property="article:tag" content="probability">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Signals from the deep — ABYSSAL, part 6 — Rory Millard">
+  <meta name="twitter:description" content="The physics behind ABYSSAL&#x27;s Signal Lab: SAR ship detection, Kelvin wakes and the azimuth shift, AIS association and dark vessels, hydroacoustic TDOA localisation, ring detection, calibration, and impact ring waves as a dispersive clock.">
+  <meta name="twitter:image" content="https://millardr.github.io/assets/cards/abyssal-06-signals-from-the-deep.jpg">
+  <meta name="twitter:image:alt" content="Signals from the deep: Rory Millard">
+  <link rel="alternate" type="application/rss+xml" title="Rory Millard — writing" href="https://millardr.github.io/feed.xml">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://millardr.github.io/abyssal/06-signals-from-the-deep.html#webpage","url":"https://millardr.github.io/abyssal/06-signals-from-the-deep.html","name":"Signals from the deep — ABYSSAL, part 6 — Rory Millard","isPartOf":{"@id":"https://millardr.github.io/#website"},"breadcrumb":{"@id":"https://millardr.github.io/abyssal/06-signals-from-the-deep.html#breadcrumb"},"inLanguage":"en-GB"},{"@type":"TechArticle","@id":"https://millardr.github.io/abyssal/06-signals-from-the-deep.html#article","headline":"Signals from the deep","name":"Signals from the deep","description":"The physics behind ABYSSAL's Signal Lab: SAR ship detection, Kelvin wakes and the azimuth shift, AIS association and dark vessels, hydroacoustic TDOA localisation, ring detection, calibration, and impact ring waves as a dispersive clock.","url":"https://millardr.github.io/abyssal/06-signals-from-the-deep.html","mainEntityOfPage":{"@id":"https://millardr.github.io/abyssal/06-signals-from-the-deep.html#webpage"},"image":["https://millardr.github.io/assets/cards/abyssal-06-signals-from-the-deep.jpg"],"datePublished":"2026-11-21","dateModified":"2026-11-22","author":[{"@type":"Person","@id":"https://millardr.github.io/#person","name":"Rory Millard","url":"https://millardr.github.io/about.html"}],"publisher":{"@id":"https://millardr.github.io/#person"},"inLanguage":"en-GB","isAccessibleForFree":true,"wordCount":3279,"keywords":["ABYSSAL","Bayesian search","search theory","search and rescue","probability"],"isPartOf":{"@type":"CreativeWorkSeries","@id":"https://millardr.github.io/abyssal/#series","name":"ABYSSAL, from every side","url":"https://millardr.github.io/abyssal/"},"position":6},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Rory Millard","item":"https://millardr.github.io/"},{"@type":"ListItem","position":2,"name":"ABYSSAL","item":"https://millardr.github.io/abyssal/"},{"@type":"ListItem","position":3,"name":"Part 6: Signals from the deep"}],"@id":"https://millardr.github.io/abyssal/06-signals-from-the-deep.html#breadcrumb"}]}</script>
+  <meta name="theme-color" content="#0d0d0d">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem('theme-abyssal')||'dark';if(t)document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme='dark';}</script>
+  <link rel="preload" href="../assets/fonts/inter-normal-latin-6ab57b19.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../assets/fonts/newsreader-normal-latin-f24c3215.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/fonts/fonts.css">
+  <link rel="stylesheet" href="../assets/vendor/katex/katex.min.css">
+  <script defer src="../assets/vendor/katex/katex.min.js"></script>
+  <script defer src="../assets/vendor/katex/contrib/auto-render.min.js"></script>
+  <link rel="stylesheet" href="../assets/series.css">
+  <script defer src="../assets/series.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <div class="sitebar">
+    <div class="in">
+      <a class="home" href="../index.html"><span aria-hidden="true">&larr;</span> Rory Millard</a>
+      <nav aria-label="Rory Millard's site"><a href="../projects.html">Work</a><a href="../writing.html">Writing</a><a href="../about.html">About</a><a href="../contact.html">Contact</a></nav>
+    </div>
+  </div>
+  <header class="topbar productbar">
+    <div class="in">
+      <a class="product" href="../abyssal/index.html" aria-label="ABYSSAL, overview"><span class="pmark" aria-hidden="true"></span>ABYSSAL</a>
+      <span class="crumb"><a href="index.html">Series</a> / Part 6 of 9</span>
+      <nav aria-label="ABYSSAL sections" id="site-nav"><span class="nav-k" aria-hidden="true">ABYSSAL</span><a href="../abyssal/index.html">Overview</a><a href="../abyssal/engines.html">The machine</a><a href="../abyssal/evidence.html">Real data</a><a href="../abyssal/01-a-tour.html" aria-current="page">Series</a><a href="../abyssal/index.html#labs">Labs</a><span class="nav-k site" aria-hidden="true">Rory Millard</span><span class="nav-site"><a href="../projects.html">Work</a><a href="../writing.html">Writing</a><a href="../about.html">About</a><a href="../contact.html">Contact</a></span></nav>
+      <button class="theme-btn" type="button" aria-label="Toggle theme"></button>
+      <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
+    </div>
+  </header>
+  <section class="hero">
+    <canvas class="field" aria-hidden="true"></canvas>
+    <div class="in">
+      <div class="kicker"><span class="dot"></span><span>ABYSSAL · Part 6 of 9</span><span class="lv">Technical · physics &amp; detection</span></div>
+      <h1>Signals from the deep</h1>
+      <p class="dek">Kelvin's 19.47°, a ship that appears hundreds of metres from where it is, hydrophones that hear an implosion across an ocean, and the one rule that keeps clever detectors from fooling the map.</p>
+      <div class="meta"><span><b>14 min</b> read · 3,279 words · <b>4</b> interactive labs</span><span>Rory Millard · November 2026</span></div>
+      
+      <figure class="figure-peek reveal"><img  src="../assets/abyssal/signal-dark-vessel-wake.webp" srcset="../assets/abyssal/signal-dark-vessel-wake-640.webp 640w, ../assets/abyssal/signal-dark-vessel-wake.webp 1440w" sizes="(max-width: 900px) 100vw, 1100px" width="1440" height="880" decoding="async" alt="A synthetic radar image of a ship&#x27;s bright echo displaced from its dark wake, with the recovered heading arrow" fetchpriority="high"></figure>
+    </div>
+  </section>
+  <main class="page" id="main">
+    <div class="article-grid">
+      <aside class="toc" aria-label="On this page"></aside>
+      <article class="prose">
+<p class="lede">Everything in the first four parts starts from evidence a person can read: a sighting, a track, a search report. Much of what matters in a search arrives as something else: a radar image of forty thousand square kilometres of sea, an hour of hydrophone recording, a magnetometer trace, a sonar swath. Nobody reads those. Something has to turn them into evidence first.</p>
+
+<p>That something is ABYSSAL's second engine, the <strong>Signal Lab</strong>. Its job is to go from raw measurements to physics-screened, calibrated detections, and then to likelihoods the map can use. This part is about the physics, which is unusually beautiful, and about the one rule that stops a detector, however clever, from quietly corrupting the map.</p>
+
+<h2><span class="num">01</span>Seeing ships with radar</h2>
+
+<p>Synthetic aperture radar satellites, such as the European Sentinel-1 pair, illuminate the sea at an oblique angle with microwaves and record the echo. The resulting image is not a photograph. It works through cloud and at night. The sea's brightness comes from centimetre-scale ripples resonating with the radar wavelength (Bragg scattering), so a calm sea is dark and a windy one bright. Steel ships, with their corners and flat faces acting as reflectors, are among the brightest things in the scene.</p>
+
+<p>Finding them is a classic detection problem against a noisy background. The image is speckled (coherent imaging multiplies the true brightness by random noise) and the sea clutter has heavy tails, well modelled by a K-distribution. ABYSSAL uses a <strong>constant false alarm rate</strong> (CFAR) detector: for every pixel, estimate the local mean and spread of the sea from a ring of background pixels, skipping a guard window around the pixel so a ship does not contaminate its own background, and flag the pixel if it stands out by more than a threshold measured in local standard deviations. Working on log-intensity tames the speckle; separable box sums make the whole image O(N). Connected bright pixels become a detection, and second moments of the blob give its length and orientation.</p>
+
+<h2><span class="num">02</span>The wake knows where the ship is</h2>
+
+<p>A moving ship leaves two signatures in the sea that the radar can see. Directly behind it is a <strong>turbulent wake</strong>: a long, dark, straight band where the churned water has smoothed away the small ripples that scatter radar. Spreading from it is the <strong>Kelvin wake</strong>, the V-shaped pattern of waves you have seen behind every boat, and its geometry is one of the loveliest results in fluid dynamics.</p>
+
+<h3>Why 19.47°, for every ship at every speed</h3>
+
+<p>In deep water, waves of wavenumber \(k\) travel at phase speed \(c = \sqrt{g/k}\), and their energy travels at the group speed \(c_g = c/2\). A ship moving at speed \(U\) makes waves that are stationary in its own frame, so a wave travelling at angle \(\theta\) to the track must have \(c = U\cos\theta\).</p>
+
+<p>Now follow the energy. Waves made at a point \(P\) a time \(t\) ago, travelling at angle \(\theta\), have carried their energy a distance \(c_g t = \tfrac12 U t \cos\theta\) from \(P\). As \(\theta\) varies, the points \(\tfrac12 Ut\cos\theta\) in direction \(\theta\) trace a circle through \(P\) of diameter \(\tfrac12 Ut\). Meanwhile the ship has moved \(Ut\) from \(P\). So all the wave energy made at \(P\) lies on a circle of radius \(Ut/4\) whose centre is \(3Ut/4\) behind the ship. The edge of the wake is the tangent from the ship to that circle:</p>
+
+<div class="eq"><span class="tag">Kelvin angle</span>
+\[ \sin\alpha = \frac{Ut/4}{3Ut/4} = \frac13 \qquad\Longrightarrow\qquad \alpha = \arcsin\tfrac13 \approx 19.47^\circ . \]
+</div>
+
+<p>\(U\) and \(t\) cancel. A rowing boat and a supertanker draw the same angle. What does depend on speed is the spacing of the transverse waves, the crests running across the track directly behind the ship. They have \(\theta = 0\), so \(c = U\) and</p>
+
+<div class="eq"><span class="tag">speed from the wake</span>
+\[ \lambda_\text{transverse} = \frac{2\pi U^2}{g} \qquad\Longleftrightarrow\qquad U = \sqrt{\frac{g\,\lambda}{2\pi}} . \]
+</div>
+
+<p>Measure the wavelength in the image and you have the speed. At 10 knots it is 17 m; at 20 knots, 68 m. With 10 m radar pixels and at least four pixels per wavelength to measure it, the method works from about 8 m/s upward.</p>
+
+<h3>Why the ship is not where the radar says</h3>
+
+<p>Here is the physics that makes radar ship detection subtle. A synthetic aperture radar does not form its image with a lens; it builds the along-track (azimuth) position of each scatterer from the Doppler history of its echo as the satellite flies past. A scatterer that is itself moving towards or away from the radar adds an extra Doppler shift, which the processor cannot distinguish from a different azimuth position. So <strong>a moving ship is drawn in the wrong place</strong>, displaced along the satellite's track by</p>
+
+<div class="eq"><span class="tag">azimuth shift</span>
+\[ \Delta x_\text{az} = \frac{R}{V}\,u_r, \qquad u_r = U\,\sin\theta_\text{inc}\,(\hat h \cdot \hat r), \]
+</div>
+
+<p>where \(R\) is the slant range, \(V\) the satellite's speed, \(u_r\) the ship's velocity along the line of sight, \(\theta_\text{inc}\) the incidence angle and \(\hat h\cdot\hat r\) the component of the ship's heading along the range direction. For Sentinel-1, \(R/V\) is roughly two minutes. A ship making 10 knots across the range direction is drawn several hundred metres from its true position: the "train off the tracks" effect that radar analysts learn early. Its wake, being water that is essentially still relative to the sea, is drawn where it is. In the image, <em>the ship sits beside its own wake</em>.</p>
+
+<p>That looks like a nuisance. ABYSSAL turns it into a measurement. The true position must lie on the azimuth line through the echo, offset by an amount whose sign and size are tied to the heading. So the wake search is a <strong>physics-constrained Hough transform</strong>: for every physically allowed pair of (offset, heading), score a dark half-line trailing from the candidate true position plus two bright Kelvin arms at ±19.47°, as a significance in units of the clutter's standard error. The best-scoring pair gives the heading, the true position and, from the offset, a second, independent speed estimate \(U = \Delta x_\text{az} V / (R \sin\theta_\text{inc}\,\hat h\cdot\hat r)\), which is fused with the Kelvin-wavelength speed when they agree.</p>
+
+<div class="lab wide" data-lab="kelvin" id="lab-kelvin">
+  <div class="lab-head"><span class="t">Lab · a ship, its wake, and where the radar draws it</span><span class="s">Kelvin crests from stationary phase; SAR shift for Sentinel-1-like geometry</span></div>
+  <div class="lab-body">
+    <canvas aria-label="A ship's Kelvin wake on a dark sea: curved crests, dashed arms at 19.47 degrees, a dark turbulent wake, and the bright SAR echo displaced along azimuth from the wake apex"></canvas>
+    <div class="controls">
+      <label class="ctl"><span>Ship speed <output data-for="u">14 kn</output></span><input type="range" name="u" min="4" max="30" value="14"></label>
+      <label class="ctl"><span>Heading relative to range direction <output data-for="hd">30°</output></span><input type="range" name="hd" min="0" max="90" value="30"></label>
+    </div>
+    <div class="readout">
+      <div><small>Speed</small><b data-read="ms">—</b></div>
+      <div><small>Transverse wavelength</small><b data-read="lam">—</b></div>
+      <div><small>Wake half-angle</small><b data-read="angle">—</b></div>
+      <div><small>Echo displaced by</small><b data-read="shift">—</b></div>
+    </div>
+    <p class="note">Crests follow the stationary-phase curves \(x = -C\cos t\,(1+\sin^2 t)\), \(y = C\cos^2 t\,\sin t\) with \(C = n\lambda\). Speed changes the wavelength, never the angle. Turn the heading to 90° (moving along the satellite track, no line-of-sight motion) and the echo snaps back onto the wake.</p>
+  </div>
+</div>
+
+<h2><span class="num">03</span>Dark vessels and ghosts</h2>
+
+<p>Large ships must broadcast their identity and position on AIS, the Automatic Identification System. Most do. The interesting ones are those that do not: vessels that have switched their transponder off to fish illegally, run sanctions, or meet another ship at sea. A radar detection with no matching AIS report is a <strong>dark vessel</strong>.</p>
+
+<p>Matching is harder than it sounds, because of the shift above. ABYSSAL interpolates each AIS track to the exact image time and then <em>shifts the AIS position by the azimuth displacement its own reported velocity would cause</em>, so that a cooperative ship's AIS lands on its echo rather than on its wake. Detections and shifted AIS positions are then gated by Mahalanobis distance (a χ² test at 99%) using the combined position uncertainty, and assigned one-to-one by the Hungarian algorithm.</p>
+
+<p>Three outcomes follow. Matched vessels. <strong>DARK</strong> detections with no AIS. And the mirror image: an AIS position with no echo where the radar should have seen a ship. That last one can mean a spoofed position (a vessel broadcasting that it is somewhere it is not) or simply that the radar missed a small boat in rough sea. ABYSSAL flags it as a possible ghost <em>only</em> when the lower bound of the measured detection probability for a ship of that reported length is at least 0.8. Otherwise it reports "may simply be below the detection limit", which is usually the truth.</p>
+
+<figure class="shot wide reveal"><img  src="../assets/abyssal/signal-dark-vessels.webp" srcset="../assets/abyssal/signal-dark-vessels-640.webp 640w, ../assets/abyssal/signal-dark-vessels.webp 1440w" sizes="(max-width: 900px) 100vw, 1100px" width="1440" height="880" decoding="async" alt="A synthetic SAR scene with ship detections: green circles for AIS-matched, red for dark vessels, magenta for a ghost AIS position, with wakes and headings drawn" loading="lazy"><figcaption><b>A SCENARIO radar scene in the Signal Lab.</b> Green: detections matched to AIS. Red: DARK. Magenta: an AIS report with no echo where one was expected. Blue lines are recovered wakes and arrows are headings. The panel scores the run against the scene's answer key: ships found, false alarms, dark ships correctly flagged, ghosts flagged, median heading and speed errors.</figcaption></figure>
+
+<p>Measured on 24 synthetic scenes with K-distributed clutter at 10 m pixels:</p>
+
+<table>
+  <thead><tr><th>Ship length</th><th class="n">25 m</th><th class="n">45 m</th><th class="n">80 m</th><th class="n">120 m</th><th class="n">180 m</th><th class="n">250 m</th></tr></thead>
+  <tbody>
+    <tr><td>Probability of detection</td><td class="n">3%</td><td class="n">83%</td><td class="n">100%</td><td class="n">100%</td><td class="n">100%</td><td class="n">100%</td></tr>
+    <tr><td>95% lower bound</td><td class="n">0.5%</td><td class="n">68%</td><td class="n">89%</td><td class="n">91%</td><td class="n">93%</td><td class="n">92%</td></tr>
+  </tbody>
+</table>
+
+<p>False alarms ran at 2.45 per 1,000 km². Wakes were recovered for 80% of moving ships, with a median heading error of 0.55° and a median speed error of 0.11 m/s; the true position recovered from the wake was typically within 5 to 40 m. Every ghost track was flagged and no cooperative vessel was wrongly called dark.</p>
+
+<div class="callout honest">
+  <div class="t">Synthetic, and labelled as such</div>
+  <p>Those numbers come from a simulator with an answer key. They prove that the mathematics is implemented correctly and give honest uncertainty <em>within the simulator</em>. They do not make a detection on a real Sentinel-1 scene admissible as evidence. The real-data path (GeoTIFF, including Sentinel-1 ground-range products; AIS as CSV) is implemented and tested only on synthetic files. The route to a real calibration is free labels: cooperative ships broadcasting AIS in real scenes give known positives of known length, so detection probability by length, incidence and wind can be measured on real data. That is the next piece of engine work.</p>
+</div>
+
+<h2><span class="num">04</span>Hearing across an ocean</h2>
+
+<p>In November 2017 the Argentine submarine ARA <em>San Juan</em> disappeared in the South Atlantic. Among the earliest hard evidence of what had happened was acoustic: hydrophone stations of the international network that listens for nuclear tests had recorded an impulsive event consistent with an implosion. Sound travels far in the sea, at about 1,480 m/s, and the difference in its arrival times at stations hundreds of kilometres apart pins down where it came from. The wreck was found a year later.</p>
+
+<p>The geometry is old: the set of points whose distances to two stations differ by a fixed amount is a hyperbola, so each pair of stations with a measured time difference of arrival (TDOA) gives one hyperbola, and two or more pairs intersect at the source. The craft is in the details.</p>
+
+<ul>
+  <li><strong>Picking the onset.</strong> Band-pass the recording, take the Hilbert envelope, and pick the onset with a short-term to long-term average ratio. Then refine each time difference by cross-correlation with a β-PHAT weighting over a short window (−2 s to +3 s) around the onset. The short window matters: in the ocean, multipath arrivals come within seconds, and a long window locked onto the wrong path in 42 of 81 trials; the short one in none.</li>
+  <li><strong>Correlated errors.</strong> All differences are taken relative to one reference station, so they all share that station's timing error. Treating them as independent overweights the reference. ABYSSAL uses the full covariance \(\Sigma = \sigma^2(I + J)\), where \(J\) is the all-ones matrix, plus per-path sound-speed uncertainty on the diagonal, and inverts it per cell with the Sherman–Morrison formula: \(\Sigma^{-1} = \sigma^{-2}\big(I - J/(1+m)\big)\) for \(m\) differences.</li>
+  <li><strong>Uncertain sound speed.</strong> The common speed of sound is not known exactly, so the likelihood is marginalised over it rather than fixed.</li>
+  <li><strong>Checking itself.</strong> With four or more stations there are more equations than unknowns, and the minimum of the quadratic form is χ²-distributed with \(m - 2\) degrees of freedom if the picks are right. An injected 1.5-second clock error at one station gives \(p \lt 0.001\) every time.</li>
+</ul>
+
+<div class="lab wide" data-lab="tdoa" id="lab-tdoa">
+  <div class="lab-head"><span class="t">Lab · four hydrophones, one bang</span><span class="s">drag the source; the map is the TDOA likelihood</span></div>
+  <div class="lab-body">
+    <canvas aria-label="A 400 km wide ocean area with four hydrophone stations, three hyperbolae and the likelihood surface; a draggable green source"></canvas>
+    <div class="controls">
+      <label class="ctl"><span>Timing noise per station, \(\sigma\) <output data-for="sig">0.30 s</output></span><input type="range" name="sig" min="2" max="150" value="30"></label>
+      <label class="ctl"><span><span>Mispick H3 by +1.5 s</span><input type="checkbox" name="bad"></span></label>
+    </div>
+    <div class="btns"><button type="button" data-act="roll">New noise draw</button></div>
+    <div class="readout">
+      <div><small>Fix error</small><b data-read="err">—</b></div>
+      <div><small>χ² at the fix (1 dof)</small><b data-read="chi">—</b></div>
+      <div><small>Consistency p-value</small><b data-read="p">—</b></div>
+    </div>
+    <p class="note">The glowing bands are the three hyperbolae (H2, H3 and H4 against reference H1), each drawn a few seconds wide; they cross at the fix (white cross). The fix and the χ² use the correlated-reference covariance above. Tick the mispick box: the fix moves and the χ² test raises the alarm, because four stations over-determine a two-dimensional position.</p>
+  </div>
+</div>
+
+<p>On synthetic tests with four stations about 400 km apart, 10 dB signal-to-noise and ±2 m/s per-path sound-speed error, the median error was 0.4 km, and the 95% error ellipse contained the truth 46 times in 50, which is what a 95% ellipse should do. With a real recording, the localiser can propose its fix as a <em>draft</em> ellipse observation for a person to review.</p>
+
+<figure class="shot wide reveal"><img  src="../assets/abyssal/signal-acoustic.webp" srcset="../assets/abyssal/signal-acoustic-640.webp 640w, ../assets/abyssal/signal-acoustic.webp 1440w" sizes="(max-width: 900px) 100vw, 1100px" width="1440" height="880" decoding="async" alt="The acoustic localiser in the Signal Lab: hyperbolae crossing at the fix and each station's waveform with its pick" loading="lazy"><figcaption><b>The acoustic localiser.</b> Hyperbolae from three time differences crossing at the fix, the truth marker, and each station's waveform with its pick. Synthetic data.</figcaption></figure>
+
+<h2><span class="num">05</span>Rings</h2>
+
+<p>Some things that matter in a search are round. Debris from an aircraft that struck the water spreads into a rough ring. A small impact crater has a rim. Oil from a sunken wreck can rise and spread into a dark disc or ring on the surface. The ring finder is a matched-filter bank over radii: each thin annulus is scored against its inside and outside after a band-pass that removes texture broader than the ring, by FFT convolution, with robust z-scores and three-dimensional (space × scale) non-maximum suppression, then suppression of sidelobes inside stronger rings. On synthetic scenes with half the rings deliberately broken and filled discs of similar size planted as decoys, bright rings were found 75–100% of the time by radius with under one false ring per 100 km², dark rings at least 92% of the time, and decoy discs almost never.</p>
+
+<figure class="shot wide reveal"><img  src="../assets/abyssal/signal-rings.webp" srcset="../assets/abyssal/signal-rings-640.webp 640w, ../assets/abyssal/signal-rings.webp 1440w" sizes="(max-width: 900px) 100vw, 1100px" width="1440" height="880" decoding="async" alt="Ring finder output: detected rings in magenta against the answer key in green, with grey decoy discs" loading="lazy"><figcaption><b>Ring finder.</b> Detected rings (magenta) against the answer key (green rings; grey decoy discs). Natural ring-like features, eddies, rain cells, seabed pockmarks, will also respond; the finder reports contacts, not causes.</figcaption></figure>
+
+<h2><span class="num">06</span>The calibration gate</h2>
+
+<p>Every detector above produces <strong>contacts</strong>. None of them, today, produces evidence the map will accept. That is invariant number six: <em>only calibrated detectors, with measured probability of detection and false-alarm rates, can create admissible observations</em>.</p>
+
+<p>The reason is the same as for the 0% "Uncalibrated" preset in Part 1. If a detector looks at an area and reports nothing, that "nothing" is evidence of absence only in proportion to the detector's real probability of detection there. Feed the map a detector's opinion with an invented POD and the map will confidently clear ground the detector could never have seen into. So calibration is not a report you write at the end; it is the gate between a clever algorithm and the belief that sends people out.</p>
+
+<p>ABYSSAL's calibration framework turns labelled held-out results into probabilities of detection with Wilson score intervals, and false alarms per km² with exact Poisson intervals (rather than the mislabelled binomial bounds that are a common mistake). Every labelled sample must declare whether it is <code>REAL</code> or <code>SCENARIO</code>, and a synthetic injected target that tries to pass as real raises an error.</p>
+
+<div class="lab" data-lab="wilson" id="lab-wilson">
+  <div class="lab-head"><span class="t">Lab · how many trials make a measurement?</span><span class="s">Wilson 95% interval for a probability of detection</span></div>
+  <div class="lab-body">
+    <canvas aria-label="A probability axis with the Wilson interval drawn as an amber bar and the gate threshold as a dashed line"></canvas>
+    <div class="controls">
+      <label class="ctl"><span>Trials, \(n\) <output data-for="n">10</output></span><input type="range" name="n" min="1" max="200" value="10"></label>
+      <label class="ctl"><span>Detections, \(k\) <output data-for="k">10</output></span><input type="range" name="k" min="0" max="10" value="10"></label>
+      <label class="ctl"><span>Gate on the lower bound <output data-for="thr">80%</output></span><input type="range" name="thr" min="50" max="99" value="80"></label>
+    </div>
+    <div class="readout">
+      <div><small>Observed rate</small><b data-read="phat">—</b></div>
+      <div><small>95% interval</small><b data-read="ci">—</b></div>
+      <div><small>Ghost-AIS flag allowed?</small><b data-read="gate">—</b></div>
+    </div>
+    <p class="note">Ten detections out of ten sounds perfect; its lower bound is about 72%, which fails a gate of 80%. It takes 16 out of 16 to pass. This is why the vessel engine refuses to call a missing echo a spoof until the detection rate for that ship size has been measured on enough real ships.</p>
+  </div>
+</div>
+
+<h2><span class="num">07</span>Next: an impact is a clock</h2>
+
+<p>The next engines on the roadmap are: tracking dark vessels across successive radar passes; fetching real Sentinel-1 scenes and calibrating against AIS; back-tracking recovered debris to an impact area; anomaly detection in side-scan and multibeam sonar; full magnetic dipole inversion; and long-range ocean acoustics through the deep sound channel. One idea in that list deserves a preview here, because the physics is too good not to share.</p>
+
+<p>When something heavy hits calm water it makes rings. You might expect them to have a characteristic wavelength. They do not, and that is the useful part. An impulsive disturbance at a point excites all wavelengths at once, and because deep-water waves are dispersive (long waves travel faster), the ring sorts itself by wavelength as it spreads. This is the Cauchy–Poisson problem, solved two centuries ago. By stationary phase, the surface at distance \(r\) and time \(t\) after the impact oscillates with phase \(gt^2/4r\), so the local wavenumber and wavelength are</p>
+
+<div class="eq"><span class="tag">Cauchy–Poisson chirp</span>
+\[ k(r,t) = \frac{g\,t^2}{4\,r^2}, \qquad \lambda(r,t) = \frac{8\pi r^2}{g\,t^2}, \qquad\text{equivalently}\qquad t = r\sqrt{\frac{8\pi}{g\,\lambda(r)}} . \]
+</div>
+
+<p>Long waves lead, short waves trail, and the wavelength at a given radius shrinks as time passes. That makes the ring a <strong>chirp</strong>, and a chirp of a known form is something a matched filter can find. The template has three parameters, the centre \((x_0, y_0)\) and the time since impact \(t\), and fitting it does two things at once: it detects the impact, and it reads the clock. Measure the wavelength at two radii in a single image and you know how long ago the impact happened. The finite size \(L\) of whatever struck the water suppresses waves shorter than about \(L\), so the visible packet travels at roughly the group speed of waves with \(k \approx 1/L\), that is \(\tfrac12\sqrt{gL}\): about 7 m/s for a 20 m object.</p>
+
+<div class="lab wide" data-lab="splash" id="lab-splash">
+  <div class="lab-head"><span class="t">Lab · the dispersive clock</span><span class="s">impact ring waves on deep water, with ambient sea</span></div>
+  <div class="lab-body">
+    <canvas aria-label="A top-down view of the sea surface with an expanding ring wave whose wavelength increases outward, over ambient waves"></canvas>
+    <canvas class="profile" aria-label="The surface height along a radius, showing a chirp: long waves at the front and short waves behind" style="margin-top:10px"></canvas>
+    <div class="controls">
+      <label class="ctl"><span>Time since impact <output data-for="t">60 s</output></span><input type="range" name="t" min="10" max="400" value="60"></label>
+      <label class="ctl"><span>Size of the object, \(L\) <output data-for="L">20 m</output></span><input type="range" name="L" min="2" max="60" value="20"></label>
+      <label class="ctl"><span>Ambient sea <output data-for="sea">20%</output></span><input type="range" name="sea" min="0" max="100" value="20"></label>
+    </div>
+    <div class="btns"><button type="button" data-act="play">Play time</button></div>
+    <div class="readout">
+      <div><small>Ring radius</small><b data-read="r">—</b></div>
+      <div><small>Wavelength at the ring</small><b data-read="lam">—</b></div>
+      <div><small>Wavelength 1.5× further out</small><b data-read="lam2">—</b></div>
+      <div><small>Packet speed ½√(gL)</small><b data-read="cg">—</b></div>
+    </div>
+    <p class="note">The phase is the exact stationary-phase result; the amplitude envelope is qualitative. Raise the ambient sea and the ring disappears to the eye long before it disappears to a matched filter that knows the chirp law, because the filter integrates along the whole ring.</p>
+  </div>
+</div>
+
+<p>An honest note on what this can and cannot do. Impact rings are fleeting: on open water they are measurable for minutes to perhaps an hour before ambient waves and wind swamp them. A satellite happening to image the right spot in that window is improbable. Aerial imagery from a search aircraft, a ship's X-band radar (which images waves routinely), or a drone at the scene are far more plausible sensors. The same impact is also loud underwater, which is why the long-range acoustic engine is the natural partner: acoustics finds roughly where and when, and the ring, if anyone images it, nails the centre and the clock.</p>
+
+<h2><span class="num">08</span>A line, and why</h2>
+
+<p>Finding a <em>lost</em> submarine is squarely in scope: the acoustic localiser above was built for exactly the <em>San Juan</em> kind of event, and debris, slick and magnetic anomaly detection serve search and recovery. Detecting or tracking an <em>operating</em> submarine is anti-submarine warfare targeting, which is outside ABYSSAL's purpose of finding lost things, and I have not built it.</p>
+
+<p>The physics agrees with the scope. A body moving at depth \(d\) makes surface waves of wavenumber \(k\) attenuated by roughly \(e^{-kd}\), and the waves that make up its Kelvin pattern have \(k \approx g/U^2\). The surface signature therefore decays like \(e^{-gd/U^2}\): at 10 m/s and 100 m depth that is about \(e^{-9.8} \approx 10^{-4}\), far below radar clutter. Only shallow, fast bodies leave a visible surface signature, and in practice the general wake engine above sees surface ships.</p>
+
+<p>Since this part was written, eleven more engines have joined these three: self-calibration of the radar from ships that broadcast AIS, dark tracks across passes, identities for ships that went dark, wind from the radar itself, persistence across passes, the splash clock, ocean-basin acoustics, implosion forensics, seabed anomalies from sonar and survey bathymetry, magnetic dipole inversion and debris back-tracking, plus a lost-submarine drill that chains three of them. They are all on one page, with the architecture they share: <a href="engines.html">Inside the machine</a>.</p>
+
+<p>Next, <a href="07-the-operating-picture.html">Part 7</a> zooms out from single detections to the whole operating picture: live aircraft and ships, satellites and their swaths, weather, terrain, and a dozen field tools.</p>
+
+        <nav class="series-nav" aria-label="The ABYSSAL series"><div class="label">The ABYSSAL series</div><ol><li><a href="01-a-tour.html"><span class="n">01</span><span>Finding what is lost: a tour of ABYSSAL</span></a></li><li><a href="02-a-map-that-refuses-to-lie.html"><span class="n">02</span><span>A map that refuses to lie</span></a></li><li><a href="03-the-arithmetic-of-not-finding.html"><span class="n">03</span><span>The arithmetic of not finding</span></a></li><li><a href="04-five-echoes-one-witness.html"><span class="n">04</span><span>Five echoes, one witness</span></a></li><li><a href="05-where-next-and-when-to-stop.html"><span class="n">05</span><span>Where next, and when to stop</span></a></li><li class="cur"><a href="06-signals-from-the-deep.html"><span class="n">06</span><span>Signals from the deep</span></a></li><li><a href="07-the-operating-picture.html"><span class="n">07</span><span>The operating picture</span></a></li><li><a href="08-three-cases-two-refusals.html"><span class="n">08</span><span>Three cases, two refusals</span></a></li><li><a href="09-building-it-honestly.html"><span class="n">09</span><span>Building it honestly</span></a></li></ol></nav><div class="prevnext"><a class="prev" href="05-where-next-and-when-to-stop.html"><small>← Part 5</small><b>Where next, and when to stop</b></a><a class="next" href="07-the-operating-picture.html"><small>Part 7 →</small><b>The operating picture</b></a></div>
+      </article>
+      <div></div>
+    </div>
+  </main>
+  <footer class="foot">
+    <div class="in">
+      <div>
+        <b>Rory Millard</b>
+        <span>ABYSSAL is a research prototype by Rory Millard: a Bayesian workbench for finding lost aircraft, ships and people.</span>
+      </div>
+      <nav aria-label="Footer">
+        <a href="../projects.html">Work</a>
+        <a href="../abyssal/index.html">ABYSSAL</a>
+        <a href="../writing.html">Writing</a>
+        <a href="../about.html">About</a>
+        <a href="mailto:j7yma3egrrm9nxaa.16ls4@aleeas.com">Email</a>
+        <a href="https://www.linkedin.com/in/rorymillard1/" rel="noopener noreferrer">LinkedIn</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

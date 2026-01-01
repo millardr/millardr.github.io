@@ -1,0 +1,518 @@
+{
+ "af447-live": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "after-graphite": {
+  "h": 900,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "demo-live": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "demo-workspace": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "eng-bubble-depth": {
+  "h": 945,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1640
+ },
+ "eng-bubble-trace": {
+  "h": 945,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1640
+ },
+ "eng-dark-tracks": {
+  "h": 945,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1640
+ },
+ "eng-debris": {
+  "h": 945,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1640
+ },
+ "eng-drill": {
+  "h": 945,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1640
+ },
+ "eng-identity": {
+  "h": 945,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1640
+ },
+ "eng-impact-rings": {
+  "h": 945,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1640
+ },
+ "eng-magnetic": {
+  "h": 945,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1640
+ },
+ "eng-persistence": {
+  "h": 945,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1640
+ },
+ "eng-persistence-scenario": {
+  "h": 945,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1640
+ },
+ "eng-seabed-andrea-doria": {
+  "h": 945,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1640
+ },
+ "eng-sentinel1-wind": {
+  "h": 945,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1640
+ },
+ "eng-sofar": {
+  "h": 945,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1640
+ },
+ "eng-spectral": {
+  "h": 945,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1640
+ },
+ "eng-viewshed": {
+  "h": 945,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1640
+ },
+ "evidence-geometry": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "evidence-map": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "evidence-map-live": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "evidence-map-panel": {
+  "h": 1360,
+  "variants": [],
+  "w": 460
+ },
+ "evidence-real": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "land-search": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "landing-dark": {
+  "h": 900,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "landing-light": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "layers": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "live-search-loop": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "merchant-royal-live": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "mh370-live": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "movement": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "ops-3d-terrain": {
+  "h": 860,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "ops-bearings-fix": {
+  "h": 860,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "ops-cockpit": {
+  "h": 860,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "ops-detect-roster": {
+  "h": 860,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "ops-global-context-quakes": {
+  "h": 860,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "ops-globe-satellites": {
+  "h": 860,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "ops-iamsar-pattern": {
+  "h": 860,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "ops-leeway-drift": {
+  "h": 860,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "ops-light-moon": {
+  "h": 860,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "ops-live-air-sea-orbit": {
+  "h": 860,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "ops-rain-radar": {
+  "h": 860,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "ops-satellite-view": {
+  "h": 860,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "ops-sea-survival": {
+  "h": 860,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "ops-shadow-chronolocation": {
+  "h": 860,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "ops-wind-currents": {
+  "h": 860,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "plan-studio": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "plan-studio-ev": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "plan-studio-ev-panel": {
+  "h": 1660,
+  "variants": [
+   640
+  ],
+  "w": 800
+ },
+ "provenance-graph": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "provenance-live": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "replay": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "search-health": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "search-health-panel": {
+  "h": 1150,
+  "variants": [
+   640
+  ],
+  "w": 790
+ },
+ "search-information": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "signal-acoustic": {
+  "h": 880,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "signal-dark-vessel-wake": {
+  "h": 880,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "signal-dark-vessels": {
+  "h": 880,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "signal-rings": {
+  "h": 880,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "sketch-crop": {
+  "h": 1380,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1550
+ },
+ "sketch-live": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "surface-3d": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "valley-checklist-panel": {
+  "h": 1660,
+  "variants": [
+   640
+  ],
+  "w": 1080
+ },
+ "watchlist": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "watchlist-light": {
+  "h": 900,
+  "variants": [
+   640
+  ],
+  "w": 1440
+ },
+ "watchlist-live": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ },
+ "where-next": {
+  "h": 1250,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2000
+ }
+}

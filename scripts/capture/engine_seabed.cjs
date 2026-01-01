@@ -1,0 +1,26 @@
+const { chromium } = require('playwright');
+const OUT = process.argv[2];
+(async () => {
+  const browser = await chromium.launch();
+  const page = await browser.newPage({ viewport: { width: 1600, height: 1000 }, deviceScaleFactor: 2, colorScheme: 'dark' });
+  await page.goto(`${process.env.ABYSSAL_URL || 'http://127.0.0.1:8501'}/`);
+  await page.waitForTimeout(2500);
+  await page.getByText('See the Evidence Map: one witness, five echoes').click();
+  await page.waitForTimeout(6000);
+  await require('./prep.cjs')(page);
+  const ops = page.locator('button.rail-btn', { hasText: 'Ops console' });
+  if (await ops.count()) await ops.first().click();
+  await page.waitForTimeout(3000);
+  await page.mouse.click(573, 204);
+  await page.mouse.click(247, 122);
+  await page.locator('button.rail-btn', { hasText: 'Signal Lab' }).first().click();
+  await page.waitForTimeout(1000);
+  await page.getByText('Seabed · multibeam & side-scan', { exact: true }).click();
+  await page.locator('select').filter({ has: page.locator('option', { hasText: 'BlueTopo' }) }).first().selectOption('bluetopo');
+  await page.getByRole('button', { name: /Try the Andrea Doria/ }).click();
+  await page.waitForSelector('text=/Receipt/', { timeout: 120000 });
+  await page.waitForTimeout(4000);
+  await page.screenshot({ path: `${OUT}/g-seabed.png` });
+  console.log('errors', await page.locator('.sl-error').allTextContents());
+  await browser.close();
+})();

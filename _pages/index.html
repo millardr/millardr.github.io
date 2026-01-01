@@ -1,0 +1,89 @@
+<!--meta
+{"out": "index.html", "title": "Rory Millard — Engineer: probability, physics, decisions", "desc": "Rory Millard is an engineer working where probability meets the physical world: Bayesian search, physics-based sensing and decisions under uncertainty. Home of ABYSSAL, a Bayesian workbench for finding lost aircraft, ships and people.", "active": "home", "layout": "home", "image": "demo-live.webp"}
+-->
+  <section class="h-hero band">
+    <canvas class="flow" data-flow="hero" aria-hidden="true"></canvas>
+    <div class="in">
+      <div class="label">Rory Millard <span class="lv">Engineer</span></div>
+      <h1>Engineer working where <span class="grad">probability</span> meets the physical world.</h1>
+      <p class="dek">I build systems that reason about real things under uncertainty: where a lost aircraft lies, which radar echo is a ship, when a search has done enough. Every number says how sure it is, and why.</p>
+      <div class="cta"><a class="btn light" href="abyssal/index.html">See ABYSSAL →</a><a class="btn ghost-light" href="writing.html">Read the writing</a></div>
+    </div>
+    <div class="hud">
+      <span class="t"><i></i>Live simulation · a Bayesian search</span>
+      <span>cells searched<b data-r="n">0</b></span><span>P(found)<b data-r="pf">0%</b></span><span>entropy, bits<b data-r="h">–</b></span>
+      <span class="f">A simulated target and searcher, running in your browser. Every empty sweep lowers belief where it looked; it seeps back as the target drifts.</span>
+    </div>
+    <div class="scroll-cue" aria-hidden="true"></div>
+  </section>
+
+  <div class="page">
+    <div class="trio3">
+      <div class="reveal">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><path class="s" d="M3 27 C9 9 15 9 19 20 S29 31 36 12"/><circle class="f" cx="36" cy="12" r="2.6"/><path class="g" d="M3 34 H37" stroke-dasharray="2 4"/></svg>
+        <b>Model the physics</b>
+        <span>Start from what the world would produce if a hypothesis were true, then ask how well the data fit.</span>
+        <code>d = f(x, θ) + ε</code>
+      </div>
+      <div class="reveal">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><path class="g" d="M5 33 H35"/><path class="s" d="M13 9 V27 M9 9 H17 M9 27 H17 M27 6 V24 M23 6 H31 M23 24 H31"/><circle class="f" cx="13" cy="18" r="2.6"/><circle class="f" cx="27" cy="15" r="2.6"/></svg>
+        <b>Measure the error</b>
+        <span>A detector is worth exactly its measured hit and false-alarm rates, with intervals. Unmeasured means unadmitted.</span>
+        <code>POD 0.78 [0.71, 0.84]</code>
+      </div>
+      <div class="reveal">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><path class="s" d="M10 5 H25 L31 11 V35 H10 Z M25 5 V11 H31"/><path class="g" d="M15 18 H26 M15 23 H26 M15 28 H21"/></svg>
+        <b>Keep the receipts</b>
+        <span>Every result traces back to its inputs, its model version and the person who admitted the evidence.</span>
+        <code>sha256(inputs) → result</code>
+      </div>
+    </div>
+
+    <div class="counts reveal">
+      <div><b data-count="16">16</b><small>physics-based signal engines in ABYSSAL</small></div>
+      <div><b data-count="{{NPARTS}}">{{NPARTS}}</b><small>essays in the ABYSSAL series</small></div>
+      <div><b data-count="{{NLABS}}">{{NLABS}}</b><small>interactive maths labs, running in the page</small></div>
+      <div><b data-count="{{TOTAL_WORDS_N}}">{{TOTAL_WORDS}}</b><small>words on search, inference and sensing</small></div>
+    </div>
+
+    <header class="sh"><span class="no">01</span><h2>Selected work</h2><a href="projects.html">All work →</a></header>
+
+    <article class="xcard reveal">
+      <div class="tx">
+        <div class="tag"><span>ABYSSAL</span><span>Research prototype · ongoing</span></div>
+        <h3>Finding what is lost, with probability that cannot overclaim.<small>A Bayesian workbench for searching for aircraft, ships and people. It keeps an honest map of where the target could be, learns from every empty search, and says where the next hour should go.</small></h3>
+        <dl>
+          <dt>Belief</dt><dd>Log-space Bayes over space and time. Empty searches count as evidence; five retellings of one sighting count once.</dd>
+          <dt>Signals</dt><dd>Sixteen physics engines (radar, sonar, sound in the ocean, magnetics, drift, satellite imagery and line of sight on land) behind a single calibration gate.</dd>
+          <dt>Decisions</dt><dd>Where to search next, what that is worth, and when to stop.</dd>
+          <dt>Evidence</dt><dd>Measured on real data against buoys, AIS, nautical charts, real satellite scenes and a real wreck; maths tested against known answers. Not yet used in a live search.</dd>
+        </dl>
+        <div class="go"><a href="abyssal/index.html">Overview →</a><a href="abyssal/index.html#story">Try it in a minute</a><a href="abyssal/evidence.html">Proven on real data</a><a href="abyssal/engines.html">Inside the machine</a><a href="abyssal/01-a-tour.html">The series</a></div>
+      </div>
+      <div class="im"><img src="assets/abyssal/demo-live.webp" alt="The ABYSSAL workspace: a probability map over satellite imagery with credible-region contours and the Search Ledger" loading="lazy"></div>
+    </article>
+
+    <header class="sh"><span class="no">02</span><h2>Directions</h2><span class="r">Where I'm heading next, not finished projects</span></header>
+    <div class="dirs">
+      <article class="reveal"><div class="k">AI · evaluation</div><h3>When can a model's confidence be trusted?</h3><p>Calibration and evaluation of learning systems: how they behave, how they fail, and how to measure the difference between a confident model and a correct one.</p><p class="q">Is a model's 90% really 90%?</p></article>
+      <article class="reveal"><div class="k">Autonomy · multi-agent</div><h3>Many sensors, many targets, little time</h3><p>Tasking by expected information gain, and coordination that stays sound when agents' observations are correlated rather than independent.</p><p class="q">Which sensor should look where, next?</p></article>
+      <article class="reveal"><div class="k">Optimisation · design</div><h3>High-dimensional design, efficiently</h3><p>Methods that find good designs in few expensive evaluations, building on my master's research into the optimisation of supersonic nozzle geometries.</p><p class="q">How few simulations find a good shape?</p></article>
+    </div>
+
+    <header class="sh"><span class="no">03</span><h2>Writing</h2><a href="writing.html">All writing →</a></header>
+    <nav class="wl" aria-label="Selected writing">
+      <a href="abyssal/01-a-tour.html"><span class="k">Series · {{NPARTS}} parts</span><span class="t">ABYSSAL, from every side<small>Tours, derivations, physics and three historical cases, with {{NLABS}} interactive labs running the real formulas.</small></span><span class="m">{{TOTAL_WORDS}} words</span></a>
+      <a href="abyssal/engines.html"><span class="k">Feature</span><span class="t">Inside the machine<small>The whole system on one sheet, and sixteen signal engines with what each one measured against an answer key and on real data.</small></span><span class="m">16 engines</span></a>
+      <a href="abyssal/03-the-arithmetic-of-not-finding.html"><span class="k">Essay · maths</span><span class="t">The arithmetic of not finding<small>Palomares, 1966: why an empty search is evidence, how much, and the share of belief that leaks outside the box.</small></span><span class="m">Part 3</span></a>
+      <a href="notes/the-fifth-miss.html"><span class="k">Working note · 001</span><span class="t">The Fifth Miss<small>Five searches with the same sensor and nothing. How sure should you be? It depends on how the sensor fails.</small></span><span class="m">Interactive</span></a>
+    </nav>
+
+    <section class="closer band reveal">
+      <canvas class="flow" data-flow="band" aria-hidden="true"></canvas>
+      <div class="in">
+        <p>Searching for something hard to find? <span class="grad">Let's talk.</span></p>
+        <div class="cta"><a class="btn light" href="contact.html">Get in touch</a><a class="btn ghost-light" href="about.html">About me</a></div>
+      </div>
+    </section>
+    <div class="after-closer"></div>
+  </div>

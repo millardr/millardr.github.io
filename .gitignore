@@ -1,0 +1,13 @@
+# keep local and system files out of the public repository
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.env
+.env.*
+node_modules/
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+*.log
