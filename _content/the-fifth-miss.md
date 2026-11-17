@@ -1,7 +1,3 @@
-# The Fifth Miss
-
-*Working note · Bayesian inference · An interactive example*
-
 Suppose you're looking for a lost scientific instrument. You search the same patch of ground, using the same sensor, five times. Nothing appears.
 
 How confident should you be that the instrument isn't there?
@@ -10,21 +6,21 @@ The answer depends not just on how good the sensor is, but on **how it fails**.
 
 ## A deliberately small model
 
-Let $H$ mean that the instrument is present. We begin with $P(H)=1/2$. When the sensor works, it detects the instrument with probability $d$. But there's a probability $f$ that a persistent condition makes it ineffective for *every* pass.
+Let <var>H</var> mean that the instrument is present. We begin with <var>P</var>(<var>H</var>) = 1/2. When the sensor works, it detects the instrument with probability <var>d</var>. But there's a probability <var>f</var> that a persistent condition makes it ineffective for *every* pass.
 
 For simplicity, assume there are no false positives. The sensor's latent working state is fixed over the sequence. Detection attempts are independent **conditional** on that state.
 
-If we incorrectly average over the sensor's working state anew on every pass, the likelihood of $n$ misses given presence is:
+If we incorrectly average over the sensor's working state anew on every pass, the likelihood of <var>n</var> misses given presence is:
 
-`L_independent(n) = (1 − (1 − f)d)^n`
+<div class="math-block"><var>L</var><sub>independent</sub>(<var>n</var>) = (1 − (1 − <var>f</var>)<var>d</var>)<sup><var>n</var></sup></div>
 
 If instead the failure state persists across all passes:
 
-`L_shared(n) = f + (1 − f)(1 − d)^n`
+<div class="math-block"><var>L</var><sub>shared</sub>(<var>n</var>) = <var>f</var> + (1 − <var>f</var>)(1 − <var>d</var>)<sup><var>n</var></sup></div>
 
 Since a missing instrument yields a miss with probability one, Bayes' rule gives:
 
-`P(H | n misses) = L(n) / (1 + L(n))`
+<div class="math-block"><var>P</var>(<var>H</var> | <var>n</var> misses) = <var>L</var>(<var>n</var>) / (1 + <var>L</var>(<var>n</var>))</div>
 
 Both models agree before any searches and after the first one. After repeated misses, they can disagree sharply.
 
@@ -44,7 +40,7 @@ The immediate practical question is no longer just where to search. It is whethe
 
 ## A direction for further research
 
-The example above assumes we already know $f$ and $d$. In a real system, they're often uncertain too. How much data would distinguish persistent unreliability from absence? What observation would best resolve the ambiguity? How badly do decisions suffer when we pretend the measurements are independent?
+The example above assumes we already know <var>f</var> and <var>d</var>. In a real system, they're often uncertain too. How much data would distinguish persistent unreliability from absence? What observation would best resolve the ambiguity? How badly do decisions suffer when we pretend the measurements are independent?
 
 Those questions lead from a toy Bayesian calculation toward experimental design, calibrated inference and the evaluation of intelligent agents.
 
