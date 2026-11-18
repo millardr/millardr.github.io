@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="ABYSSAL: a local-first probabilistic workbench for search under imperfect observation. Complete brief, mathematics, interactive models, and honest limits.">
+  <title>ABYSSAL: Honest Probability Maps for Imperfect Search — Rory Millard</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <a class="brand" href="../index.html">Rory Millard</a>
+      <nav aria-label="Main navigation">
+        <a href="../writing.html" aria-current="page">Writing</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <article class="narrow">
+        <div class="page-head">
+          <div class="eyebrow"><a href="../writing.html">Writing</a> / 002 · Technical Brief</div>
+          <h1>ABYSSAL: Honest Probability Maps for Imperfect Search</h1>
+          <p class="subtitle">Bayesian search theory, human-admitted evidence, and decision support under explicit assumptions.</p>
+        </div>
+
+        <div class="prose">
+          <nav class="level-nav" aria-label="Reading depth">
+            <span class="level-nav-label">Jump to depth:</span>
+            <a href="#l0">L0 · 30s Summary</a>
+            <a href="#l1">L1 · Story</a>
+            <a href="#l2">L2 · Concepts</a>
+            <a href="#l3">L3 · Maths</a>
+            <a href="#l4">L4 · Under the Hood</a>
+            <a href="#l5">L5 · Status &amp; Limits</a>
+          </nav>
+
+          <!-- ==================== L0 ==================== -->
+          <section id="l0">
+            <span class="level-tag">L0 · The 30-second version</span>
+            <p><strong>ABYSSAL is a local-first workbench that keeps an honest probability map of where a lost thing might be, updates it after every search, and shows exactly which evidence moved it and who approved that evidence.</strong></p>
+            <p>When something is lost—a hiker, an aircraft, a shipwreck, an archaeological site, a rare animal—searchers usually fail in a predictable way: they confuse <em>"we covered 80% of the area"</em> with <em>"we have an 80% chance of having found it"</em>. ABYSSAL replaces that with arithmetic. It holds a probability map, lowers the probability of searched ground in proportion to how well the search could actually have found the target, keeps an explicit share for <em>"it was never in this area at all"</em>, and records where every input came from and which human accepted it.</p>
+            <div class="note">
+              <p><strong>Honest status:</strong> ABYSSAL runs locally on one laptop, was built in about a month, is covered by ~2,400 automated tests, and has one complete fictional demo plus a handful of historical reference cases. It <strong>has not been validated against real search outcomes</strong>, and <strong>has no external users yet</strong>. It provides decision support—never answers, target authentication, or clearance certificates.</p>
+            </div>
+          </section>
+
+          <hr>
+
+          <!-- ==================== L1 ==================== -->
+          <section id="l1">
+            <span class="level-tag">L1 · The story for anyone</span>
+            <h2>Looking for lost keys, scaled up</h2>
+            <p>Suppose you lose your keys in a house. You search the kitchen for five minutes and don't find them. Two questions follow immediately:</p>
+            <ol>
+              <li>Does that mean they're not in the kitchen? <strong>No</strong>—you may have looked badly. How much it lowers the chance depends on how thorough you were.</li>
+              <li>Does it make other rooms more likely? <strong>Yes</strong>, a little, because the kitchen got a bit less likely.</li>
+            </ol>
+            <p>Now scale that up to a forest, an ocean, a thousand searchers, or a multi-million-pound survey. The logic is identical, and people routinely get it wrong in three predictable ways:</p>
+            <ul>
+              <li><strong>The coverage fallacy:</strong> Hearing <em>"we covered 80% of the area"</em> as <em>"80% chance we found it"</em>. If your method only spots the target 7 times in 10 when it's actually there, covering 80% gives 0.8 × 0.7 = <strong>56%</strong> of the in-area probability, not 80%.</li>
+              <li><strong>Ignoring what "not found" says about the boundary:</strong> If you assumed the target was inside the box you drew, every empty search makes it likelier your box was wrong. Almost nobody updates that number.</li>
+              <li><strong>Repeating a method where it fails:</strong> Dense canopy, deep silt, or acoustic shadow causes the same sensor to miss the same target for the same reason. Four passes can equal one chance counted four times, not four independent chances.</li>
+            </ul>
+
+            <h3>Interactive: The coverage fallacy &amp; the honest progress bar</h3>
+            <p>Planners are <strong>90% sure</strong> the target is inside the drawn area (10% outside). They search <strong>80%</strong> of the area with a method that detects the target <strong>70%</strong> of the time when it's there, and find nothing. Adjust the sliders below to see where the remaining probability actually sits.</p>
+
+            <div class="panel" aria-label="Coverage fallacy and honest progress bar">
+              <h3>Where does the remaining belief sit after an empty search?</h3>
+              <div class="controls">
+                <label class="control">
+                  <span>Inside-area belief <var>a</var> <strong id="cov-inside-val">90%</strong></span>
+                  <input id="cov-inside" type="range" min="50" max="100" value="90" step="5">
+                </label>
+                <label class="control">
+                  <span>Area covered <var>c</var> <strong id="cov-coverage-val">80%</strong></span>
+                  <input id="cov-coverage" type="range" min="10" max="100" value="80" step="5">
+                </label>
+                <label class="control">
+                  <span>Detection if there (POD) <var>d</var> <strong id="cov-pod-val">70%</strong></span>
+                  <input id="cov-pod" type="range" min="10" max="95" value="70" step="5">
+                </label>
+              </div>
+
+              <div class="progress-bar-track" aria-hidden="true">
+                <div id="seg-missed" class="seg-missed" style="width: 43.55%"></div>
+                <div id="seg-unsearched" class="seg-unsearched" style="width: 36.29%"></div>
+                <div id="seg-outside" class="seg-outside" style="width: 20.16%"></div>
+              </div>
+              <div class="legend-row">
+                <span><span class="legend-dot" style="background:#425f6a"></span>Searched &amp; missed</span>
+                <span><span class="legend-dot" style="background:#b5c3c8"></span>Not yet searched</span>
+                <span><span class="legend-dot" style="background:#c78d4e"></span>Outside drawn area</span>
+              </div>
+
+              <div class="results">
+                <div>
+                  <small>Pre-search chance of success (<var>a·c·d</var>)</small>
+                  <strong id="cov-found-val">50.4%</strong>
+                </div>
+                <div>
+                  <small>Remaining: searched &amp; missed</small>
+                  <strong id="cov-missed-val">43.55%</strong>
+                </div>
+                <div>
+                  <small>Remaining: unsearched ground</small>
+                  <strong id="cov-unsearched-val">36.29%</strong>
+                </div>
+                <div>
+                  <small>Remaining: outside the boundary</small>
+                  <strong id="cov-outside-val">20.16%</strong>
+                </div>
+              </div>
+              <p class="explain">With defaults (90%, 80%, 70%), a fifth of the remaining belief now sits outside the drawn line, and the largest single share (43.55%) sits in ground already "done". These shares are model-relative beliefs, valid only if the declared outside share and POD assumptions hold.</p>
+            </div>
+
+            <h3>What ABYSSAL does &amp; where it applies</h3>
+            <ul>
+              <li>Holds a <strong>belief map</strong> over the search area plus an explicit "outside" share.</li>
+              <li>Accepts evidence with minimal typing: drop a map point, draw <em>"we searched here"</em>, drop a GPX/KML track, or attach a document.</li>
+              <li><strong>Nothing changes the map until a person admits it.</strong> Importing, downloading, or an algorithm flagging a contact never alters the belief map automatically.</li>
+              <li>Lets an analyst draw an area and state a belief (<em>"not here, 5%"</em>), updating the map by the smallest amount that honours the statement and reporting the cost in <strong>bits</strong>.</li>
+              <li>Tracks full provenance: every file has a URL, retrieval time, size, SHA-256 hash, and licence text; every result records model version, code commit, and input hashes.</li>
+            </ul>
+            <p>The same mathematics applies to shipwrecks from conflicting historical reports, aircraft lost at sea, buried archaeological sites, rare or invasive species, lost people on land, and lost drones. Today, <strong>only a fictional lost-hiker case is a complete end-to-end demonstration</strong>; the others are historical reference cases or planned domain packs.</p>
+
+            <figure class="shot">
+              <img src="../assets/images/abyssal-valley-hiker.png" alt="ABYSSAL workbench showing the fictional SCENARIO Valley hiker search with Archive library on the left, probability map in the centre, and Model Inspector on the right" loading="lazy">
+              <figcaption><strong>The ABYSSAL workspace (fictional <code>SCENARIO</code> valley-hiker demo):</strong> Retained sources and tracks sit in the left Archive; the centre map renders the 50% core, 90% likely contour, and hatched searched footprints; the right Inspector separates <code>Draft</code> items from <code>In model</code> observations. Nothing enters the map without human admission.</figcaption>
+            </figure>
+          </section>
+
+          <hr>
+
+          <!-- ==================== L2 ==================== -->
+          <section id="l2">
+            <span class="level-tag">L2 · Core concepts</span>
+            <h2>Belief, evidence, and human admission</h2>
+            <p>ABYSSAL cuts the search area into a grid of cells. Each cell holds the probability that the target is in it, summing to 1 across the map (with an optional human-declared "outside" share). Colour represents <em>belief</em>, not fact.</p>
+            <ul>
+              <li><strong>Positive evidence:</strong> A sighting, bearing, witness statement, or sonar contact (<em>"it's around here"</em>).</li>
+              <li><strong>Negative evidence:</strong> <em>"We searched there and saw nothing."</em> In real searches, negative evidence is usually the dominant driver of the map.</li>
+              <li><strong>Reliability (<var>r</var>):</strong> An analyst's confidence parameter between 0 and 1—not a measured accuracy or false-alarm rate. A clue is treated as a mixture: with weight <var>r</var> it is informative; with weight 1 − <var>r</var> it says nothing.</li>
+              <li><strong>POD, POA, POS:</strong> Probability of Detection (POD) is the chance a search finds the target <em>if it is there</em>. Probability of Area (POA) is the chance it is in that segment. Probability of Success is POS = POA × POD. ABYSSAL separates <em>assumed</em> POD (allowed, flagged) from <em>calibrated</em> POD (measured on held-out labelled data).</li>
+              <li><strong>Independence is a claim, not a default:</strong> Five reports tracing back to one original pamphlet are one voice, not five.</li>
+              <li><strong>Information in bits:</strong> One bit is one fair coin flip. ABYSSAL reports how many bits each piece of evidence—or your own drawn assertion—moved the map, alongside <strong>entropy</strong> (spread of belief) and <strong>perplexity</strong> (effective number of equally likely places).</li>
+            </ul>
+
+            <div class="viz-box">
+              <h4>Evidence &amp; Provenance Pipeline (Animated)</h4>
+              <svg class="viz-svg" viewBox="0 0 680 175" role="img" aria-label="Evidence flow from Source to Claim to Observation to Human Decision before updating the Belief Map">
+                <defs>
+                  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#425f6a"/>
+                  </marker>
+                </defs>
+                <!-- Nodes -->
+                <rect x="12" y="28" width="122" height="62" rx="4" fill="#fffefa" stroke="#cbc5b9"/>
+                <text x="73" y="53" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#25231f">Source</text>
+                <text x="73" y="71" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10.5" fill="#6e6961">URL · SHA-256 · Licence</text>
+
+                <rect x="166" y="28" width="112" height="62" rx="4" fill="#fffefa" stroke="#cbc5b9"/>
+                <text x="222" y="53" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#25231f">Claim</text>
+                <text x="222" y="71" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10.5" fill="#6e6961">Root provenance</text>
+
+                <rect x="310" y="28" width="128" height="62" rx="4" fill="#fffefa" stroke="#cbc5b9"/>
+                <text x="374" y="53" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#25231f">Observation</text>
+                <text x="374" y="71" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10.5" fill="#6e6961">Typed · Explicit units</text>
+
+                <rect x="470" y="20" width="196" height="78" rx="4" fill="#425f6a" stroke="#425f6a"/>
+                <text x="568" y="48" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#fffefa">Human Decision</text>
+                <text x="568" y="66" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10.5" fill="#e4e0d8">Admits → Updates Map</text>
+                <text x="568" y="82" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#b5c3c8">Hash-chained audit log</text>
+
+                <!-- Animated Connectors -->
+                <line x1="134" y1="59" x2="160" y2="59" stroke="#425f6a" stroke-width="2" class="flow-dash" marker-end="url(#arrow)"/>
+                <line x1="278" y1="59" x2="304" y2="59" stroke="#425f6a" stroke-width="2" class="flow-dash" marker-end="url(#arrow)"/>
+                <line x1="438" y1="59" x2="464" y2="59" stroke="#425f6a" stroke-width="2" class="flow-dash" marker-end="url(#arrow)"/>
+
+                <!-- Context / Calibration Gate note -->
+                <rect x="310" y="118" width="356" height="40" rx="4" fill="#fffefa" stroke="#e4e0d8" stroke-dasharray="4 3"/>
+                <text x="488" y="136" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#6e6961">Detectors &amp; AI archive summaries produce Context only.</text>
+                <text x="488" y="150" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#6e6961">Only calibrated detectors or human admissions enter the map.</text>
+              </svg>
+            </div>
+
+            <figure class="shot">
+              <img src="../assets/images/abyssal-search-admitted.png" alt="Admitted negative search polygon on the ABYSSAL map removing 21.4 percentage points from its footprint" loading="lazy">
+              <figcaption><strong>Negative evidence in practice:</strong> An analyst uploads a search polygon with an explicit <code>POD assumption (0-1): 0.6</code>, saves it as a draft, and admits it. The hatched search removes 21.4 percentage points from its footprint (50.0% → 28.6%) and shifts belief onto the unsearched half.</figcaption>
+            </figure>
+          </section>
+
+          <hr>
+
+          <!-- ==================== L3 ==================== -->
+          <section id="l3">
+            <span class="level-tag">L3 · The mathematics</span>
+            <h2>How the calculations work</h2>
+            <p>All grid computations run in <strong>log space</strong> using float64 on the server (browsers receive float32 display grids; the server holds the authoritative posterior SHA-256). Unsupported cells stay at −∞; an impossible observation over all support raises an error with no silent renormalisation. Expand any section below for the exact formulas and worked test vectors.</p>
+
+            <details class="deep-dive" open>
+              <summary>L3.1 – L3.4 · Grid Bayes, Negative Evidence &amp; Positive Clues (v1 vs v2)</summary>
+              <div class="deep-body">
+                <p>For cells <var>i</var> = 1 … <var>N</var> with normalised prior <var>p<sub>i</sub></var> ≥ 0, independent provenance roots multiply while same-root layers are pooled before accumulation so the posterior is <strong>exactly invariant to evidence order</strong>:</p>
+                <div class="math-block">log <var>p'</var><sub><var>i</var></sub> = log <var>p<sub>i</sub></var> + log <var>L<sub>i</sub></var> − log <var>Z</var>, &nbsp;&nbsp; log <var>Z</var> = logsumexp<sub><var>i</var></sub>(log <var>p<sub>i</sub></var> + log <var>L<sub>i</sub></var>)</div>
+
+                <p><strong>Negative evidence (empty search):</strong> A pass with detection <var>d</var>, cell footprint fraction <var>f<sub>i</sub></var>, and reliability <var>r</var> has miss likelihood:</p>
+                <div class="math-block"><var>L<sub>i</sub></var> = 1 − <var>r · d · f<sub>i</sub></var></div>
+                <p><em>Worked example:</em> Two cells with prior (0.5, 0.5). Search cell 1 with <var>d</var> = 0.8, <var>r</var> = 0.75 (miss factor 0.4). After one pass, cell 1 drops to 0.2 / 0.7 = <strong>0.2857</strong>. After two <em>independent</em> passes (factor 0.16), cell 1 is 4/29 = <strong>0.1379</strong>. After two passes with <em>one shared working state</em> (0.25 + 0.75 × 0.04 = 0.28), cell 1 is 7/32 = <strong>0.2188</strong>. Same passes, different failure assumption.</p>
+
+                <p><strong>Positive clues (Model v1 vs live Model v2):</strong> Legacy v1 used peak-normalised kernels <var>L<sub>i</sub></var> = (1 − <var>r</var>) + <var>rK<sub>i</sub></var>. Current default <strong>v2</strong> normalises against the original prior so the informative part is a proper distribution on supported cells:</p>
+                <div class="math-block"><var>K̄</var> = ∑<sub><var>i</var></sub> <var>p<sub>i</sub>K<sub>i</sub></var>, &nbsp;&nbsp; <var>q<sub>i</sub></var> = <var>p<sub>i</sub>K<sub>i</sub></var> / <var>K̄</var>, &nbsp;&nbsp; <var>L<sub>i</sub></var> = (1 − <var>r</var>) + <var>r</var>(<var>K<sub>i</sub></var> / <var>K̄</var>), &nbsp;&nbsp; <var>p'</var><sub><var>i</var></sub> = (1 − <var>r</var>)<var>p<sub>i</sub></var> + <var>r·q<sub>i</sub></var></div>
+                <p>In the <em>Merchant Royal</em> reference case (<var>r</var> = 0.75, radius 47.226 km, scale 19.446 km), switching from v1 to v2 moves mass within ±1 scale of the clue from <strong>6.53% to 35.63%</strong> and shrinks the 50% credible area from <strong>570,052 km² to 14,713 km²</strong>.</p>
+              </div>
+            </details>
+
+            <details class="deep-dive">
+              <summary>L3.5 – L3.6 · Provenance Pooling &amp; Repeated Searches (with Interactive Curve)</summary>
+              <div class="deep-body">
+                <p><strong>Provenance pooling:</strong> For <var>n</var> enabled children of one shared provenance root, each layer receives exponent 1/<var>n</var>, giving the geometric mean ∏<sub><var>m</var>=1..<var>n</var></sub> <var>L<sub>m</sub></var><sup>1/<var>n</var></sup>. Identical duplicates cannot sharpen the posterior: (<var>L<sup>n</sup></var>)<sup>1/<var>n</var></sup> = <var>L</var>.</p>
+                <p><strong>Live v5/v6 repeat credit:</strong> At 8×8 sub-cell resolution, each method-group <var>g</var> interpolates between max-only (<var>ρ<sub>g</sub></var> = 0, default: an identical pass earns no extra credit) and fully independent (<var>ρ<sub>g</sub></var> = 1):</p>
+                <div class="math-block"><var>S<sub>g</sub></var>(<var>s</var>) = (1 − <var>e<sub>g</sub></var>(<var>s</var>))<sup>1 − <var>ρ<sub>g</sub></var></sup> ∏<sub><var>k</var>∈<var>g</var></sub> (1 − <var>e<sub>k</sub></var>(<var>s</var>))<sup><var>ρ<sub>g</sub></var></sup>, &nbsp;&nbsp; <var>n</var><sub>eff</sub> = 1 + <var>ρ</var>(<var>k</var> − 1)</div>
+
+                <div class="panel" aria-label="Repeat credit and correlated misses">
+                  <h3>Interactive: Repeat credit vs. independent &amp; shared-detectability models</h3>
+                  <div class="controls">
+                    <label class="control">
+                      <span>Repeat passes <var>k</var> <strong id="rep-passes-val">2</strong></span>
+                      <input id="rep-passes" type="range" min="1" max="10" value="2" step="1">
+                    </label>
+                    <label class="control">
+                      <span>Repeat credit <var>ρ</var> <strong id="rep-rho-val">0.50</strong></span>
+                      <input id="rep-rho" type="range" min="0" max="100" value="50" step="25">
+                    </label>
+                    <label class="control">
+                      <span>Per-pass effectiveness <var>e</var> <strong id="rep-eff-val">50%</strong></span>
+                      <input id="rep-eff" type="range" min="10" max="90" value="50" step="5">
+                    </label>
+                  </div>
+
+                  <svg id="rep-svg" class="viz-svg" viewBox="0 0 640 210" style="margin-top:18px" role="img" aria-label="Survival probability curves across repeat passes"></svg>
+                  <div class="legend-row" style="margin-top:8px">
+                    <span><span class="legend-dot" style="background:#425f6a"></span>Live repeat-credit <var>S</var>(<var>k</var>)</span>
+                    <span><span class="legend-dot" style="background:#9aa8ad"></span>Fully independent (1 − <var>e</var>)<sup><var>k</var></sup></span>
+                    <span><span class="legend-dot" style="background:#c78d4e"></span>Uniform Beta shared-detectability 1/(<var>k</var>+1) (separate model family)</span>
+                  </div>
+
+                  <div class="results">
+                    <div>
+                      <small>Effective independent passes (<var>n</var><sub>eff</sub>)</small>
+                      <strong id="rep-neff-val">1.50</strong>
+                    </div>
+                    <div>
+                      <small>Repeat-credit survival <var>S</var></small>
+                      <strong id="rep-surv-val">35.4%</strong>
+                    </div>
+                    <div>
+                      <small>Fully independent survival</small>
+                      <strong id="rep-indep-val">25.0%</strong>
+                    </div>
+                    <div>
+                      <small>Max-only survival (<var>ρ</var> = 0)</small>
+                      <strong id="rep-max-val">50.0%</strong>
+                    </div>
+                  </div>
+                  <p class="explain">Repeat credit (<var>ρ</var>) is an analyst assumption interpolating between max-only and independent passes. The dashed amber curve shows the separate Uniform-Beta shared-detectability family (for <var>n</var> = 2: 33.3% vs 25.0% independent; for <var>n</var> = 4: 20.0% vs 6.25%).</p>
+                </div>
+              </div>
+            </details>
+
+            <details class="deep-dive">
+              <summary>L3.7 · Region Assertions: "Not here, 5%" (with Interactive 10×10 Grid)</summary>
+              <div class="deep-body">
+                <p>In live <strong>v6</strong>, an analyst can draw a polygon <var>R</var> holding current conditional mass <var>p</var> = <var>P</var>(<var>R</var>) and assert a target mass <var>q</var> ∈ [10<sup>−4</sup>, 1 − 10<sup>−4</sup>]. ABYSSAL applies a <strong>minimum-KL (Jeffrey-style) update</strong>—scaling supported cells inside <var>R</var> by <var>q/p</var> and outside by (1 − <var>q</var>)/(1 − <var>p</var>). Overlapping assertions are solved jointly by log-space iterative proportional fitting (IPF) after linear-programme feasibility checks (HiGHS).</p>
+                <div class="math-block"><var>D</var> = <var>q</var> log<sub>2</sub>(<var>q</var>/<var>p</var>) + (1 − <var>q</var>) log<sub>2</sub>((1 − <var>q</var>)/(1 − <var>p</var>)) &nbsp; bits</div>
+
+                <div class="panel" aria-label="Interactive 10x10 belief grid">
+                  <h3>Interactive: Draw a region &amp; assert target probability</h3>
+                  <div class="grid-widget-layout">
+                    <div>
+                      <div id="belief-grid" class="belief-grid" role="group" aria-label="10 by 10 probability grid"></div>
+                      <div class="btn-row">
+                        <button type="button" id="assert-reset" class="btn-subtle">Reset region</button>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="control" style="margin-bottom:16px">
+                        <span>Asserted mass inside region <var>q</var> <strong id="assert-q-val">5%</strong></span>
+                        <input id="assert-q" type="range" min="1" max="95" value="5" step="1">
+                      </label>
+                      <div class="results" style="margin-top:0;padding-top:14px">
+                        <div>
+                          <small>Prior mass in region (<var>p</var>)</small>
+                          <strong id="assert-p-val">—</strong>
+                        </div>
+                        <div>
+                          <small>Information cost (<var>D</var>)</small>
+                          <strong id="assert-bits-val">—</strong>
+                        </div>
+                        <div>
+                          <small>Selected cells</small>
+                          <strong id="assert-count-val">9 / 100</strong>
+                        </div>
+                      </div>
+                      <p class="explain">Click cells on the 10×10 grid to reshape the amber-outlined region <var>R</var>, then drag <var>q</var>. Cells darken or lighten as probability mass shifts minimally to satisfy your statement.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <details class="deep-dive">
+              <summary>L3.8 · Information Read-outs &amp; Absence Assurance Calculator</summary>
+              <div class="deep-body">
+                <p>ABYSSAL reports <strong>entropy</strong> <var>H</var> = −∑ <var>p<sub>i</sub></var> log<sub>2</sub> <var>p<sub>i</sub></var>, <strong>perplexity</strong> 2<sup><var>H</var></sup>, leave-one-out <strong>per-item information</strong> <var>D</var><sub>KL</sub>(full ‖ omitted), and 50/90/99% credible areas. Note that a surprising observation can <em>increase</em> entropy (e.g., prior (0.9, 0.1) with miss-likelihood (0.1, 0.9) yields (0.5, 0.5), raising entropy from 0.469 to 1 bit).</p>
+                <p>A separate <strong>absence-assurance calculator</strong> computes how many conditionally independent clean visits <var>k</var> (each with fixed detection <var>p</var>, given prior presence <var>ψ</var>) are needed to reach absence confidence 1 − <var>ε</var>:</p>
+                <div class="math-block"><var>P</var>(present | <var>k</var> negatives) = <var>ψ</var>(1 − <var>p</var>)<sup><var>k</var></sup> / (1 − <var>ψ</var> + <var>ψ</var>(1 − <var>p</var>)<sup><var>k</var></sup>)</div>
+
+                <div class="panel" aria-label="Absence assurance calculator">
+                  <h3>Interactive: How many clean visits?</h3>
+                  <div class="controls">
+                    <label class="control">
+                      <span>Prior presence <var>ψ</var> <strong id="abs-psi-val">50%</strong></span>
+                      <input id="abs-psi" type="range" min="10" max="90" value="50" step="5">
+                    </label>
+                    <label class="control">
+                      <span>Per-visit detection <var>p</var> <strong id="abs-pod-val">30%</strong></span>
+                      <input id="abs-pod" type="range" min="10" max="80" value="30" step="5">
+                    </label>
+                    <label class="control">
+                      <span>Target absence confidence <strong id="abs-conf-val">95%</strong></span>
+                      <input id="abs-conf" type="range" min="80" max="99" value="95" step="1">
+                    </label>
+                  </div>
+
+                  <div id="abs-bars" class="absence-bars" aria-label="Presence probability decay by visit count"></div>
+
+                  <div class="results">
+                    <div>
+                      <small>Clean visits needed (amber bar)</small>
+                      <strong id="abs-k-val">9 visits</strong>
+                    </div>
+                    <div>
+                      <small>Presence remaining after 5 clean visits</small>
+                      <strong id="abs-5-val">14.4%</strong>
+                    </div>
+                  </div>
+                  <p class="explain">Not a clearance certificate: outputs depend entirely on your assumed prior presence <var>ψ</var> and per-visit detection <var>p</var>.</p>
+                </div>
+              </div>
+            </details>
+
+            <details class="deep-dive">
+              <summary>L3.9 – L3.12 · Moving Targets, Optimal Effort, Calibration Gate &amp; Experimental v3</summary>
+              <div class="deep-body">
+                <p><strong>Land movement (live v4, opt-in):</strong> Builds a lognormal walking prior over 8-neighbour Dijkstra least-cost distance on elevation/terrain, mixed with the area prior as <var>P</var><sub>v4</sub> = (1 − <var>r</var>)<var>P</var><sub>area</sub> + <var>r·P</var><sub>walk</sub>.</p>
+                <p><strong>Honest refusal — MH370 flight-path SMC lab:</strong> Seven satellite timing measurements (BTO) were used to weight sampled flight paths. Result: <strong>no convergence</strong>—high ESS concealed that only a handful of original lineages survived, swinging the "south weight" between 0.000 and 1.000 across seeds at 1,000 particles and 0.678 vs 0.629 at 200,000 particles. The module remains a read-only Context prototype and <strong>publishes no search prior</strong>.</p>
+                <p><strong>Optimal effort allocation ("water-filling"):</strong> Under exponential detection <var>d<sub>i</sub></var> = 1 − exp(−<var>a<sub>i</sub>e<sub>i</sub></var>) and budget <var>B</var>, active cells equalise marginal return <var>μ</var> in <var>O</var>(<var>n</var> log <var>n</var>) time:</p>
+                <div class="math-block"><var>e<sub>i</sub></var> = max(0, (ln <var>p<sub>i</sub></var> + ln <var>a<sub>i</sub></var> − ln <var>μ</var>) / <var>a<sub>i</sub></var>)</div>
+                <p>This is an optimistic upper bound, not an executable route. A separate research-only marine survey planner compares parallel, expanding-spiral, and adaptive routes using illustrative scenario assumptions.</p>
+
+                <figure class="shot">
+                  <img src="../assets/images/abyssal-where-next.png" alt="Where next optimal effort allocation panel showing 3.55% expected chance of success and ranked grid cells" loading="lazy">
+                  <figcaption><strong>Where next? (water-filling allocation):</strong> Given an 8,000 km effort budget and an assumed detection rate of 0.25/km, <code>allocate_exponential</code> ranks and highlights the highest-marginal-return cells while flagging that the rate is an analyst assumption.</figcaption>
+                </figure>
+
+                <p><strong>Calibration gate:</strong> A detector can create <em>contacts</em> (Context only); only calibrated detectors with held-out Wilson/Poisson intervals can create admissible observations. Accordingly, <strong>AF447 negative-search admission was a recorded NO-GO</strong> because reviewed sources lacked measured spatial POD and held-out calibration.</p>
+                <p><strong>Experimental v3 engine <span class="status-pill status-exp">Experimental · Not Live</span>:</strong> A full generative model with nuisance-parameter integration (adaptive quadrature, MCMC, tempered SMC), posterior trust, conflict checks, Bayesian model averaging, and simulation-based calibration (SBC) exists in the codebase, but is <strong>not wired into the live app</strong>.</p>
+              </div>
+            </details>
+          </section>
+
+          <hr>
+
+          <!-- ==================== L4 ==================== -->
+          <section id="l4">
+            <span class="level-tag">L4 · Under the hood</span>
+            <h2>Architecture, invariants, and verification</h2>
+            <p>ABYSSAL runs locally (Python 3.12+ FastAPI backend with per-project SQLite under <code>.abyssal/projects/</code>; React + TypeScript + MapLibre GL + deck.gl frontend). Outbound requests pass through a single host-allowlist guard; an optional, per-case "archive intelligence" route is off by default, displays an explicit consent notice listing every transmitted field, and writes Context only.</p>
+
+            <h3>The ten invariants (rules the code may not break)</h3>
+            <div class="invariants-grid">
+              <div class="invariant-card"><strong>1. Admission</strong>A map changes only via approved, enabled observations with nonzero reliability.</div>
+              <div class="invariant-card"><strong>2. Scenario isolation</strong>Synthetic/fictional data is tagged <code>SCENARIO</code> and never enters a real case.</div>
+              <div class="invariant-card"><strong>3. Receipts</strong>Every acquired file stores URL, retrieval time, size, SHA-256, and licence text.</div>
+              <div class="invariant-card"><strong>4. Reproducibility</strong>Every result records <code>model_version</code>, code commit, and input hashes.</div>
+              <div class="invariant-card"><strong>5. Probability semantics</strong>Log space, preserved support, no silent renormalisation; invalid input raises.</div>
+              <div class="invariant-card"><strong>6. Calibration gate</strong>Un-calibrated detectors create Context contacts only, never admissible detections.</div>
+              <div class="invariant-card"><strong>7. Roles</strong>Agents propose, deterministic code acquires, humans admit.</div>
+              <div class="invariant-card"><strong>8. Generality</strong>No code branches on a case ID or place; reference cases are data packs.</div>
+              <div class="invariant-card"><strong>9. Law &amp; safety</strong>No exact coordinates of protected sites or war graves by default; no personal location harvesting.</div>
+              <div class="invariant-card"><strong>10. Golden results</strong>Frozen v1 posterior hashes never change unless semantics explicitly do.</div>
+            </div>
+
+            <h3>Model version history</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Version</th>
+                  <th>Date</th>
+                  <th>Semantics &amp; status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>v1</strong></td>
+                  <td>Oct 2026</td>
+                  <td>Peak-normalised contamination; frozen golden posterior hashes.</td>
+                </tr>
+                <tr>
+                  <td><strong>v2</strong></td>
+                  <td>28 Oct</td>
+                  <td>Normalised against the original prior; <strong>live default</strong>.</td>
+                </tr>
+                <tr>
+                  <td><strong>v3</strong></td>
+                  <td>Nov</td>
+                  <td>Generative densities, nuisance integration, shared detectability, SBC. <span class="status-pill status-exp">Experimental</span></td>
+                </tr>
+                <tr>
+                  <td><strong>v4</strong></td>
+                  <td>6 Nov</td>
+                  <td>Opt-in land walking prior (lognormal least-cost distance).</td>
+                </tr>
+                <tr>
+                  <td><strong>v5</strong></td>
+                  <td>13 Nov</td>
+                  <td>Grouped quick-search survival at 8×8 sub-cell resolution with repeat credit; Search Ledger.</td>
+                </tr>
+                <tr>
+                  <td><strong>v6</strong></td>
+                  <td>16 Nov</td>
+                  <td>Human-stated area-mass assertions (min-KL, IPF) over a v2/v4/v5 base.</td>
+                </tr>
+                <tr>
+                  <td>—</td>
+                  <td>17 Nov</td>
+                  <td><strong>Correction:</strong> External adversarial audit caught v5 silently applying v1 contamination to non-quick positive observations after a quick search; fixed with regression tests.</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p><strong>Verification &amp; scale:</strong> As of commit <code>90ccba5</code> (540 commits since 20 Oct 2026), the repository comprises ~37,900 lines of Python, ~33,100 lines of Python tests, and ~35,250 lines of TypeScript/React. An 18-step exact-head local verifier passed <strong>2,387 Python tests, 60 classic JS tests, 249 frontend unit tests, and 107 browser journeys</strong>. On an Apple Silicon Mac (300×300 grid), Search Information latency was cut from 4.33 s to 0.594 s with identical posterior hashes (reported in PR measurements; real-GPU zoom smoothness remains unproven).</p>
+
+            <h3>Inside the Python engine</h3>
+            <ul>
+              <li><strong>Strict support &amp; partial coverage (<code>abyssal/core/inference.py</code>):</strong> <code>contamination_log_likelihood</code> validates that incoming priors are finite, nonnegative, and already normalised within <code>rtol=1e-12, atol=1e-14</code>—never silently rescaling a broken prior. Under <code>model_version == 2</code>, it computes <code>log_mean = logsumexp(log_prior + kernel[support]) - logsumexp(log_prior)</code> strictly over measured, positive-prior cells, and forces unmeasured cells to <code>0.0</code> in log space so missing data never acquires a spurious multiplier.</li>
+              <li><strong>Overflow-safe water-filling (<code>abyssal/plan/allocation.py</code>):</strong> <code>_waterfill</code> accumulates inverse detection rates with <code>np.logaddexp.accumulate(-log_rates)</code> and sums effort using <code>math.fsum</code>, stepping back if logarithmic rounding would overshoot the budget. For tiny exposures (<code>log_exposure &lt; -36</code>), <code>allocate_exponential</code> uses <code>log(1 - exp(-x)) ≈ log(x)</code> directly in log space and returns frozen read-only arrays paired with a <code>ComputationProvenance</code> hash of inputs and commit.</li>
+              <li><strong>Origin-enforced calibration (<code>abyssal/detect/calibration.py</code>):</strong> Every <code>LabelledSample</code> requires an explicit <code>DataOrigin</code> (<code>REAL</code> or <code>SCENARIO</code>) and raises immediately if an injected target attempts to pass as <code>REAL</code>. POD and per-unit false-positive rates use Wilson score intervals, while false alarms per km² use Poisson (chi-square) count intervals rather than mislabelled binomial bounds.</li>
+            </ul>
+          </section>
+
+          <hr>
+
+          <!-- ==================== L5 ==================== -->
+          <section id="l5">
+            <span class="level-tag">L5 · Applications, status &amp; limits</span>
+            <h2>Where it fits—and where it stands today</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Domain</th>
+                  <th>Status today</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Lost person (land)</td>
+                  <td><span class="status-pill status-live">Implemented</span> Complete fictional <code>SCENARIO</code> demo ("valley hiker", real elevation tile, illustrative POD 0.35).</td>
+                </tr>
+                <tr>
+                  <td>Shipwreck (historical reports)</td>
+                  <td><span class="status-pill status-live">Reference case</span> <em>Merchant Royal</em> (114 retained source records, EMODnet seabed grid); packaged pack <span class="status-pill status-plan">Planned</span>.</td>
+                </tr>
+                <tr>
+                  <td>Aircraft lost at sea</td>
+                  <td><span class="status-pill status-live">Reference cases</span> <em>MH370</em> &amp; <em>AF447</em> with explicit refusals on non-convergent SMC and uncalibrated POD.</td>
+                </tr>
+                <tr>
+                  <td>Rare / invasive species</td>
+                  <td><span class="status-pill status-live">Calculator only</span> Absence-assurance calculator implemented; habitat pack <span class="status-pill status-plan">Planned</span>.</td>
+                </tr>
+                <tr>
+                  <td>Archaeology &amp; lost drones</td>
+                  <td><span class="status-pill status-plan">Planned</span> Specs drafted; not yet built.</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <figure class="shot">
+              <img src="../assets/images/abyssal-merchant-royal.png" alt="ABYSSAL light-mode view of the Merchant Royal 1641 reference case off Land's End with 114 retained library sources" loading="lazy">
+              <figcaption><strong>Reference case — <em>Merchant Royal</em> (1641):</strong> 114 retained historical and archival records sit in the library (most marked <code>Context</code>), while the single admitted 1641 pamphlet range claim shapes the 50% and 90% contours off Land's End. Posterior output is not a validated probability of discovery.</figcaption>
+            </figure>
+
+            <h3>Planned: The seven Search Health traps</h3>
+            <p>Next on the roadmap—<strong>Evidence Map → Search Health → Case Story → Autopsy</strong>—are seven deterministic, explainable alarms that never hide a number or block a decision:</p>
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Trap</th>
+                  <th>Illustrative alarm</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>T1</td><td>Coverage fallacy</td><td>Honest progress bar (already live for eligible cases).</td></tr>
+                <tr><td>T2</td><td>Streetlight effect</td><td><em>"70% of effort has gone into ground holding 15% of the probability."</em></td></tr>
+                <tr><td>T3</td><td>Cleared-ground complacency</td><td><em>"Sector 2 was 82% clear at 11:00; a moving subject has made it 54% clear now."</em></td></tr>
+                <tr><td>T4</td><td>Single-story anchoring</td><td><em>"92% of the weight rests on one story, which rests on one sighting."</em></td></tr>
+                <tr><td>T5</td><td>Fragile clue</td><td><em>"Remove sighting S4 and the top sector changes."</em></td></tr>
+                <tr><td>T6</td><td>Repeating a failing method</td><td><em>"A third dog pass adds 0.4 points; a thermal drone here would add 3.1."</em></td></tr>
+                <tr><td>T7</td><td>Sunk-cost continuation</td><td><em>"Tomorrow buys 1.1 points for the same cost; your threshold is 2."</em></td></tr>
+              </tbody>
+            </table>
+
+            <h2>What this does not do</h2>
+            <ol>
+              <li><strong>No real-world validation; no external users.</strong> A stop rule applies: if fewer than 5 outside practitioners across 2+ fields use it on a real or replayed case by ~21 January 2027, feature work stops and the engine is released open source with a written method.</li>
+              <li><strong>Detection probabilities are analyst assumptions</strong>, not measured; reliability is a confidence parameter, not a calibrated probability.</li>
+              <li><strong>Multiple belief semantics coexist</strong> across the live grid, experimental v3, <code>closed_loop</code>, and <code>occupancy</code> and are not interchangeable.</li>
+              <li><strong>The live grid is conditional on the drawn domain</strong>; the outside share is a human declaration, and the ledger bar is withheld when combined with fitted assertions or imported searches.</li>
+              <li><strong>Grid approximations apply:</strong> uniform density within cells, 8×8 sub-cell sampling for footprints, cell-centre polygon checks, and regional tangent-plane transforms in legacy modules.</li>
+              <li><strong>v2 multiplies contamination factors</strong> normalised against the original prior—a documented approximation when observations are correlated under that prior.</li>
+              <li><strong>The planner is an optimistic bound</strong> with scenario cost inputs, not an operational route.</li>
+              <li><strong>Experimental samplers have known failure modes</strong> (prior-proposal Metropolis and global-covariance SMC can freeze on concentrated or multimodal targets).</li>
+              <li><strong>Real-GPU zoom performance is unproven</strong>, and basemaps require internet access (all evidence and inference stay local).</li>
+              <li><strong>Single owner-architect</strong> directing AI coding agents under written invariants; broader than finished.</li>
+            </ol>
+          </section>
+        </div>
+      </article>
+      <script src="../assets/abyssal-blog.js" defer></script>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© Rory Millard</span>
+      <span><a href="mailto:millard.rge@outlook.com">Email</a> &nbsp;·&nbsp; <a href="../writing.html">Writing</a></span>
+    </div>
+  </footer>
+</body>
+</html>

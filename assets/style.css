@@ -447,6 +447,409 @@ h2 {
   margin: 18px 0 0;
 }
 
+/* Level Jump Bar & Depth Badges */
+.level-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 36px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 12.5px;
+  align-items: center;
+}
+
+.level-nav-label {
+  color: var(--muted);
+  margin-right: 4px;
+  font-weight: 500;
+}
+
+.level-nav a {
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 3px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.level-nav a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.level-tag {
+  display: inline-block;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(66, 95, 106, 0.09);
+  padding: 2px 8px;
+  border-radius: 3px;
+  margin-bottom: 8px;
+}
+
+.status-pill {
+  display: inline-block;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 3px;
+  vertical-align: middle;
+}
+
+.status-live {
+  background: rgba(66, 95, 106, 0.12);
+  color: var(--accent);
+}
+
+.status-exp {
+  background: rgba(164, 114, 48, 0.14);
+  color: #8a5b1a;
+}
+
+.status-plan {
+  background: rgba(110, 105, 97, 0.12);
+  color: var(--muted);
+}
+
+/* Tables */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0 28px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.prose th,
+.prose td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.prose th {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--line);
+}
+
+.prose tr:last-child td {
+  border-bottom: 0;
+}
+
+.num {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Collapsible Math Drawers */
+details.deep-dive {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  margin: 22px 0;
+  background: var(--paper);
+  transition: border-color 0.2s ease;
+}
+
+details.deep-dive[open] {
+  border-color: #cbc5b9;
+}
+
+details.deep-dive summary {
+  cursor: pointer;
+  padding: 14px 18px;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--surface);
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+details.deep-dive summary::-webkit-details-marker {
+  display: none;
+}
+
+details.deep-dive summary::after {
+  content: "+";
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--accent);
+  transition: transform 0.2s ease;
+}
+
+details.deep-dive[open] summary::after {
+  content: "−";
+}
+
+details.deep-dive .deep-body {
+  padding: 18px 20px 6px;
+  border-top: 1px solid var(--line);
+}
+
+/* Animated Progress Bar Widget */
+.progress-bar-track {
+  display: flex;
+  height: 28px;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #efece4;
+  margin: 18px 0 12px;
+}
+
+.seg-missed {
+  background: #425f6a;
+  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.seg-unsearched {
+  background: #b5c3c8;
+  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.seg-outside {
+  background: #c78d4e;
+  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.legend-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 12.5px;
+  color: #4b4740;
+  margin-bottom: 10px;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+/* Interactive 10x10 Belief Grid */
+.grid-widget-layout {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.belief-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 26px);
+  grid-template-rows: repeat(10, 26px);
+  gap: 2px;
+  padding: 6px;
+  background: #e9e4d9;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  user-select: none;
+}
+
+.belief-cell {
+  width: 26px;
+  height: 26px;
+  border-radius: 2px;
+  cursor: pointer;
+  border: 1px solid rgba(37, 35, 31, 0.08);
+  transition: background-color 0.35s ease, transform 0.12s ease, box-shadow 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 9px;
+  color: transparent;
+}
+
+.belief-cell:hover {
+  transform: scale(1.08);
+  z-index: 2;
+}
+
+.belief-cell.in-region {
+  box-shadow: inset 0 0 0 2px #c78d4e;
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.btn-subtle {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 12.5px;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+
+.btn-subtle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* SVG / Canvas Charts & Animated Diagrams */
+.viz-box {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 4px;
+  padding: 20px;
+  margin: 28px 0;
+}
+
+.viz-box h4 {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin: 0 0 14px;
+  color: var(--ink);
+}
+
+.viz-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@keyframes pulseFlow {
+  0% { stroke-dashoffset: 24; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.flow-dash {
+  stroke-dasharray: 6 6;
+  animation: pulseFlow 1.4s linear infinite;
+}
+
+.absence-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 120px;
+  padding: 14px 0 4px;
+  border-bottom: 1px solid var(--line);
+}
+
+.absence-bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.absence-bar-fill {
+  width: 100%;
+  max-width: 28px;
+  background: var(--accent);
+  border-radius: 2px 2px 0 0;
+  transition: height 0.35s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.25s ease;
+}
+
+.absence-bar-fill.is-target {
+  background: #c78d4e;
+}
+
+.absence-bar-label {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.invariants-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 22px 0;
+}
+
+.invariant-card {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 14px 16px;
+  border-radius: 4px;
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.invariant-card strong {
+  display: block;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 12.5px;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+/* Workbench Screenshots */
+figure.shot {
+  margin: 28px 0 32px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+figure.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid var(--line);
+}
+
+figure.shot figcaption {
+  padding: 12px 16px;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+figure.shot figcaption strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
 /* Footer */
 footer {
   border-top: 1px solid var(--line);
@@ -539,5 +942,24 @@ footer a:hover {
 
   .panel {
     padding: 20px;
+  }
+
+  .grid-widget-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .belief-grid {
+    grid-template-columns: repeat(10, 22px);
+    grid-template-rows: repeat(10, 22px);
+    width: fit-content;
+  }
+
+  .belief-cell {
+    width: 22px;
+    height: 22px;
+  }
+
+  .invariants-grid {
+    grid-template-columns: 1fr;
   }
 }
