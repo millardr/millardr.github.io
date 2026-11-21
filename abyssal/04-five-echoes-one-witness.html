@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Five echoes, one witness — ABYSSAL, part 4 — Rory Millard</title>
+  <meta name="description" content="An essay on correlated evidence and provenance in ABYSSAL: geometric pooling of same-source reports, per-item versus whole-source influence in bits, and why humans must admit evidence.">
+  <meta property="og:title" content="Five echoes, one witness — ABYSSAL, part 4 — Rory Millard">
+  <meta property="og:description" content="An essay on correlated evidence and provenance in ABYSSAL: geometric pooling of same-source reports, per-item versus whole-source influence in bits, and why humans must admit evidence.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://millardr.github.io/assets/abyssal/evidence-map-live.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#0d0d0d">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="../assets/series.css">
+  <script defer src="../assets/series.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <header class="topbar">
+    <div class="in">
+      <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>Rory Millard</a>
+      <span class="crumb"><a href="index.html">ABYSSAL series</a> / Part 4</span>
+      <nav aria-label="Main navigation" id="site-nav"><a href="../writing.html">Writing</a><a href="../projects.html">Projects</a><a href="../abyssal/index.html" aria-current="page">ABYSSAL</a><a href="../about.html">About</a><a href="../contact.html">Contact</a></nav>
+      <button class="theme-btn" type="button" aria-label="Toggle theme"></button>
+      <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
+    </div>
+  </header>
+  <section class="hero">
+    <canvas class="field" aria-hidden="true"></canvas>
+    <div class="in">
+      <div class="kicker"><span class="dot"></span><span>ABYSSAL · Part 4 of 9</span><span class="lv">Essay · provenance &amp; correlated evidence</span></div>
+      <h1>Five echoes, one witness</h1>
+      <p class="dek">Why five reports that trace back to one source must count once, how ABYSSAL pools them, and why the same mistake quietly breaks intelligence assessments, risk models and machine-learning explanations.</p>
+      <div class="meta"><span><b>10 min</b> read · 2,235 words · <b>1</b> interactive lab</span><span>Rory Millard · November 2026</span></div>
+      
+      <figure class="figure-peek reveal"><img src="../assets/abyssal/evidence-map-live.webp" alt="The Evidence Map panel beside the probability map" fetchpriority="high"></figure>
+    </div>
+  </section>
+  <main class="page" id="main">
+    <div class="article-grid">
+      <aside class="toc" aria-label="On this page"></aside>
+      <article class="prose">
+<p class="lede">A hiker is overdue. One walker remembers passing her on the Mist Trail at about ten in the morning and writes it in the trail register. By evening the sighting has been repeated five times: a ranger copies it into the patrol log, a volunteer radios it in, someone posts it, a reporter quotes the post, and a second volunteer, hearing the radio, writes it into the register again in different words. The incident room now holds five documents that all say "Mist Trail, mid-morning".</p>
+
+<p>How many witnesses is that?</p>
+
+<p>One. Everyone in the room knows it is one, if they stop to trace it. But the documents arrive separately, from different people, in different words and at different times, and the human mind counts arrivals. So does any software that treats each document as independent evidence. Five likelihoods multiply, the map collapses onto the Mist Trail, and the search goes there with a confidence that was never earned.</p>
+
+<p>ABYSSAL's demonstration case is built around exactly this scenario. It is called <em>One witness, five echoes</em>, and it is the fastest way I know to show what the product is for.</p>
+
+<h2><span class="num">01</span>What a copy is worth</h2>
+
+<p>Write \(x\) for the hiker's location and \(y_1\) for the original sighting. If the five later reports \(y_2, \dots, y_6\) are copies, they depend on \(x\) only <em>through</em> \(y_1\):</p>
+
+<div class="eq"><span class="tag">conditional independence</span>
+\[ P(y_1, \dots, y_6 \mid x) = P(y_1 \mid x)\,\prod_{k=2}^{6} P(y_k \mid y_1). \]
+</div>
+
+<p>The second factor does not involve \(x\) at all, so it cancels when the map is normalised. Five copies carry exactly zero bits of information about where the hiker is. They carry information about how a story spread, which may be useful for other reasons, but not about the hiker.</p>
+
+<p>If instead the six reports came from six people who each independently saw her, the likelihood would be \(\prod_k P(y_k \mid x)\), and the plausible width would shrink roughly as one over the square root of the number of witnesses, the way averaging independent measurements does. The difference between those two models is the difference between a 13 km² search area and a 2 km² one, and nothing in the text of the reports tells you which model is true. Only their <strong>provenance</strong> does.</p>
+
+<div class="pull">Independence is a claim about the world. It should be stated, sourced and defensible, never a default.</div>
+
+<h2><span class="num">02</span>How ABYSSAL pools a source</h2>
+
+<p>Every observation in ABYSSAL hangs from a <em>provenance root</em>: the earliest document it can be traced to. Five trail-register echoes share one root, the original logbook entry. When several admitted observations share a root, their likelihood layers are pooled before they touch the map, by a geometric mean:</p>
+
+<div class="eq"><span class="tag">same-root pooling</span>
+\[ L^{\text{root}}_i \;=\; \prod_{m=1}^{n} \left(L^{(m)}_i\right)^{1/n}, \qquad\text{so}\qquad \log L^{\text{root}}_i = \frac1n \sum_{m=1}^{n} \log L^{(m)}_i . \]
+</div>
+
+<p>If the echoes are exact copies, \(L^{(m)} = L\) for all \(m\), and the pool returns \(L\): five copies count exactly once, as they should. If they differ, because a retelling drifted ("Mist Trail" became "near Vernal Fall"), the pool returns their log-average, a compromise that is broader than any one of them when they disagree. Pooled roots then multiply with other, genuinely independent roots in the usual way. Because roots are pooled before accumulation, the posterior is exactly invariant to the order in which evidence arrives.</p>
+
+<p>Why a geometric mean and not an arithmetic one? Two reasons. The normalised geometric mean of a set of distributions is the distribution that minimises the average Kullback–Leibler divergence <em>to</em> them, \(\arg\min_q \tfrac1n\sum_m D_\text{KL}(q \,\|\, p_m)\), so it is the natural "consensus" in the same information geometry the rest of the engine uses. And logarithmic pooling is the one pooling rule that commutes with Bayesian updating: pool then update gives the same answer as update then pool. The arithmetic mean has neither property. It is, however, a modelling choice; the experimental v3 engine replaces it with an explicit shared-source density, and the engine audit lists all three treatments side by side so nobody mistakes one for another.</p>
+
+<div class="lab wide" data-lab="echoes" id="lab-echoes">
+  <div class="lab-head"><span class="t">Lab · five echoes, one witness</span><span class="s">one true sighting, repeated</span></div>
+  <div class="lab-body">
+    <canvas aria-label="A one-dimensional map along a trail, showing the prior, the naive posterior that counts every echo and the pooled posterior that counts the source once"></canvas>
+    <div class="legend"><span><i style="background:rgba(127,127,127,0.4)"></i>prior</span><span><i style="background:#c0397a"></i>naive: every report counted</span><span><i style="background:#e8962e"></i>ABYSSAL: one root, pooled</span></div>
+    <div class="controls">
+      <label class="ctl"><span>Reports in circulation <output data-for="n">5</output></span><input type="range" name="n" min="1" max="10" value="5"></label>
+      <label class="ctl"><span>Trust in the sighting, \(r\) <output data-for="r">0.70</output></span><input type="range" name="r" min="10" max="99" value="70"></label>
+      <label class="ctl"><span>Retelling drift (km) <output data-for="s">0.0</output></span><input type="range" name="s" min="0" max="12" value="0" step="0.5"></label>
+    </div>
+    <div class="readout">
+      <div><small>Naive: mass within 10 km</small><b data-read="naiveW">—</b></div>
+      <div><small>Pooled: mass within 10 km</small><b data-read="pooledW">—</b></div>
+      <div><small>Naive: moved the map</small><b data-read="naiveB">—</b></div>
+      <div><small>Pooled: moved the map</small><b data-read="pooledB">—</b></div>
+    </div>
+    <p class="note">The likelihood of each report is the v2 contamination mixture \((1-r) + rK/\bar K\). Slide the number of reports up: the naive posterior keeps sharpening on the copies; the pooled one does not move. Add retelling drift and the pooled posterior widens slightly, because disagreeing copies are less informative than one clear original.</p>
+  </div>
+</div>
+
+<h2><span class="num">03</span>The trap inside "which evidence mattered?"</h2>
+
+<p>Pooling fixes the map. It creates a second, subtler problem in the explanation of the map, and this one catches experts.</p>
+
+<p>The obvious way to ask "how much did this report matter?" is to remove it and see how far the map moves. Do that for echo number three. The remaining four echoes still share the root; their geometric mean is the same layer as before; the map does not move. Echo three is worth 0.000 bits. So is echo one, two, four and five. A reviewer reading that table would conclude that the trail-register reports are irrelevant to the answer, and might switch them all off one at a time to tidy up the case, at which point the map lurches sideways.</p>
+
+<p>Each echo is redundant <em>given the others</em>, so no single one matters, and yet together they carry the case. Statisticians call this masking; anybody who has computed feature importance on correlated inputs in machine learning has met it. Drop-one importance says every correlated feature is useless; the model collapses when you drop them all. It is the reason methods like Shapley values exist.</p>
+
+<figure class="shot reveal" style="max-width:420px"><img src="../assets/abyssal/evidence-map-panel.webp" alt="Evidence Map panel listing each observation with its per-item bits and a Shared group row for five reports counted once" loading="lazy"><figcaption><b>Two counterfactuals, side by side.</b> Each row's bar is the map change if <em>only that report</em> is removed. The "Shared · 5 reports, 1 source · counted once" row is the change if the <em>whole source</em> is removed. They are different questions, labelled as such, and the panel warns that they do not add up.</figcaption></figure>
+
+<p>ABYSSAL's Evidence Map therefore shows both numbers. For every item it reports the per-item counterfactual, \(D_\text{KL}(p^\text{full} \,\|\, p^{-k})\). For every provenance root with more than one active child it also reports the <strong>whole-source counterfactual</strong>, \(D_\text{KL}(p^\text{full} \,\|\, p^{-\text{root}})\), computed by the same inference path with every observation from that root removed together. In the demo, each echo is worth almost nothing on its own and the source is worth a great deal. The bars are labelled as different counterfactuals, and the panel shows how far the sum of the parts is from the whole, so nobody adds them up.</p>
+
+<p>Underneath both numbers sits the <strong>Provenance graph</strong>: sources on the left, claims and observations in the middle, the map on the right, with edge thickness proportional to bits. It is the picture you show a sceptic. You can see five lines converge on one register entry before they reach the map.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/provenance-live.webp" alt="The Provenance graph beside the map over real terrain tiles" loading="lazy"><figcaption><b>The Provenance graph in the demo.</b> Solid edges are admitted evidence; dashed are drafts; dotted are context that never reaches the map. The five echoes visibly share a root.</figcaption></figure>
+
+<h2><span class="num">04</span>The same mistake, everywhere</h2>
+
+<p>I started thinking about this problem in a search context, but it is not a search problem. It is the problem of fusing sources whose errors are correlated, and it is everywhere money or lives depend on fused judgement.</p>
+
+<ul>
+  <li><strong>Intelligence analysis</strong> calls it <em>circular reporting</em>: a single source's claim reaches an analyst through several channels and is mistaken for corroboration. Post-mortems of major assessment failures repeatedly find a small number of sources counted many times over. The analyst's question is ABYSSAL's question: what is the provenance root of each report?</li>
+  <li><strong>Open-source investigation</strong> faces it at internet scale: a video is reposted by a thousand accounts, each with its own caption, location tag and timestamp, and the geolocation work has to begin by collapsing them back to the first upload.</li>
+  <li><strong>Finance</strong> faces it in credit and in research. Several analysts upgrade a stock after one channel check; several "independent" risk signals are driven by one macro factor; a portfolio of loans looks diversified until a common shock arrives. Underestimated correlation between apparently independent sources of evidence or risk is, in a sense, the canonical way models fail in the tails.</li>
+  <li><strong>Medicine</strong> faces it in meta-analysis, where the same patients can appear in several published trials and be counted repeatedly.</li>
+  <li><strong>Machine learning</strong> faces it as duplicated data across training and test sets, and as masking in feature attribution, exactly as above.</li>
+</ul>
+
+<p>In each field the technical fix is some version of what ABYSSAL does: make provenance explicit, pool within a source, multiply across sources, and report the influence of whole sources as well as individual items. The hard part is never the formula. It is the discipline of recording where every claim came from, at the moment it arrives, when nobody is yet wondering. That is why every file in ABYSSAL gets a SHA-256 receipt and a root at import time rather than at review time.</p>
+
+<div class="callout think">
+  <div class="t">Thought experiment · the almanac</div>
+  <p>In the seventeenth century a navigator checks a coastline position in five almanacs and finds them in perfect agreement. Is that reassuring? It depends entirely on whether the five printers each surveyed the coast or all copied the same survey, errors included. Perfect agreement between sources should, if anything, raise the suspicion of copying: independent measurements disagree a little. ABYSSAL's <em>Merchant Royal</em> case lives in exactly this world, where 114 retained documents about one 1641 shipwreck turn out to rest on a handful of original accounts.</p>
+</div>
+
+<h2><span class="num">05</span>"What would change my mind?"</h2>
+
+<p>The Evidence Map has a second tab whose name I like more than anything else in the interface: <em>What would change my mind</em>. It looks forward instead of back. It lists candidate next observations, a search of a particular area with a particular asset, a witness or spot-measurement check at a particular place, and ranks them by <strong>expected information gain</strong>: how many bits, on average over the outcomes the current map predicts, the observation would move the map. Twelve candidates in the demo, filterable by kind.</p>
+
+<p>For a binary observation that detects with probability \(d_c\) if the target is in cell \(c\), and with the map holding mass \(m_c\) there, the expected gain is the mutual information between the target's location and the outcome,</p>
+
+<div class="eq"><span class="tag">expected gain</span>
+\[ I(X;Y) = H_2\Big(\sum_c m_c d_c\Big) - \sum_c m_c\,H_2(d_c), \qquad H_2(u) = -u\log_2 u - (1-u)\log_2(1-u), \]
+</div>
+
+<p>which is the same quantity Plan Studio uses per pound spent (<a href="05-where-next-and-when-to-stop.html">Part 5</a>). The point of the tab is cultural as much as mathematical. The most useful thing to know about a conclusion is how cheaply it could be overturned. A map whose top area depends on one sighting from one person at two kilometres in failing light should be sending someone to re-interview that person, not more teams to the top area. Search Health's trap T5, the <em>fragile clue</em>, fires automatically on the backward-looking version of the same question: when removing a single admitted item would move the map by more than a threshold in total-variation distance.</p>
+
+<h2><span class="num">06</span>Why a person must admit every piece</h2>
+
+<p>All of this rests on a rule that the codebase treats as invariant number one: <strong>the map changes only through approved, enabled observations with nonzero reliability</strong>. Importing a file does not change it. A detector flagging a contact does not change it. An AI model reading a scanned archive and extracting "the ship sank ten leagues off Land's End" does not change it. Each of those produces a <em>draft</em> or a <em>context</em> item that a person reviews and either admits, edits, or discards. The admission is recorded, with who and when, in a hash-chained log.</p>
+
+<p>People sometimes read this as caution about AI. It is more specific than that. Provenance and independence are exactly the judgements that automated extraction is worst at, because they depend on information that is not in the document: who told whom, which archive copied which, whether this sonar contact is the same object as last week's. A model can propose that two reports share a root, and often should. But the decision to count something once or five times moves the map by bits that can send a helicopter to the wrong valley, and somebody accountable has to own it.</p>
+
+<p>There is a second reason, which matters more as AI systems get better rather than less. A search case is an argument that has to survive review: by the next shift, by an inquest, by an insurer, by a court. "The system decided" does not survive review. "These seven observations were admitted by these two people for these stated reasons, and here is what the map looks like without each of them" does. The audit trail is not a compliance feature bolted on; it is the product.</p>
+
+<h2><span class="num">07</span>How this looks in the app</h2>
+
+<ol>
+  <li>Open the landing page and click <em>See the Evidence Map: one witness, five echoes</em>.</li>
+  <li>Open the Evidence Map from the right-hand rail (or press <span class="keys">E</span>). Take the four-step tour.</li>
+  <li>Find the <em>Shared · 5 reports, 1 source · counted once</em> row. Compare its bar with the individual echo bars.</li>
+  <li>Click <em>Remove</em> on one echo. Note the bits. Undo. Now switch off the whole source from the archive and watch the map move.</li>
+  <li>Open <em>Provenance graph</em> and follow the five echoes back to the logbook entry.</li>
+</ol>
+
+<p>Every one of those actions is exactly undoable: the test suite checks that the posterior hash after undo equals the hash before, bit for bit.</p>
+
+<p>Next, in <a href="05-where-next-and-when-to-stop.html">Part 5</a>: once the map is honest, where should the next hour of searching go, what is that hour worth, and when should you stop?</p>
+
+        <nav class="series-nav" aria-label="The ABYSSAL series"><div class="label">The ABYSSAL series</div><ol><li><a href="01-a-tour.html"><span class="n">01</span><span>Finding what is lost: a tour of ABYSSAL</span></a></li><li><a href="02-a-map-that-refuses-to-lie.html"><span class="n">02</span><span>A map that refuses to lie</span></a></li><li><a href="03-the-arithmetic-of-not-finding.html"><span class="n">03</span><span>The arithmetic of not finding</span></a></li><li class="cur"><a href="04-five-echoes-one-witness.html"><span class="n">04</span><span>Five echoes, one witness</span></a></li><li><a href="05-where-next-and-when-to-stop.html"><span class="n">05</span><span>Where next, and when to stop</span></a></li><li><a href="06-signals-from-the-deep.html"><span class="n">06</span><span>Signals from the deep</span></a></li><li><a href="07-the-operating-picture.html"><span class="n">07</span><span>The operating picture</span></a></li><li><a href="08-three-cases-two-refusals.html"><span class="n">08</span><span>Three cases, two refusals</span></a></li><li><a href="09-building-it-honestly.html"><span class="n">09</span><span>Building it honestly</span></a></li></ol></nav><div class="prevnext"><a class="prev" href="03-the-arithmetic-of-not-finding.html"><small>← Part 3</small><b>The arithmetic of not finding</b></a><a class="next" href="05-where-next-and-when-to-stop.html"><small>Part 5 →</small><b>Where next, and when to stop</b></a></div>
+      </article>
+      <div></div>
+    </div>
+  </main>
+  <footer class="foot">
+    <div class="in">
+      <div>
+        <b>Rory Millard</b>
+        <span>Bayesian inference, search under uncertainty, and the places where mathematics meets messy physical systems.</span>
+      </div>
+      <nav aria-label="Footer">
+        <a href="../abyssal/index.html">ABYSSAL series</a>
+        <a href="../writing.html">Writing</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../about.html">About</a>
+        <a href="mailto:j7yma3egrrm9nxaa.16ls4@aleeas.com">Email</a>
+        <a href="https://www.linkedin.com/in/rorymillard1/" rel="noopener noreferrer">LinkedIn</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

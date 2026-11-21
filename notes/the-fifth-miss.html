@@ -3,109 +3,140 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Independent writing and research by Rory Millard.">
   <title>The Fifth Miss — Rory Millard</title>
-  <link rel="stylesheet" href="../assets/style.css">
+  <meta name="description" content="A small experiment in negative evidence: how shared sensor failures change what repeated misses tell you, with an interactive model.">
+  <meta property="og:title" content="The Fifth Miss — Rory Millard">
+  <meta property="og:description" content="A small experiment in negative evidence: how shared sensor failures change what repeated misses tell you, with an interactive model.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://millardr.github.io/assets/abyssal/live-search-loop.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#0d0d0d">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="../assets/series.css">
+  <script defer src="../assets/series.js"></script>
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <a class="brand" href="../index.html">Rory Millard</a>
-      <nav aria-label="Main navigation">
-        <a href="../writing.html" aria-current="page">Writing</a>
-        <a href="../projects.html">Projects</a>
-        <a href="../about.html">About</a>
-        <a href="../contact.html">Contact</a>
-      </nav>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <header class="topbar">
+    <div class="in">
+      <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>Rory Millard</a>
+      <span class="crumb"><a href="../writing.html">Writing</a> / 001</span>
+      <nav aria-label="Main navigation" id="site-nav"><a href="../writing.html" aria-current="page">Writing</a><a href="../projects.html">Projects</a><a href="../abyssal/index.html">ABYSSAL</a><a href="../about.html">About</a><a href="../contact.html">Contact</a></nav>
+      <button class="theme-btn" type="button" aria-label="Toggle theme"></button>
+      <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
     </div>
   </header>
+  <section class="hero short">
+    <canvas class="field" aria-hidden="true"></canvas>
+    <div class="in">
+      <div class="kicker"><span class="dot"></span><span>Working note · 001</span><span class="lv">Bayesian inference · an interactive example</span></div>
+      <h1>The Fifth Miss</h1>
+      <p class="dek">You search the same patch of ground with the same sensor five times and find nothing. How confident should you be that the thing isn't there? It depends less on how good the sensor is than on how it fails.</p>
+      
+      
+      
+    </div>
+  </section>
+  <main class="page" id="main">
+    <div class="article-grid">
+      <aside class="toc" aria-label="On this page"></aside>
+      <article class="prose">
+<p class="lede">Suppose you're looking for a lost scientific instrument. You search the same patch of ground, using the same sensor, five times. Nothing appears. How confident should you be that the instrument isn't there?</p>
 
-  <main>
-    <div class="wrap">
-      <article class="narrow">
-        <div class="page-head">
-          <div class="eyebrow"><a href="../writing.html">Writing</a> / 001</div>
-          <h1>The Fifth Miss</h1>
-          <p class="subtitle">Working note · Bayesian inference · An interactive example</p>
-        </div>
+<p>The answer depends not just on how good the sensor is, but on <strong>how it fails</strong>.</p>
 
-        <div class="prose">
-          <p>Suppose you're looking for a lost scientific instrument. You search the same patch of ground, using the same sensor, five times. Nothing appears.</p>
-          <p>How confident should you be that the instrument isn't there?</p>
-          <p>The answer depends not just on how good the sensor is, but on <strong>how it fails</strong>.</p>
+<h2>A deliberately small model</h2>
 
-          <h2>A deliberately small model</h2>
-          <p>Let <var>H</var> mean that the instrument is present. We begin with <var>P</var>(<var>H</var>) = 1/2. When the sensor works, it detects the instrument with probability <var>d</var>. But there's a probability <var>f</var> that a persistent condition makes it ineffective for <em>every</em> pass.</p>
-          <p>For simplicity, assume there are no false positives. The sensor's latent working state is fixed over the sequence. Detection attempts are independent <strong>conditional</strong> on that state.</p>
-          <p>If we incorrectly average over the sensor's working state anew on every pass, the likelihood of <var>n</var> misses given presence is:</p>
-          <div class="math-block"><var>L</var><sub>independent</sub>(<var>n</var>) = (1 − (1 − <var>f</var>)<var>d</var>)<sup><var>n</var></sup></div>
-          <p>If instead the failure state persists across all passes:</p>
-          <div class="math-block"><var>L</var><sub>shared</sub>(<var>n</var>) = <var>f</var> + (1 − <var>f</var>)(1 − <var>d</var>)<sup><var>n</var></sup></div>
-          <p>Since a missing instrument yields a miss with probability one, Bayes' rule gives:</p>
-          <div class="math-block"><var>P</var>(<var>H</var> | <var>n</var> misses) = <var>L</var>(<var>n</var>) / (1 + <var>L</var>(<var>n</var>))</div>
-          <p>Both models agree before any searches and after the first one. After repeated misses, they can disagree sharply.</p>
+<p>Let \(H\) mean that the instrument is present. We begin with \(P(H) = 1/2\). When the sensor works, it detects the instrument with probability \(d\). But there is a probability \(f\) that a persistent condition (the wrong soil, an acoustic shadow, a miscalibrated gain) makes it ineffective for <em>every</em> pass.</p>
 
-          <h2>Try it</h2>
-          <p>Change the three inputs below. The calculation is analytic, not simulated; the numbers describe this toy model and <strong>not measured sensor performance</strong>.</p>
+<p>For simplicity, assume there are no false positives. The sensor's latent working state is fixed over the sequence, and detection attempts are independent <strong>conditional</strong> on that state.</p>
 
-          <div class="panel" aria-label="Interactive probability experiment">
-            <h3>How much does another miss mean?</h3>
-            <div class="controls">
-              <label class="control">
-                <span>Consecutive misses <strong id="misses-value">5</strong></span>
-                <input id="misses" type="range" min="0" max="12" value="5" step="1">
-              </label>
-              <label class="control">
-                <span>Persistent failure probability <strong id="failure-value">20%</strong></span>
-                <input id="failure" type="range" min="0" max="60" value="20" step="5">
-              </label>
-              <label class="control">
-                <span>Detection if working <strong id="detection-value">80%</strong></span>
-                <input id="detection" type="range" min="20" max="100" value="80" step="5">
-              </label>
-            </div>
-            <div class="results">
-              <div>
-                <small>Independent-pass posterior</small>
-                <strong id="independent">—</strong>
-              </div>
-              <div>
-                <small>Shared-failure posterior</small>
-                <strong id="persistent">—</strong>
-              </div>
-              <div>
-                <small>Next detection: repeat sensor</small>
-                <strong id="retry">—</strong>
-              </div>
-              <div>
-                <small>Next detection: independent new sensor</small>
-                <strong id="switch">—</strong>
-              </div>
-            </div>
-            <p class="explain">The new sensor is assumed to have the same prior-average detection probability but an independent failure condition. All results condition on the previous misses. At certain extreme settings, posterior probabilities can be at the boundary.</p>
-          </div>
+<p>If we incorrectly average over the sensor's working state anew on every pass, the likelihood of \(n\) misses given presence is</p>
 
-          <h2>The fifth miss is not like the first</h2>
-          <p>A run of misses can mean the instrument is absent. It can also mean the method isn't effective under these conditions.</p>
-          <p>Once those alternatives are represented jointly, another failed attempt doesn't necessarily eliminate much probability. The history has itself become evidence about the sensor.</p>
-          <p>The immediate practical question is no longer just where to search. It is whether the next observation should come from the same source at all.</p>
+<div class="eq"><span class="tag">independent</span>
+\[ L_\text{independent}(n) = \big(1 - (1-f)\,d\big)^n . \]
+</div>
 
-          <h2>A direction for further research</h2>
-          <p>The example above assumes we already know <var>f</var> and <var>d</var>. In a real system, they're often uncertain too. How much data would distinguish persistent unreliability from absence? What observation would best resolve the ambiguity? How badly do decisions suffer when we pretend the measurements are independent?</p>
-          <p>Those questions lead from a toy Bayesian calculation toward experimental design, calibrated inference and the evaluation of intelligent agents.</p>
+<p>If instead the failure state persists across all passes,</p>
 
-          <hr>
-          <p><em>This is a working explanatory note, not a novel research result. The underlying phenomenon is well known in Bayesian modelling of imperfect detection. Future notes will examine model misspecification and decision-making.</em></p>
-        </div>
+<div class="eq"><span class="tag">shared failure</span>
+\[ L_\text{shared}(n) = f + (1-f)(1-d)^n . \]
+</div>
+
+<p>Since a missing instrument yields a miss with probability one, Bayes' rule with even prior odds gives</p>
+
+<div class="eq"><span class="tag">posterior</span>
+\[ P(H \mid n \text{ misses}) = \frac{L(n)}{1 + L(n)} . \]
+</div>
+
+<p>Both models agree before any searches and after the first one. After repeated misses they can disagree sharply: the shared-failure likelihood never falls below \(f\), however many times you look.</p>
+
+<h2>Try it</h2>
+
+<p>The calculation is analytic, not simulated; the numbers describe this toy model and <strong>not measured sensor performance</strong>.</p>
+
+<div class="lab wide" data-lab="fifthmiss">
+  <div class="lab-head"><span class="t">Lab · how much does another miss mean?</span><span class="s">posterior probability of presence after n misses</span></div>
+  <div class="lab-body">
+    <canvas aria-label="Probability the instrument is present against the number of misses, for independent passes and for a shared failure state"></canvas>
+    <div class="legend"><span><i style="background:#c0397a"></i>treating passes as independent</span><span><i style="background:#e8962e"></i>shared failure state</span></div>
+    <div class="controls">
+      <label class="ctl"><span>Consecutive misses, \(n\) <output data-for="n">5</output></span><input type="range" name="n" min="0" max="12" value="5"></label>
+      <label class="ctl"><span>Persistent failure probability, \(f\) <output data-for="f">20%</output></span><input type="range" name="f" min="0" max="60" value="20" step="5"></label>
+      <label class="ctl"><span>Detection if working, \(d\) <output data-for="d">80%</output></span><input type="range" name="d" min="20" max="100" value="80" step="5"></label>
+    </div>
+    <div class="readout">
+      <div><small>Independent-pass posterior</small><b data-read="ind">—</b></div>
+      <div><small>Shared-failure posterior</small><b data-read="sh">—</b></div>
+      <div><small>Next detection: same sensor</small><b data-read="retry">—</b></div>
+      <div><small>Next detection: a new, independent sensor</small><b data-read="switch">—</b></div>
+    </div>
+    <p class="note">The new sensor is assumed to have the same prior-average detection probability but an independent failure condition. All results condition on the previous misses.</p>
+  </div>
+</div>
+
+<h2>The fifth miss is not like the first</h2>
+
+<p>A run of misses can mean the instrument is absent. It can also mean the method isn't effective under these conditions. Once those alternatives are represented jointly, another failed attempt doesn't necessarily eliminate much probability: the history has itself become evidence about the sensor.</p>
+
+<p>The immediate practical question is then no longer just where to search. It is whether the next observation should come from the same source at all. Push \(n\) to 12 in the lab: the same sensor's chance of finding the instrument on the next pass collapses, while a different sensor's barely moves.</p>
+
+<p>This note became the seed of ABYSSAL's repeat-credit accounting and of its Search Health trap T6, <em>repeating a failing method</em>; <a href="../abyssal/03-the-arithmetic-of-not-finding.html">Part 3 of the ABYSSAL series</a> shows how the idea scales to overlapping searches on a map.</p>
+
+<h2>A direction for further research</h2>
+
+<p>The example above assumes we already know \(f\) and \(d\). In a real system they are often uncertain too. How much data would distinguish persistent unreliability from absence? What observation would best resolve the ambiguity? How badly do decisions suffer when we pretend the measurements are independent? Those questions lead from a toy Bayesian calculation towards experimental design, calibrated inference and the evaluation of intelligent agents.</p>
+
+<hr>
+
+<p><em>This is a working explanatory note, not a novel research result. The underlying phenomenon is well known in Bayesian modelling of imperfect detection.</em></p>
+
       </article>
-      <script src="../assets/experiment.js" defer></script>
+      <div></div>
     </div>
   </main>
-
-  <footer>
-    <div class="wrap">
-      <span>© Rory Millard</span>
-      <span><a href="mailto:millard.rge@outlook.com">Email</a> &nbsp;·&nbsp; <a href="../writing.html">Writing</a></span>
+  <footer class="foot">
+    <div class="in">
+      <div>
+        <b>Rory Millard</b>
+        <span>Bayesian inference, search under uncertainty, and the places where mathematics meets messy physical systems.</span>
+      </div>
+      <nav aria-label="Footer">
+        <a href="../abyssal/index.html">ABYSSAL series</a>
+        <a href="../writing.html">Writing</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../about.html">About</a>
+        <a href="mailto:j7yma3egrrm9nxaa.16ls4@aleeas.com">Email</a>
+        <a href="https://www.linkedin.com/in/rorymillard1/" rel="noopener noreferrer">LinkedIn</a>
+      </nav>
     </div>
   </footer>
 </body>

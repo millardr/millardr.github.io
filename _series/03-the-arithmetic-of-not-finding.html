@@ -1,0 +1,219 @@
+<!--meta
+{"slug": "03-the-arithmetic-of-not-finding", "title": "The arithmetic of not finding", "level": "Technical · Bayesian search", "hero": "live-search-loop.webp", "hero_alt": "The live search loop: searched cells marked on the probability map with an update toast", "dek": "Negative evidence, the outside share, positive clues that cannot double-count, correlated misses and information in bits: the mathematics under every pixel of the map, with a grid you can search yourself.", "desc": "The mathematics of Bayesian search in ABYSSAL: log-space grid updates, negative evidence, the coverage fallacy, contamination likelihoods, repeat credit, KL divergence in bits and minimum-KL area statements."}
+-->
+<p class="lede">In January 1966 a B-52 collided with a tanker over Palomares in southern Spain and dropped four hydrogen bombs. Three were found on land within a day. The fourth was somewhere in the Mediterranean, and the US Navy asked a civilian scientist, John Craven, where to look. He did something then unusual: he wrote down probabilities for competing stories of what had happened, built a map from them, and then, crucially, updated the map every time a search found nothing.</p>
+
+<p>The idea was older. Bernard Koopman had formalised it during the Second World War, working out how to hunt U-boats with aircraft whose radar sometimes missed. Craven used it again to find the submarine USS <em>Scorpion</em> in 1968. Lawrence Stone and colleagues used it to find the SS <em>Central America</em>, and in 2011 to find the wreck of Air France 447 after two years of failed searches. In each case the decisive step was the same humble piece of arithmetic: <strong>treat "we looked and found nothing" as data</strong>.</p>
+
+<p>This part derives that arithmetic, and the half-dozen refinements ABYSSAL adds so that the map stays honest when the evidence gets messy. It is the most technical article in the series. Everything here is implemented, tested, and documented in the engine audit that ships with the code.</p>
+
+<h2><span class="num">01</span>A map is a distribution</h2>
+
+<p>Cut the search area into cells \(i = 1, \dots, N\). The map is a probability vector \(p_i \ge 0\) with \(\sum_i p_i = 1\): the probability that the target is in cell \(i\), <em>given that it is somewhere in the mapped area</em>. Hold on to that conditioning; we will come back to it.</p>
+
+<p>Evidence enters as a likelihood \(L_i = P(\text{evidence} \mid \text{target in } i)\). Bayes' rule is one line:</p>
+
+<div class="eq"><span class="tag">update</span>
+\[ p'_i \;=\; \frac{p_i\,L_i}{\sum_j p_j L_j}. \]
+</div>
+
+<p>On a 300 × 300 grid with a few dozen observations, the raw products underflow double precision long before anything interesting happens, so ABYSSAL never multiplies probabilities. It adds logarithms and normalises with a numerically stable log-sum-exp:</p>
+
+<div class="eq"><span class="tag">log space</span>
+\[ \log p'_i = \log p_i + \log L_i - \log Z, \qquad \log Z = \operatorname{logsumexp}_j\big(\log p_j + \log L_j\big). \]
+</div>
+
+<p>Two invariants follow, and the code enforces both. <strong>Prior support is preserved</strong>: a cell the prior rules out (land, for a shipwreck) stays at \(\log p = -\infty\) forever, and no likelihood can resurrect it. And there is <strong>no silent renormalisation</strong>: if a set of observations is impossible everywhere on the support, the computation raises an error rather than quietly returning a uniform map. A map that cannot be explained should say so.</p>
+
+<h2><span class="num">02</span>Looking and not finding</h2>
+
+<p>Suppose a team searches part of the map with a method that, if the target is in a searched spot, detects it with probability \(d\), the probability of detection, or POD. They find nothing. What is the likelihood of "nothing" for each cell?</p>
+
+<p>If cell \(i\) was not searched, nothing was ever going to be found there: \(L_i = 1\). If it was fully searched, the search had to miss: \(L_i = 1 - d\). If a fraction \(f_i\) of the cell was covered, and we hold an analyst's reliability \(r\) that the search was carried out as reported, then</p>
+
+<div class="eq"><span class="tag">negative evidence</span>
+\[ L_i \;=\; 1 - r\,d\,f_i . \]
+</div>
+
+<p>That is the whole of it. Notice what the formula refuses to do: a searched cell is never driven to zero unless \(r\,d\,f_i = 1\), which nobody should ever claim. Searched ground gets less likely; unsearched ground, by normalisation, gets more likely. With two cells at prior \((0.5, 0.5)\) and a search of cell 1 with \(d = 0.8\), \(r = 0.75\), the miss factor is \(1 - 0.6 = 0.4\) and the posterior on cell 1 is \(0.2/0.7 \approx 0.286\).</p>
+
+<p>Where does \(d\) come from? In the classical theory, for a sensor with effective sweep width \(W\) moving a track length \(\ell\) through an area \(A\), randomly placed tracks give Koopman's <em>random search</em> law \(d = 1 - e^{-W\ell/A}\); a perfectly systematic sweep gives \(d = \min(1, W\ell/A)\). Reality sits between them. In ABYSSAL, every POD typed by a person is labelled an <em>analyst assumption</em>, and an asset with no measured POD is held at zero, so that an unmeasured sensor cannot make an empty search count against a place. Measured PODs, with confidence intervals, come only from calibration on labelled trials (more in <a href="06-signals-from-the-deep.html">Part 6</a>).</p>
+
+<h3>A satellite pass is a completed search</h3>
+
+<p>The same formula turns free data into evidence. A radar satellite pass covers a known footprint at a known time. If nothing was detected there, that is "searched, nothing found", with a probability of detection set mainly by the size of the thing you are looking for and the wind (which sets how bright the sea clutter is). ABYSSAL imports a pass footprint as a <em>draft</em> completed search, with POD taken from an editable table of target length class × wind speed, spread by an explicit uncertainty, and labelled an analyst assumption until it is calibrated against real detections. A pass with a low POD moves the map a little; a cloud or a flat calm cannot become "proof of absence", because the POD table says so before anyone admits it.</p>
+
+<h2 id="the-coverage-fallacy"><span class="num">03</span>The coverage fallacy and the outside share</h2>
+
+<p>Now the conditioning comes back to bite. The map is conditional on the target being inside the drawn boundary. But nobody is ever certain of that. Let \(a\) be the declared probability that the target is inside the mapped area at all. After a set of empty searches with cell survival \(S_i\) (the product of the miss factors), the <em>unconditional</em> belief splits three ways:</p>
+
+<div class="eq"><span class="tag">the search ledger</span>
+\[ Z = a\sum_i p_i S_i + (1-a), \qquad
+\underbrace{\frac{a\sum_{i\,\text{unsearched}} p_i}{Z}}_{\text{unsearched}} \;+\;
+\underbrace{\frac{a\sum_{i\,\text{searched}} p_i S_i}{Z}}_{\text{searched and missed}} \;+\;
+\underbrace{\frac{1-a}{Z}}_{\text{outside}} \;=\; 1, \]
+</div>
+
+<p>and \(1 - Z\) is the probability the searches would already have found the target. Take the standard example: \(a = 0.9\), a uniform map, 80% of the ground searched once at \(d = 0.7\). Then \(Z = 0.9\,(0.2 + 0.8 \times 0.3) + 0.1 = 0.496\), and the remaining belief is 36.3% unsearched, <strong>43.5% searched and missed</strong>, and <strong>20.2% outside</strong>. The ground already "done" holds more belief than the ground not yet touched, and the probability that the boundary itself was wrong has doubled from 10% to 20%.</p>
+
+<p>That outside share is the number almost nobody updates, and it is the one that tells a coordinator to stop refining the box and question it. ABYSSAL's Search Ledger bar draws all three parts at the top of every case.</p>
+
+<div class="lab wide" data-lab="grid">
+  <div class="lab-head"><span class="t">Lab · search the grid yourself</span><span class="s">click or drag across cells to search them and find nothing</span></div>
+  <div class="lab-body">
+    <canvas aria-label="A 30 by 16 probability grid. Clicking a cell records an empty search there."></canvas>
+    <div class="ledger" aria-hidden="true"></div>
+    <div class="legend"><span><i style="background:#3fae84"></i>unsearched</span><span><i style="background:#e8962e"></i>searched and missed</span><span><i style="background:#a678d8"></i>outside the map</span></div>
+    <div class="controls">
+      <label class="ctl"><span>Belief the target is inside the map, \(a\) <output data-for="a">90%</output></span><input type="range" name="a" min="50" max="100" value="90"></label>
+      <label class="ctl"><span>Probability of detection, \(d\) <output data-for="d">60%</output></span><input type="range" name="d" min="5" max="95" value="60"></label>
+      <label class="ctl"><span>Repeat credit, \(\rho\) <output data-for="rho">0.00</output></span><input type="range" name="rho" min="0" max="100" value="0" step="25"></label>
+    </div>
+    <div class="btns"><button type="button" data-act="best">Search the most likely cell</button><button type="button" data-act="fallacy">Load the 90 / 80 / 70 example</button><button type="button" data-act="reset">Reset</button></div>
+    <div class="readout">
+      <div><small>Unsearched</small><b data-read="unsearched">—</b></div>
+      <div><small>Searched &amp; missed</small><b data-read="missed">—</b></div>
+      <div><small>Outside</small><b data-read="outside">—</b></div>
+      <div><small>Would have found by now</small><b data-read="found">—</b></div>
+      <div><small>Entropy of the map</small><b data-read="H">—</b></div>
+      <div><small>Last search moved the map</small><b data-read="last">—</b></div>
+    </div>
+    <p class="note">Click a cell twice to search it twice; the number shows the passes. With repeat credit 0 a second identical pass earns nothing; with 1 it counts as fully independent (Section 05). The last readout is the KL divergence between the map after and before your last search.</p>
+  </div>
+</div>
+
+<div class="callout try">
+  <div class="t">Try this</div>
+  <p>Press <em>Search the most likely cell</em> twenty times. Watch the bright cell dim, its neighbours take over, and the outside share creep upward. Then set \(a\) to 100% and do it again: with no room outside, the same searches push belief into ever less plausible corners of the map. That is what overconfidence in a search boundary looks like.</p>
+</div>
+
+<h2><span class="num">04</span>Positive clues that cannot shout</h2>
+
+<p>A witness says the smoke was "about two and a half kilometres north-east". That becomes a kernel \(K_i\): a range ring or a bearing wedge, large near the stated position, small far from it. The naive move is to use \(K\) as the likelihood. The problem is that witnesses are sometimes simply wrong: wrong direction, wrong day, wrong lake. A Gaussian kernel says a report 3σ off is impossible; reality says it happens.</p>
+
+<p>ABYSSAL treats every positive clue as a <strong>contamination mixture</strong>: with probability \(r\) (the reliability) the clue is informative; with probability \(1 - r\) it is noise that says nothing about location. The first version of the engine did this with a kernel normalised to its peak, \(L_i = (1-r) + r\,K_i/\max K\). It works, but it has a nasty property: how much the clue moves the map depends on the arbitrary peak height of the kernel and on how much of the kernel falls inside the map. Model version 2 fixed that by normalising against the prior:</p>
+
+<div class="eq"><span class="tag">model v2</span>
+\[ \bar K = \sum_i p_i K_i, \qquad L_i = (1-r) + r\,\frac{K_i}{\bar K}, \qquad\Longrightarrow\qquad p'_i = (1-r)\,p_i + r\,\underbrace{\frac{p_i K_i}{\bar K}}_{q_i}. \]
+</div>
+
+<p>Read the last expression aloud: <em>the posterior is a mixture of the prior and the fully informed map, in proportion to how much you trust the clue</em>. That is exactly the semantics a person means when they say "I'm 75% sure about this report". On the <em>Merchant Royal</em> case (a 1641 pamphlet putting the wreck about ten leagues from Land's End, \(r = 0.75\)) switching from v1 to v2 moved the mass within one kernel scale of the clue from 6.53% to 35.63%, and shrank the 50% credible area from 570,052 km² to 14,713 km². Same evidence, same trust; one formula honoured the trust and one did not.</p>
+
+<div class="callout honest">
+  <div class="t">An honest approximation</div>
+  <p>Each v2 factor is normalised against the <em>original</em> prior, not against the posterior after earlier clues. Multiplying several of them is therefore an approximation when the clues are correlated under the prior. The engine audit records this explicitly, and the experimental v3 engine replaces it with a proper generative report density \(r f(y\mid x) + (1-r) g(y)\). v3 is not wired into the live app yet, because it is slower and its samplers have known failure modes on multimodal maps.</p>
+</div>
+
+<h2><span class="num">05</span>When misses are correlated</h2>
+
+<p>Here is the subtle one. A scent dog sweeps a gully and finds nothing. The handler, unhappy, sweeps it again. Nothing. Is that two independent misses, survival \((1-d)^2\)? Only if the reason the dog missed the first time has nothing to do with the reason it might miss the second. If the wind was wrong, it is still wrong. If the target is under a rock ledge that blocks scent, it is still under the ledge. Repeated searches with the same method over the same ground are correlated, and treating them as independent is how searches convince themselves an area is clear when it is not.</p>
+
+<p>I wrote a whole note about the simplest version of this, <a href="../notes/the-fifth-miss.html">The Fifth Miss</a>: if with probability \(f\) a persistent condition makes the sensor useless for every pass, the likelihood of \(n\) misses given presence is \(f + (1-f)(1-d)^n\), which never falls below \(f\), however many times you look.</p>
+
+<p>ABYSSAL's live engine (model v5) needs something that works on a map, with overlapping footprints of different shapes. Each search pass \(k\) has a per-point effectiveness \(e_k(s) = d_k\, r_k\, \mathbb{1}[s \in \text{footprint}_k]\). Passes are grouped by method; within a group \(g\) the analyst declares a <strong>repeat credit</strong> \(\rho_g \in [0, 1]\), and the group's survival at a point is</p>
+
+<div class="eq"><span class="tag">model v5</span>
+\[ S_g(s) = \big(1 - \max_{k\in g} e_k(s)\big)^{1-\rho_g}\;\prod_{k\in g}\big(1 - e_k(s)\big)^{\rho_g}. \]
+</div>
+
+<p>At \(\rho = 0\) (the default) an identical second pass earns nothing: only the best pass counts. At \(\rho = 1\) passes are fully independent. For \(k\) identical passes the result is \((1-e)^{n_\text{eff}}\) with \(n_\text{eff} = 1 + \rho(k-1)\) effective passes. Different methods (dog, then thermal drone) multiply as independent groups. The survival is computed on an 8 × 8 lattice inside each map cell and averaged <em>after</em> the groups are multiplied, so the geometry of partial overlaps is preserved rather than smeared across a coarse cell.</p>
+
+<p>Use the repeat-credit slider in the lab above: search one cell five times at \(\rho = 0\), then at \(\rho = 1\), and watch how differently the map treats the same five passes. The value of \(\rho\) is not something ABYSSAL can know; it is an assumption about the world that the analyst must state and own, and the interface records the rationale.</p>
+
+<h2><span class="num">06</span>Information in bits</h2>
+
+<p>How much did a piece of evidence matter? ABYSSAL's answer is the Kullback–Leibler divergence, in bits, between the map with the evidence and the map without it:</p>
+
+<div class="eq"><span class="tag">influence</span>
+\[ D_\text{KL}\!\left(p^{\text{full}} \,\big\|\, p^{-k}\right) = \sum_i p^{\text{full}}_i \log_2 \frac{p^{\text{full}}_i}{p^{-k}_i}. \]
+</div>
+
+<p>One bit is one fair coin's worth of information: evidence that halves the plausible area is worth about a bit. The map's own uncertainty is its Shannon entropy \(H = -\sum_i p_i \log_2 p_i\), and \(2^H\), the <em>perplexity</em>, is the effective number of equally likely cells. The demo case in Part 1 sat at 9.93 bits, about 975 effective cells.</p>
+
+<p>Two facts about these numbers trip people up, and the interface says both out loud.</p>
+
+<ul>
+  <li><strong>Leave-one-out influences do not add up.</strong> Remove clue A and the map moves 2 bits; remove clue B and it moves 1.5; remove both and it might move 1 or 6. Evidence interacts. The Evidence Map shows the gap between the summed parts and the whole.</li>
+  <li><strong>Evidence can increase uncertainty.</strong> A prior of \((0.9, 0.1)\) meeting a likelihood of \((0.1, 0.9)\) gives \((0.5, 0.5)\): entropy rises from 0.47 to 1 bit. A surprising observation that contradicts what you thought you knew <em>should</em> make you less sure. A tool that reports "information gained" as a reduction in entropy will tell you the opposite.</li>
+</ul>
+
+<h2><span class="num">07</span>Saying "not here, 5%"</h2>
+
+<p>Sometimes the evidence is a person's judgement about an area rather than a measurement. An experienced searcher looks at a cliff band and says: "she's not up there, I'd put that at 5% at most". Model v6 lets an analyst draw that polygon \(R\) and state a probability \(q\). The question is how to change the map to honour the statement while changing it as little as possible. The answer, which goes back to Richard Jeffrey's rule for updating on uncertain evidence, is the minimum-KL update: scale every cell inside \(R\) by \(q/p\) and every cell outside by \((1-q)/(1-p)\), where \(p\) is the current mass in \(R\). The cost of the statement, in bits, is</p>
+
+<div class="eq"><span class="tag">model v6</span>
+\[ D = q\log_2\frac{q}{p} + (1-q)\log_2\frac{1-q}{1-p}, \]
+</div>
+
+<p>and ABYSSAL shows it before you commit.</p>
+
+<div class="lab" data-lab="region">
+  <div class="lab-head"><span class="t">Lab · "not here, 5%"</span><span class="s">click cells to shape the region</span></div>
+  <div class="lab-body">
+    <canvas aria-label="A 10 by 10 probability grid; the outlined cells form the region of the statement" style="max-width:420px;margin:0 auto"></canvas>
+    <div class="controls">
+      <label class="ctl"><span>Stated mass in the region, \(q\) <output data-for="q">5%</output></span><input type="range" name="q" min="1" max="95" value="5"></label>
+    </div>
+    <div class="btns"><button type="button" data-act="clear">Clear region</button></div>
+    <div class="readout">
+      <div><small>Current mass in the region, \(p\)</small><b data-read="p">—</b></div>
+      <div><small>Cost of the statement</small><b data-read="D">—</b></div>
+      <div><small>Inside</small><b data-read="in">—</b></div>
+      <div><small>Outside</small><b data-read="out">—</b></div>
+    </div>
+    <p class="note">Every cell inside is scaled by the same factor and every cell outside by another: the smallest change, in KL divergence, that makes the region hold exactly \(q\). Shape the region over the bright blob and state 5%: the cost jumps, which is the map asking whether you really know that.</p>
+  </div>
+</div>
+
+<p> Stating "5%" about a region the map already gives 4% costs almost nothing. Stating "5%" about a region the map gives 60% costs about one full bit (as much as halving the whole search area), which is the system politely asking whether you really know that. Several overlapping statements are fitted jointly by iterative proportional fitting in log space, after a linear-programming feasibility check, so contradictory statements raise an error instead of producing a silently broken map. Exact zero and one are refused here; the separate "certain" statements (<em>only here</em>, <em>not here</em>) exist for hard physical facts, like "a ship is not on land", and act as constraints on the support.</p>
+
+<h3>How many clean visits?</h3>
+
+<p>A related question comes up in ecology, archaeology and biosecurity as often as in search: a site has been visited \(k\) times by a method with per-visit detection \(p\), always finding nothing. How sure can we be the thing is absent? With prior presence \(\psi\) and conditionally independent visits,</p>
+
+<div class="eq"><span class="tag">absence assurance</span>
+\[ P(\text{present} \mid k \text{ clean visits}) = \frac{\psi(1-p)^k}{1-\psi+\psi(1-p)^k}. \]
+</div>
+
+<div class="lab" data-lab="absence">
+  <div class="lab-head"><span class="t">Lab · how many clean visits?</span><span class="s">presence after k empty visits</span></div>
+  <div class="lab-body">
+    <canvas aria-label="Bar chart of the probability of presence after 0 to 20 clean visits, with the target threshold as a dashed line"></canvas>
+    <div class="controls">
+      <label class="ctl"><span>Prior presence, \(\psi\) <output data-for="psi">50%</output></span><input type="range" name="psi" min="5" max="95" value="50" step="5"></label>
+      <label class="ctl"><span>Detection per visit, \(p\) <output data-for="d">30%</output></span><input type="range" name="d" min="5" max="90" value="30" step="5"></label>
+      <label class="ctl"><span>Target confidence of absence <output data-for="conf">95%</output></span><input type="range" name="conf" min="80" max="99" value="95"></label>
+    </div>
+    <div class="readout">
+      <div><small>Clean visits needed</small><b data-read="need">—</b></div>
+      <div><small>Presence after 5 clean visits</small><b data-read="five">—</b></div>
+      <div><small>Odds update per miss</small><b data-read="lr">—</b></div>
+    </div>
+    <p class="note">Independence is doing all the work here, and <a href="../notes/the-fifth-miss.html">The Fifth Miss</a> shows what happens when it fails. ABYSSAL's calculator is labelled accordingly: its inputs are analyst assumptions, not measured detector calibration, and it is never a clearance certificate.</p>
+  </div>
+</div>
+
+<h2><span class="num">08</span>One engine, six meanings</h2>
+
+<p>Every change to what a likelihood <em>means</em> bumps the model version, keeps the old version selectable, and is written into the engine audit. Golden files freeze the exact posterior bytes of v1, so a refactor that changes a number by one unit in the last place fails the build.</p>
+
+<table>
+  <thead><tr><th>Version</th><th>Name in the app</th><th>What it changed</th></tr></thead>
+  <tbody>
+    <tr><td><b>v1</b></td><td>(frozen)</td><td>Peak-normalised contamination. Golden posterior hashes.</td></tr>
+    <tr><td><b>v2</b></td><td>Standard</td><td>Clues normalised against the prior: the mixture \((1-r)p + rq\).</td></tr>
+    <tr><td><b>v3</b></td><td>(experimental)</td><td>Generative densities, nuisance integration, shared detectability, simulation-based calibration. Not live.</td></tr>
+    <tr><td><b>v4</b></td><td>Land walking prior</td><td>Lognormal walking distance over least-cost terrain paths, mixed with the area prior.</td></tr>
+    <tr><td><b>v5</b></td><td>Search accounting</td><td>Grouped search survival with repeat credit on an 8 × 8 sub-cell lattice; the Search Ledger.</td></tr>
+    <tr><td><b>v6</b></td><td>Area statements</td><td>Human-stated area masses by minimum-KL fitting over a v2, v4 or v5 base.</td></tr>
+  </tbody>
+</table>
+
+<p>The audit also records the mistakes. On 17 November an adversarial review found that v5 had been silently applying the old v1 formula to positive clues whenever a quick search was present; on 19 November another found that v5 was dropping the terrain context from the walking prior. Both were fixed with regression tests, and both are written up with exactly which historical results they could have changed. A map you can audit includes the record of when it was wrong.</p>
+
+<div class="callout key">
+  <div class="t">What to take away</div>
+  <p>Searching and not finding is evidence, worth exactly as much as the search's probability of detection says, and no more. The boundary of the map is itself a belief that empty searches erode. Clues should be trusted in proportion to stated reliability, not to the shape of a kernel. Repeated misses are not independent unless you say why. And every one of these choices is a number a person should be able to see, change and defend.</p>
+</div>
+
+<p>Next, in <a href="04-five-echoes-one-witness.html">Part 4</a>: what happens when five reports turn out to be one, and why that problem is the same one faced by intelligence analysts, risk desks and anyone else who fuses sources.</p>

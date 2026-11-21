@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ABYSSAL — honest probability for finding what is lost — Rory Millard</title>
+  <meta name="description" content="A nine-part series on ABYSSAL, a local-first Bayesian search workbench: guided tours, the mathematics of negative evidence and correlated sources, value of information, physics-screened detectors, live operating pictures, historical backtests, and how it was built.">
+  <meta property="og:title" content="ABYSSAL — honest probability for finding what is lost — Rory Millard">
+  <meta property="og:description" content="A nine-part series on ABYSSAL, a local-first Bayesian search workbench: guided tours, the mathematics of negative evidence and correlated sources, value of information, physics-screened detectors, live operating pictures, historical backtests, and how it was built.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://millardr.github.io/assets/abyssal/demo-live.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#0d0d0d">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+  
+  <link rel="stylesheet" href="../assets/series.css">
+  <script defer src="../assets/series.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <header class="topbar">
+    <div class="in">
+      <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>Rory Millard</a>
+      <span class="crumb"><a href="index.html">ABYSSAL series</a></span>
+      <nav aria-label="Main navigation" id="site-nav"><a href="../writing.html">Writing</a><a href="../projects.html">Projects</a><a href="../abyssal/index.html" aria-current="page">ABYSSAL</a><a href="../about.html">About</a><a href="../contact.html">Contact</a></nav>
+      <button class="theme-btn" type="button" aria-label="Toggle theme"></button>
+      <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
+    </div>
+  </header>
+  <section class="hero">
+    <canvas class="field" aria-hidden="true"></canvas>
+    <div class="in">
+      <div class="kicker"><span class="dot"></span><span>A series in nine parts</span><span class="lv">tours · mathematics · physics · essays · 13 interactive labs</span></div>
+      <h1>ABYSSAL: honest probability for finding what is lost</h1>
+      <p class="dek">A local-first Bayesian workbench for searching for aircraft, ships and people: it keeps a probability map that cannot overclaim, explains every change in bits, says where to look next and what that is worth, and records who decided to trust each piece of evidence.</p>
+      <div class="meta"><span><b>22,414</b> words · <b>13</b> labs you can play with · every figure from the running software</span><span>Rory Millard · November 2026</span></div>
+      <div class="cta"><a class="btn primary" href="01-a-tour.html">Start with the tour →</a><a class="btn ghost" href="03-the-arithmetic-of-not-finding.html">Straight to the maths</a><a class="btn ghost" href="#labs">Play with the labs</a></div>
+      <figure class="figure-peek reveal"><img src="../assets/abyssal/demo-live.webp" alt="The ABYSSAL workspace over real terrain" fetchpriority="high"></figure>
+    </div>
+  </section>
+  <main class="page" id="main">
+<div class="lede-block reveal">
+  <p>When something is lost, the hardest part of the search is rarely the hardware. It is reasoning: hearing "we covered 80% of the area" as "we are 80% done", counting five retellings of one sighting as five witnesses, repeating a failing sensor over the same ground, and forgetting that every empty search inside the box makes it likelier the box was wrong.</p>
+  <p>ABYSSAL replaces those habits with explicit arithmetic, unbroken provenance and human-admitted evidence. This series explains it from every side: what it looks like, the mathematics under every pixel, the physics of its detectors, the decisions it supports, and the times it refused to give an answer.</p>
+</div>
+
+<div class="stats reveal">
+  <div><b>9</b><small>parts: tours, derivations, physics, case studies and essays</small></div>
+  <div><b>13</b><small>interactive labs running the real formulas in your browser</small></div>
+  <div><b>0</b><small>map changes without a person admitting the evidence</small></div>
+  <div><b>~2,500</b><small>Python tests guarding the maths, plus 118 browser journeys</small></div>
+  <div><b>6</b><small>model versions, each documented in an engine audit</small></div>
+  <div><b>128</b><small>pull requests in about a month, one person directing AI agents</small></div>
+</div>
+
+<div class="section-title"><h2>The series</h2><span>Read in order, or jump to what you care about</span></div>
+<div class="parts">
+        <a class="part reveal" href="../abyssal/01-a-tour.html">
+          <div class="thumb"><img src="../assets/abyssal/demo-live.webp" alt="" loading="lazy"></div>
+          <div class="body">
+            <div class="no"><span>Part 01</span><span class="lvl">Showcase · walkthrough</span></div>
+            <h3>Finding what is lost: a tour of ABYSSAL</h3>
+            <p>A guided walk through a Bayesian search workbench: what you see in the first ten seconds, what each panel is for, and why the map never moves unless a person says so.</p>
+            <div class="rt">14 min read</div>
+          </div>
+        </a>
+        <a class="part reveal" href="../abyssal/02-a-map-that-refuses-to-lie.html">
+          <div class="thumb"><img src="../assets/abyssal/sketch-live.webp" alt="" loading="lazy"></div>
+          <div class="body">
+            <div class="no"><span>Part 02</span><span class="lvl">Design · cartography &amp; interface</span></div>
+            <h3>A map that refuses to lie</h3>
+            <p>A probability heatmap is an argument, and most of them cheat: rainbow ramps that invent ridges, sea-coloured low ends, resolution they do not have, and context smuggled in as evidence. How ABYSSAL's interface is designed so that what you see is exactly what the model believes.</p>
+            <div class="rt">9 min read · 1 lab</div>
+          </div>
+        </a>
+        <a class="part reveal" href="../abyssal/03-the-arithmetic-of-not-finding.html">
+          <div class="thumb"><img src="../assets/abyssal/live-search-loop.webp" alt="" loading="lazy"></div>
+          <div class="body">
+            <div class="no"><span>Part 03</span><span class="lvl">Technical · Bayesian search</span></div>
+            <h3>The arithmetic of not finding</h3>
+            <p>Negative evidence, the outside share, positive clues that cannot double-count, correlated misses and information in bits: the mathematics under every pixel of the map, with a grid you can search yourself.</p>
+            <div class="rt">12 min read · 3 labs</div>
+          </div>
+        </a>
+        <a class="part reveal" href="../abyssal/04-five-echoes-one-witness.html">
+          <div class="thumb"><img src="../assets/abyssal/evidence-map-live.webp" alt="" loading="lazy"></div>
+          <div class="body">
+            <div class="no"><span>Part 04</span><span class="lvl">Essay · provenance &amp; correlated evidence</span></div>
+            <h3>Five echoes, one witness</h3>
+            <p>Why five reports that trace back to one source must count once, how ABYSSAL pools them, and why the same mistake quietly breaks intelligence assessments, risk models and machine-learning explanations.</p>
+            <div class="rt">10 min read · 1 lab</div>
+          </div>
+        </a>
+        <a class="part reveal" href="../abyssal/05-where-next-and-when-to-stop.html">
+          <div class="thumb"><img src="../assets/abyssal/plan-studio-ev.webp" alt="" loading="lazy"></div>
+          <div class="body">
+            <div class="no"><span>Part 05</span><span class="lvl">Technical · decision theory</span></div>
+            <h3>Where next, and when to stop</h3>
+            <p>Optimal effort is water poured into a probability landscape. Turning bits into money tells you what an hour of searching is worth, and the same arithmetic tells you, honestly, when to go home.</p>
+            <div class="rt">9 min read · 2 labs</div>
+          </div>
+        </a>
+        <a class="part reveal" href="../abyssal/06-signals-from-the-deep.html">
+          <div class="thumb"><img src="../assets/abyssal/signal-dark-vessel-wake.webp" alt="" loading="lazy"></div>
+          <div class="body">
+            <div class="no"><span>Part 06</span><span class="lvl">Technical · physics &amp; detection</span></div>
+            <h3>Signals from the deep</h3>
+            <p>Kelvin's 19.47°, a ship that appears hundreds of metres from where it is, hydrophones that hear an implosion across an ocean, and the one rule that keeps clever detectors from fooling the map.</p>
+            <div class="rt">14 min read · 4 labs</div>
+          </div>
+        </a>
+        <a class="part reveal" href="../abyssal/07-the-operating-picture.html">
+          <div class="thumb"><img src="../assets/abyssal/ops-globe-satellites.webp" alt="" loading="lazy"></div>
+          <div class="body">
+            <div class="no"><span>Part 07</span><span class="lvl">Showcase · live data &amp; field tools</span></div>
+            <h3>The operating picture</h3>
+            <p>Live aircraft and ships, satellites and their swaths, wind, rain and earthquakes, a globe you can fly in from orbit, and a kit of field tools: what a search tool looks like when someone has to live in it all day.</p>
+            <div class="rt">10 min read · 1 lab</div>
+          </div>
+        </a>
+        <a class="part reveal" href="../abyssal/08-three-cases-two-refusals.html">
+          <div class="thumb"><img src="../assets/abyssal/merchant-royal-live.webp" alt="" loading="lazy"></div>
+          <div class="body">
+            <div class="no"><span>Part 08</span><span class="lvl">Case studies · validation</span></div>
+            <h3>Three cases, two refusals</h3>
+            <p>A treasure ship reported in a 1641 pamphlet, an airliner that left only satellite handshakes, and a wreck found after two years. What each one tests, and why the most important results are the two places ABYSSAL declines to give an answer.</p>
+            <div class="rt">10 min read · 1 lab</div>
+          </div>
+        </a>
+        <a class="part reveal" href="../abyssal/09-building-it-honestly.html">
+          <div class="thumb"><img src="../assets/abyssal/after-graphite.webp" alt="" loading="lazy"></div>
+          <div class="body">
+            <div class="no"><span>Part 09</span><span class="lvl">Essay · engineering &amp; strategy</span></div>
+            <h3>Building it honestly</h3>
+            <p>One person, a team of AI coding agents, ten invariants and a file called KNOWN_INCOMPLETE.md. What it takes to keep a probabilistic system honest when most of the code is written by machines, and where honest probability is worth money.</p>
+            <div class="rt">10 min read</div>
+          </div>
+        </a>
+</div>
+
+<div class="section-title"><h2>The ideas, in six lines</h2><span>Each one is a part of the series</span></div>
+<div class="pillars reveal">
+  <div class="pillar"><b>Not finding is evidence</b><p>An empty search lowers belief exactly as much as its probability of detection says, never to zero, and an unmeasured sensor is not allowed to clear ground at all.</p></div>
+  <div class="pillar"><b>The box is a belief too</b><p>Every empty search inside the boundary moves probability outside it. The Search Ledger shows unsearched, searched-and-missed and outside, always.</p></div>
+  <div class="pillar"><b>Echoes count once</b><p>Reports are pooled by provenance root, so five copies of one sighting carry one sighting's worth of information, and the influence of whole sources is shown in bits.</p></div>
+  <div class="pillar"><b>Humans admit</b><p>Imports, detectors, live feeds and AI extraction produce context and drafts. Only a named person's decision moves the map, and every decision can be undone exactly.</p></div>
+  <div class="pillar"><b>Bits, then money</b><p>Optimal effort is water poured into a probability landscape; expected value and information per pound say where the next hour goes and when to stop.</p></div>
+  <div class="pillar"><b>Physics before detections</b><p>Wakes, ring waves and sound arrival times are modelled from first principles, and no detector's output becomes evidence until its detection rates are measured.</p></div>
+</div>
+
+<div class="section-title" id="labs"><h2>Interactive labs</h2><span>Every one runs the formulas from its article, live</span></div>
+<div class="labs-grid">
+        <a class="labcard reveal" href="02-a-map-that-refuses-to-lie.html#lab-ramp"><span class="k">Part 2</span><b>Three colour ramps</b><span>Why a rainbow invents ridges and sinks into the sea</span></a>
+        <a class="labcard reveal" href="03-the-arithmetic-of-not-finding.html#lab-grid"><span class="k">Part 3</span><b>Search the grid</b><span>Negative evidence, the outside share and repeat credit on a 30 × 16 map</span></a>
+        <a class="labcard reveal" href="03-the-arithmetic-of-not-finding.html#lab-region"><span class="k">Part 3</span><b>Not here, 5%</b><span>A minimum-KL area statement and its cost in bits</span></a>
+        <a class="labcard reveal" href="03-the-arithmetic-of-not-finding.html#lab-absence"><span class="k">Part 3</span><b>How many clean visits?</b><span>Absence assurance under independent visits</span></a>
+        <a class="labcard reveal" href="04-five-echoes-one-witness.html#lab-echoes"><span class="k">Part 4</span><b>Five echoes, one witness</b><span>Naive multiplication versus provenance pooling</span></a>
+        <a class="labcard reveal" href="05-where-next-and-when-to-stop.html#lab-waterfill"><span class="k">Part 5</span><b>Water-filling</b><span>Optimal search effort under exponential detection</span></a>
+        <a class="labcard reveal" href="05-where-next-and-when-to-stop.html#lab-exhaust"><span class="k">Part 5</span><b>Search to exhaustion</b><span>Expected value and the stopping point of a priced search</span></a>
+        <a class="labcard reveal" href="06-signals-from-the-deep.html#lab-kelvin"><span class="k">Part 6</span><b>Kelvin wake and SAR shift</b><span>19.47°, wavelength-to-speed and why the radar misplaces ships</span></a>
+        <a class="labcard reveal" href="06-signals-from-the-deep.html#lab-tdoa"><span class="k">Part 6</span><b>Four hydrophones, one bang</b><span>TDOA hyperbolae, correlated errors and a χ² mispick alarm</span></a>
+        <a class="labcard reveal" href="06-signals-from-the-deep.html#lab-wilson"><span class="k">Part 6</span><b>How many trials make a measurement?</b><span>Wilson intervals and the calibration gate</span></a>
+        <a class="labcard reveal" href="06-signals-from-the-deep.html#lab-splash"><span class="k">Part 6</span><b>The dispersive clock</b><span>Impact ring waves (Cauchy–Poisson) as detector and timer</span></a>
+        <a class="labcard reveal" href="07-the-operating-picture.html#lab-gap"><span class="k">Part 7</span><b>The reach ellipse</b><span>Where a vessel could have gone while dark, and impossible jumps</span></a>
+        <a class="labcard reveal" href="08-three-cases-two-refusals.html#lab-lineage"><span class="k">Part 8</span><b>Lineage collapse</b><span>How a healthy ESS hides a particle filter that has not converged</span></a>
+</div>
+
+<div class="section-title"><h2>Feature atlas</h2><span>Click through to where each is explained</span></div>
+<div class="atlas">
+  <a class="reveal" href="01-a-tour.html"><img src="../assets/abyssal/demo-workspace.webp" alt="" loading="lazy"><span><b>The workspace</b><em>Belief map, credible regions, Search Ledger, archive</em></span></a>
+  <a class="reveal" href="04-five-echoes-one-witness.html"><img src="../assets/abyssal/evidence-map-live.webp" alt="" loading="lazy"><span><b>Evidence Map</b><em>Influence of every item and every source, in bits</em></span></a>
+  <a class="reveal" href="04-five-echoes-one-witness.html"><img src="../assets/abyssal/provenance-live.webp" alt="" loading="lazy"><span><b>Provenance graph</b><em>Sources, claims, observations and the map</em></span></a>
+  <a class="reveal" href="02-a-map-that-refuses-to-lie.html"><img src="../assets/abyssal/sketch-crop.webp" alt="" loading="lazy"><span><b>Sketch evidence</b><em>Bearings, rings and corridors with live dimensions</em></span></a>
+  <a class="reveal" href="01-a-tour.html"><img src="../assets/abyssal/live-search-loop.webp" alt="" loading="lazy"><span><b>Live search loop</b><em>Mark searched, update, re-rank, undo</em></span></a>
+  <a class="reveal" href="05-where-next-and-when-to-stop.html"><img src="../assets/abyssal/plan-studio.webp" alt="" loading="lazy"><span><b>Plan Studio</b><em>Multi-asset allocation and tasking exports</em></span></a>
+  <a class="reveal" href="05-where-next-and-when-to-stop.html"><img src="../assets/abyssal/plan-studio-ev.webp" alt="" loading="lazy"><span><b>Expected value</b><em>Break-even, bits per pound, search to exhaustion</em></span></a>
+  <a class="reveal" href="01-a-tour.html"><img src="../assets/abyssal/search-health.webp" alt="" loading="lazy"><span><b>Search Health</b><em>Seven named traps, checked continuously</em></span></a>
+  <a class="reveal" href="01-a-tour.html"><img src="../assets/abyssal/movement.webp" alt="" loading="lazy"><span><b>Movement &amp; time</b><em>Walking priors over terrain, drift at sea</em></span></a>
+  <a class="reveal" href="02-a-map-that-refuses-to-lie.html"><img src="../assets/abyssal/surface-3d.webp" alt="" loading="lazy"><span><b>3D probability surface</b><em>Density as height</em></span></a>
+  <a class="reveal" href="06-signals-from-the-deep.html"><img src="../assets/abyssal/signal-dark-vessels.webp" alt="" loading="lazy"><span><b>Dark vessels</b><em>SAR detection, wakes and AIS association</em></span></a>
+  <a class="reveal" href="06-signals-from-the-deep.html"><img src="../assets/abyssal/signal-acoustic.webp" alt="" loading="lazy"><span><b>Acoustic localiser</b><em>Hydrophone time differences to a fix</em></span></a>
+  <a class="reveal" href="06-signals-from-the-deep.html"><img src="../assets/abyssal/signal-rings.webp" alt="" loading="lazy"><span><b>Ring finder</b><em>Debris rings, crater rims, slicks</em></span></a>
+  <a class="reveal" href="07-the-operating-picture.html"><img src="../assets/abyssal/ops-live-air-sea-orbit.webp" alt="" loading="lazy"><span><b>Live air and sea</b><em>ADS-B, AIS, orbit detection</em></span></a>
+  <a class="reveal" href="07-the-operating-picture.html"><img src="../assets/abyssal/ops-globe-satellites.webp" alt="" loading="lazy"><span><b>Globe and satellites</b><em>SGP4 orbits, swaths, next passes</em></span></a>
+  <a class="reveal" href="07-the-operating-picture.html"><img src="../assets/abyssal/ops-leeway-drift.webp" alt="" loading="lazy"><span><b>Leeway drift</b><em>Monte Carlo of objects in the water</em></span></a>
+  <a class="reveal" href="07-the-operating-picture.html"><img src="../assets/abyssal/ops-shadow-chronolocation.webp" alt="" loading="lazy"><span><b>Shadow clock</b><em>Where a photo could have been taken</em></span></a>
+  <a class="reveal" href="07-the-operating-picture.html"><img src="../assets/abyssal/ops-satellite-view.webp" alt="" loading="lazy"><span><b>Satellite view</b><em>Thirty days of imagery over the view</em></span></a>
+  <a class="reveal" href="07-the-operating-picture.html"><img src="../assets/abyssal/watchlist-live.webp" alt="" loading="lazy"><span><b>Watchlist</b><em>Twelve dark vessels, four sensors</em></span></a>
+  <a class="reveal" href="08-three-cases-two-refusals.html"><img src="../assets/abyssal/merchant-royal-live.webp" alt="" loading="lazy"><span><b><em style="font-style:italic;color:inherit">Merchant Royal</em>, 1641</b><em>What is a league?</em></span></a>
+  <a class="reveal" href="08-three-cases-two-refusals.html"><img src="../assets/abyssal/mh370-live.webp" alt="" loading="lazy"><span><b>MH370</b><em>Satellite arcs and a refusal</em></span></a>
+  <a class="reveal" href="08-three-cases-two-refusals.html"><img src="../assets/abyssal/af447-live.webp" alt="" loading="lazy"><span><b>AF447</b><em>A held-out backtest, read honestly</em></span></a>
+  <a class="reveal" href="07-the-operating-picture.html"><img src="../assets/abyssal/ops-3d-terrain.webp" alt="" loading="lazy"><span><b>3D terrain</b><em>The belief map on real relief</em></span></a>
+  <a class="reveal" href="09-building-it-honestly.html"><img src="../assets/abyssal/before-navy.webp" alt="" loading="lazy"><span><b>The navy sea</b><em>A design mistake, and its fix</em></span></a>
+</div>
+
+<div class="callout honest reveal" style="max-width:820px">
+  <div class="t">Status, honestly</div>
+  <p>ABYSSAL is a research prototype that runs on one laptop. It has not been validated against real search outcomes beyond one historical backtest, it has no external users yet, and every probability of detection in it is labelled an analyst assumption unless it has been measured. Fictional data are tagged <code>SCENARIO</code> wherever they appear, including in these screenshots. A written stop rule ends feature work if fewer than five outside practitioners have used it on a real or replayed case by late January 2027. If you search for things for a living, I would like to hear where it is wrong.</p>
+</div>
+<div style="height:60px"></div>
+
+  </main>
+  <footer class="foot">
+    <div class="in">
+      <div>
+        <b>Rory Millard</b>
+        <span>Bayesian inference, search under uncertainty, and the places where mathematics meets messy physical systems.</span>
+      </div>
+      <nav aria-label="Footer">
+        <a href="../abyssal/index.html">ABYSSAL series</a>
+        <a href="../writing.html">Writing</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../about.html">About</a>
+        <a href="mailto:j7yma3egrrm9nxaa.16ls4@aleeas.com">Email</a>
+        <a href="https://www.linkedin.com/in/rorymillard1/" rel="noopener noreferrer">LinkedIn</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
