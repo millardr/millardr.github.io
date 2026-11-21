@@ -1,0 +1,141 @@
+<!--meta
+{"slug": "05-where-next-and-when-to-stop", "title": "Where next, and when to stop", "level": "Technical · decision theory", "hero": "plan-studio-ev.webp", "hero_alt": "Plan Studio allocating two search assets over the probability map", "dek": "Optimal effort is water poured into a probability landscape. Turning bits into money tells you what an hour of searching is worth, and the same arithmetic tells you, honestly, when to go home.", "desc": "Optimal search allocation (water-filling), expected value of information, mutual information per pound, the search-to-exhaustion curve and stopping rules in ABYSSAL's Where-next and Plan Studio."}
+-->
+<p class="lede">A map, however honest, does not search anything. Somebody has a helicopter for four hours, two dog teams until dark, a survey vessel at a day rate that would make you wince, and a sea state that closes the window on Thursday. The question that matters every morning is not "where is it?" but "where should the next hour go?", and its uncomfortable sibling, "is the next hour worth it at all?"</p>
+
+<p>This part is about those two questions. The first has a beautiful classical answer that is eighty years old and still underused. The second needs one idea that search-and-rescue software has mostly avoided: putting a price on information.</p>
+
+<h2><span class="num">01</span>Detection as a function of effort</h2>
+
+<p>Give cell \(i\) an amount of search effort \(e_i\), measured in hours of a particular asset. The chance of detecting the target if it is there rises with effort, with diminishing returns. The standard model, Koopman's random-search law, is exponential:</p>
+
+<div class="eq"><span class="tag">detection</span>
+\[ d_i(e_i) = 1 - e^{-a_i e_i}, \qquad a_i = \frac{W\,v}{A_i}, \]
+</div>
+
+<p>where \(W\) is the sweep width (how wide a strip the sensor effectively clears), \(v\) the speed and \(A_i\) the cell's area. A dense forest cell has a small \(a_i\) for a person on foot and a large one for a thermal camera at night; open water has a large one for a helicopter and a tiny one for a diver. All of those numbers live in ABYSSAL's asset library, 29 modes across platforms and sensors, and every one is labelled as an analyst assumption until measured.</p>
+
+<h2><span class="num">02</span>Pouring water into a landscape</h2>
+
+<p>With a total budget \(B\) of hours, the plan that maximises the chance of finding the target solves</p>
+
+<div class="eq"><span class="tag">optimal search</span>
+\[ \max_{e \ge 0}\; \sum_i p_i\left(1 - e^{-a_i e_i}\right) \quad\text{subject to}\quad \sum_i e_i = B . \]
+</div>
+
+<p>The objective is concave, so the Karush–Kuhn–Tucker conditions are sufficient. They say that at the optimum every cell that receives effort has the same marginal return \(\mu\), and every cell left alone has a marginal return below it:</p>
+
+<div class="eq"><span class="tag">KKT</span>
+\[ p_i a_i e^{-a_i e_i} = \mu \;\;\text{if } e_i > 0, \qquad p_i a_i \le \mu \;\;\text{if } e_i = 0, \qquad\Longrightarrow\qquad e_i = \max\!\left(0,\; \frac{\ln p_i + \ln a_i - \ln\mu}{a_i}\right). \]
+</div>
+
+<p>Here is the picture that makes it memorable. After the search, the probability left in a searched cell is \(p_i e^{-a_i e_i} = \mu / a_i\). When every cell is equally easy to search, that is the <em>same</em> number in every searched cell. Optimal search pours effort into the probability landscape like water into terrain: the highest peaks are flooded first, down to a common level, and the level falls as the budget grows. Cells below the waterline get nothing at all.</p>
+
+<div class="lab wide" data-lab="waterfill">
+  <div class="lab-head"><span class="t">Lab · water-filling</span><span class="s">twelve cells, one budget</span></div>
+  <div class="lab-body">
+    <canvas aria-label="Bar chart of twelve cells: prior probability as outlines, remaining probability after optimal search as filled bars, effort per cell below, and a dashed water level"></canvas>
+    <div class="controls">
+      <label class="ctl"><span>Budget, \(B\) <output data-for="B">6 h</output></span><input type="range" name="B" min="0" max="40" value="6"></label>
+      <label class="ctl"><span>Search rate, \(a\) <output data-for="a">0.8 /h</output></span><input type="range" name="a" min="1" max="30" value="8"></label>
+    </div>
+    <div class="readout">
+      <div><small>Optimal P(find)</small><b data-read="pf">—</b></div>
+      <div><small>Spread evenly</small><b data-read="uni">—</b></div>
+      <div><small>All on the best cell</small><b data-read="greedy">—</b></div>
+      <div><small>Cells that get effort</small><b data-read="active">—</b></div>
+    </div>
+    <p class="note">Grey outlines are each cell's prior probability; filled bars are what remains after the optimal plan; blue bars below are hours allocated. The dashed line is the common post-search level \(\mu/a\). Compare the optimal chance of success with spreading the same hours evenly, or betting them all on the most likely cell.</p>
+  </div>
+</div>
+
+<p>Two classical results make this more than a pretty picture. First, for exponential detection the optimal plan is <strong>uniformly optimal</strong> (a result due to Lawrence Stone): the plan for a budget of six hours is the first six hours of the plan for ten. You never regret having planned for less, which means the greedy, incremental "search wherever the marginal return is highest right now" is not a heuristic here; it is optimal for every budget simultaneously. Second, the solution is cheap: sort the cells by \(p_i a_i\) and find the water level in \(O(n \log n)\).</p>
+
+<p>ABYSSAL's implementation is careful in the way the rest of the engine is. The water level is found in log space with cumulative <code>logaddexp</code> to avoid overflow on maps whose probabilities span a hundred orders of magnitude; the effort sum uses exact floating-point summation and steps back if rounding would overshoot the budget; tiny exposures use \(\log(1 - e^{-x}) \approx \log x\) directly. And the panel says what the answer is: <em>an optimistic upper bound</em>. It ignores transit between cells, the shape of a real sweep track, and the fact that targets move. It tells you where effort is worth most; it is not a route.</p>
+
+<h2><span class="num">03</span>From cells to assets: Where-next and Plan Studio</h2>
+
+<p>The <strong>Where next?</strong> panel is the one-asset version. Pick an asset and a POD preset (35% Quick, 60% Standard, 80% Thorough, 95% Exhaustive, or 0% Uncalibrated) and it ranks cells by chance of success per hour, with a one-click "search the next best area" that closes the loop: mark it searched, the map updates, the ranking updates, the undo is one click away.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/where-next.webp" alt="The Where next panel: asset presets, POD presets from 35% to 95% plus 0% Uncalibrated, and a ranked list of cells with chance of success and hours" loading="lazy"><figcaption><b>Where next?</b> Asset presets from the library, sweep width and an explicit POD assumption, then a ranked list: "#1 · Cell 44, 20: 0.148% chance · 0.368% mass · 1.43 hours". The top cells are highlighted on the map. Catalogue sensors carry no measured calibration and the panel says so.</figcaption></figure>
+
+<p><strong>Plan Studio</strong> handles the real situation: several assets with different speeds, sweep widths, endurance and detection, allocated together. Each asset gets its own track drawn on the map; the plan reports hours, marginal probability of success, area and track length per asset, with a 90% band from the uncertainty in POD; and the whole thing exports as CSV, GPX for handheld units, or a PDF tasking sheet.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/plan-studio.webp" alt="Plan Studio with a dog team and a foot team allocated; orange boxes over the two high-probability regions and per-asset statistics in the panel" loading="lazy"><figcaption><b>Plan Studio on the demo case.</b> Two assets auto-allocated. For the dog team: 6.0 h, marginal POS 9.2% (90% range 5.3–12.8%), 25.92 km of track. The assumptions box is permanent: expected POS is conditional on a stationary target and the stated sweep widths, speeds and PODs; transit and terrain access are not modelled.</figcaption></figure>
+
+<h2><span class="num">04</span>Bits are not money</h2>
+
+<p>The map is measured in bits. A coordinator's budget is measured in hours and pounds. To decide whether to search at all, those have to meet.</p>
+
+<p>The cleanest bridge is the <strong>expected value</strong> of a search action. If finding the target is worth \(V\) (a salvage value, an insured loss, or, for a person, a value a public body is prepared to state for planning purposes), a plan costs \(C\), and its probability of success under the current map is \(P_\text{find}\), then</p>
+
+<div class="eq"><span class="tag">expected value</span>
+\[ \text{EV} = V\,P_\text{find} - C, \qquad \text{ROI} = \frac{V\,P_\text{find} - C}{C}, \qquad V^{*} = \frac{C}{P_\text{find}} . \]
+</div>
+
+<p>\(V^{*}\) is the <em>break-even find value</em>: the plan is worth running if and only if a find is worth more than that. It is a surprisingly useful number to show a decision maker, because it inverts the question. Nobody wants to say what a recovery is worth; everyone can say whether it is worth more than £2.4 million.</p>
+
+<p>Plan Studio also reports <strong>information per pound</strong>: the mutual information between the target's location and the plan's outcome, per thousand spent. For a plan that searches cell \(c\) with detection \(d_c\) where the map holds mass \(m_c\),</p>
+
+<div class="eq"><span class="tag">bits per £</span>
+\[ I(X;Y) = H_2\Big(\sum_c m_c d_c\Big) - \sum_c m_c\,H_2(d_c). \]
+</div>
+
+<p>Why both? Because they disagree in an instructive way. EV rewards plans likely to <em>find</em> the thing. Information rewards plans likely to <em>change your mind</em>, including plans that will almost certainly find nothing but would, by finding nothing, rule out a whole hypothesis. Early in a search, when the map is wide and the hypotheses are many, the second is often the better buy. Late in a search, when you are confident and only need to look, the first is. A tool that shows only one of them hides half the decision.</p>
+
+<figure class="shot reveal" style="max-width:440px"><img src="../assets/abyssal/plan-studio-ev-panel.webp" alt="Plan Studio economics panel: find value, fixed mobilisation cost, and the search-to-exhaustion summary showing EV-max stop 261.3 h, peak net EV $1.15M after 2,521 passes, marginal EV $41.1k per hour" loading="lazy"><figcaption><b>The money layer, on the demo case.</b> With a find valued at $2M, $1,500 an hour and $10k mobilisation: the EV-maximising stop is at 261.3 hours ($402k spent, 77.5% chance of finding), peak net EV is $1.15M after 2,521 passes, and the first hour is worth $41.1k. Every input carries an "analyst assumptions" badge.</figcaption></figure>
+
+<div class="callout honest">
+  <div class="t">The uncertainty band is only POD uncertainty</div>
+  <p>Plan Studio's EV comes with a band. It reflects uncertainty in the probability of detection only (an illustrative Beta distribution around the analyst's POD with concentration 10), and the label says so: it excludes uncertainty in the map, the value and the cost, and it is not a calibrated 90% tail. An earlier version called it "tail risk"; review renamed it, because it was not.</p>
+</div>
+
+<h2><span class="num">05</span>When to stop</h2>
+
+<p>Every long search reaches a meeting where somebody asks whether to continue. It is the hardest meeting in search, because the sunk cost is visible, the people are tired, and the family is on the phone. Search Health's trap T7, sunk-cost continuation, exists for this meeting. The arithmetic is simple once the map is honest.</p>
+
+<p>Run the greedy plan pass by pass. At each step the next pass goes to the cell with the most remaining unconditional mass \(m_c\); it finds the target with probability \(m_c d\); and afterwards that cell's mass is multiplied by \(1 - d\). The cumulative probability of success climbs towards a ceiling, and the ceiling is not 100%. It is \(a\), the probability the target was inside the map at all. The marginal value of the next pass is \(V\,m_c\,d\), falling as the map is searched out. Stop when it falls below the cost of the pass:</p>
+
+<div class="eq"><span class="tag">stopping rule</span>
+\[ \text{continue while}\quad V\cdot \max_c m_c \cdot d \;>\; c_\text{pass}. \]
+</div>
+
+<div class="lab wide" data-lab="exhaust">
+  <div class="lab-head"><span class="t">Lab · search to exhaustion</span><span class="s">a salvage search, priced</span></div>
+  <div class="lab-body">
+    <canvas aria-label="Cumulative probability of finding and net expected value against cumulative spend, with the EV-maximising stopping point marked"></canvas>
+    <div class="legend"><span><i style="background:#e8962e"></i>P(find)</span><span><i style="background:#3fae84"></i>net EV</span><span><i style="background:#a678d8"></i>ceiling = P(inside the map)</span></div>
+    <div class="controls">
+      <label class="ctl"><span>Value of the find <output data-for="V">£20m</output></span><input type="range" name="V" min="1" max="100" value="20"></label>
+      <label class="ctl"><span>Cost per pass <output data-for="c">£150k</output></span><input type="range" name="c" min="10" max="1000" value="150" step="10"></label>
+      <label class="ctl"><span>POD per pass <output data-for="d">70%</output></span><input type="range" name="d" min="10" max="95" value="70"></label>
+      <label class="ctl"><span>P(inside the map) <output data-for="a">85%</output></span><input type="range" name="a" min="30" max="100" value="85"></label>
+    </div>
+    <div class="readout">
+      <div><small>Stop after</small><b data-read="stop">—</b></div>
+      <div><small>P(find) at the stop</small><b data-read="pf">—</b></div>
+      <div><small>Spend at the stop</small><b data-read="spent">—</b></div>
+      <div><small>Net EV at the stop</small><b data-read="ev">—</b></div>
+    </div>
+    <p class="note">Forty cells with a decaying prior. Lower the value of the find or raise the cost, and the stopping point moves left. Lower P(inside) and the ceiling drops: no amount of searching inside the box can find a target that is not in it, and the right next action is to question the box.</p>
+  </div>
+</div>
+
+<p>ABYSSAL's version of this is the <strong>search-to-exhaustion curve</strong> in Plan Studio. It runs the greedy allocation on the real map with the real assets, reports cumulative cost against cumulative probability of success, the EV-maximising stopping point, the marginal EV of the next hour, and a POD-only uncertainty fan. It stops computing when one more pass costs more than it recovers and says so (<code>reached_optimum</code>), and it states its assumptions in the response: a stationary target, independent repeat passes, zero transit time, and values, costs and PODs typed in by a person.</p>
+
+<div class="callout think">
+  <div class="t">Thought experiment · the salvor's dilemma</div>
+  <p>A salvor has spent £6m over two seasons on a wreck believed to carry £40m of cargo. The map, honestly updated, says 31% of the remaining belief is inside the search box, and the best unsearched area holds 2% at a POD of 0.8 for £250k a pass. The next pass is worth \(40 \times 0.02 \times 0.8 = £0.64\)m against a cost of £0.25m: continue. But the previous £6m appears nowhere in that sum, and it should not. Sunk cost is not a term in the stopping rule. What <em>does</em> appear is the 69% outside the box, which says the best use of the next £250k might be archival research that moves the box, not another pass inside it.</p>
+</div>
+
+<h2><span class="num">06</span>Two traps the arithmetic catches</h2>
+
+<p><strong>The streetlight effect (T2).</strong> Effort drifts to where searching is easy: along trails, near the road, in daylight, close to base. Search Health ranks the mapped ground by its pre-search belief density and compares where the effort went with where the belief was. In the demo, 4.5% of effort went to the lowest-probability half of the ground, holding 1.7% of the belief: fine. In a real search where the lower half took 60% of the effort while holding 15% of the belief, the alarm reads exactly that sentence.</p>
+
+<p><strong>Repeating a failing method (T6).</strong> A third dog pass over the same gully, at repeat credit zero, adds almost nothing. Search Health compares the incremental found-chance of one more pass of the latest repeated method with a hypothetical independent method at the same POD over the same ground. When the gap exceeds two percentage points it says so: <em>a different sensor here would be worth more than the same one again</em>. It does not claim such a sensor exists; that is for a person to know.</p>
+
+<h2><span class="num">07</span>The bigger idea</h2>
+
+<p>Every search action has a cost and a payoff, and the payoff is information. Once the probability map is honest, "where next" and "whether at all" become questions of expected value, and the same arithmetic serves very different customers. A salvage company prices a sweep. A marine insurer prices the chance a loss is located before a reserve has to be set. A compliance desk prices the hours of satellite tasking needed to find out where a tanker that switched off its transponder actually went. The unit of value across all of them is the same: <strong>uncertainty removed, per pound, with an audit trail</strong>. <a href="09-building-it-honestly.html">Part 9</a> argues which of those markets are worth building for.</p>
+
+<p>Next, <a href="06-signals-from-the-deep.html">Part 6</a> goes down a level, from evidence to raw measurements: radar images, hydrophone recordings, wakes, and the physics that turns them into detections a map can trust.</p>

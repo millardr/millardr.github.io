@@ -1,0 +1,114 @@
+<!--meta
+{"slug": "02-a-map-that-refuses-to-lie", "title": "A map that refuses to lie", "level": "Design · cartography & interface", "hero": "sketch-live.webp", "hero_alt": "The ABYSSAL map over real terrain with the Ember probability ramp and Search Ledger", "dek": "A probability heatmap is an argument, and most of them cheat: rainbow ramps that invent ridges, sea-coloured low ends, resolution they do not have, and context smuggled in as evidence. How ABYSSAL's interface is designed so that what you see is exactly what the model believes.", "desc": "The design of ABYSSAL's map: the context/evidence firewall, perceptually ordered colour, credible regions, honest resolution, sketching evidence on the map, certain area statements and offline audit packs."}
+-->
+<p class="lede">Every map is an argument. A weather map argues about tomorrow; a election map argues about a country; a search map argues about where a person is, and it is an argument with consequences, because people walk, fly and dive where it points. The colours, lines, layers and numbers on that map are the rhetoric. They can be honest rhetoric, or they can quietly overstate what is known.</p>
+
+<p>This part is about the interface: the design decisions that make ABYSSAL's map say exactly what the model believes and no more. Some of them are about mathematics. More of them are about perception, habit and the small ways software lets context masquerade as evidence.</p>
+
+<h2><span class="num">01</span>The firewall between context and evidence</h2>
+
+<p>Modern mapping software makes it effortless to pile twenty layers onto a screen: bathymetry, satellite imagery, live ship traffic, weather, historical rumours, automated detections. The danger is not the layers. It is the moment one of them is folded into the probability colours without anyone deciding it should be. At that point the map stops being a record of justified belief and becomes an impressive-looking hallucination.</p>
+
+<p>ABYSSAL draws a hard line. Everything that arrives is <strong>context</strong> by default: it can be displayed, inspected, measured and annotated, and it moves the belief map by exactly zero. To become <strong>evidence</strong>, it has to travel a specific path:</p>
+
+<div class="diagram reveal" role="img" aria-label="Pipeline: a source with receipt becomes a claim with a provenance root, then a typed draft observation, then a human admission that updates the map. Live feeds, imagery and uncalibrated detectors are context and can only propose drafts.">
+<svg viewBox="0 0 760 250">
+  <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 1 L10 5 L0 9 z" class="arrowhead"/></marker></defs>
+  <g class="node"><rect x="8" y="30" width="150" height="74" rx="10"/><text x="83" y="60" class="t">Source</text><text x="83" y="80" class="s">URL · time · SHA-256</text><text x="83" y="95" class="s">licence</text></g>
+  <g class="node"><rect x="196" y="30" width="150" height="74" rx="10"/><text x="271" y="60" class="t">Claim</text><text x="271" y="80" class="s">provenance root</text><text x="271" y="95" class="s">what it asserts</text></g>
+  <g class="node"><rect x="384" y="30" width="150" height="74" rx="10"/><text x="459" y="60" class="t">Draft observation</text><text x="459" y="80" class="s">typed · units</text><text x="459" y="95" class="s">assumptions stated</text></g>
+  <g class="node hot"><rect x="572" y="22" width="180" height="90" rx="10"/><text x="662" y="56" class="t">Human admission</text><text x="662" y="76" class="s">who · when · why</text><text x="662" y="94" class="s">→ the belief map moves</text></g>
+  <line x1="158" y1="67" x2="192" y2="67" class="flow" marker-end="url(#ah)"/>
+  <line x1="346" y1="67" x2="380" y2="67" class="flow" marker-end="url(#ah)"/>
+  <line x1="534" y1="67" x2="568" y2="67" class="flow" marker-end="url(#ah)"/>
+  <g class="node ctx"><rect x="8" y="160" width="526" height="70" rx="10"/><text x="271" y="188" class="t">Context: live aircraft &amp; ships · satellite imagery · terrain · weather</text><text x="271" y="210" class="s">uncalibrated detector contacts · AI extractions · layers you can see but that cannot move the map</text></g>
+  <path d="M459 160 L459 108" class="blocked" marker-end="url(#ah)"/>
+  <text x="470" y="140" class="s left">may propose a draft</text>
+  <path d="M534 195 C 600 195, 640 170, 650 118" class="never"/>
+  <text x="590" y="214" class="s left warn">never directly</text>
+  <circle cx="648" cy="140" r="9" class="stop"/><path d="M643 135 L653 145 M653 135 L643 145" class="stopx"/>
+</svg>
+</div>
+
+<p>A raw <em>source</em> (a PDF, a GPX file, a recording) is stored with a receipt: where it came from, when, its size, its SHA-256 hash and its licence. A <em>claim</em> extracted from it is tied to its provenance root, so copies can be recognised (<a href="04-five-echoes-one-witness.html">Part 4</a>). The claim becomes a typed <em>observation</em> with explicit units and stated assumptions, and sits harmlessly as a draft. Only when a named person previews its effect and clicks <em>Include in model</em> does the map change, and that decision is recorded. Live feeds, imagery and detectors can propose drafts. They can never skip the last step.</p>
+
+<p>There is a subtle benefit to this firewall that I did not appreciate until it existed: it makes the interface calmer. Because nothing a person merely looks at can move the map, they can look at everything without fear. Toggle every layer in the Layers panel, run the Ops console's drift tool, scroll thirty days of satellite imagery: the probability colours do not flicker. The map only moves when someone decides it should.</p>
+
+<h2><span class="num">02</span>Colour is a measurement instrument</h2>
+
+<p>The single most consequential design choice on a probability map is its colour ramp, and the most common choice, the rainbow, is close to the worst. A rainbow ramp (blue, cyan, green, yellow, red) has two problems. Its perceived lightness rises and then falls, so the eye sees a bright yellow band as a peak even when red is higher, and invents edges where the data are smooth. And it spends its low end on blue and green, the colours of sea and land, so on a marine map the least likely cells are literally the colour of the water behind them.</p>
+
+<p>ABYSSAL's default ramp is <strong>Ember</strong>: derived from the perceptually uniform <em>inferno</em> map, running from near-black through violet, magenta and orange to pale amber. Its lightness rises strictly from end to end, so brighter always means more probable; it contains no blue and no green, so it never collides with water or vegetation; and opacity also rises with probability, so the lowest cells fade into the basemap instead of painting over it. A unit test enforces both the monotone lightness and the absence of blue and green. The old rainbow is still available as "Classic blue-to-red colours", and viridis as "Colour-blind-safe colours".</p>
+
+<div class="lab wide" data-lab="ramp">
+  <div class="lab-head"><span class="t">Lab · the same map, three ramps</span><span class="s">a synthetic two-mode probability field over sea and coast</span></div>
+  <div class="lab-body">
+    <canvas aria-label="A probability field drawn over a sea and coastline background with the selected colour ramp"></canvas>
+    <canvas class="lum" aria-label="The perceived lightness of the selected ramp from low to high probability" style="margin-top:10px"></canvas>
+    <div class="btns"><button type="button" data-ramp="jet">Rainbow</button><button type="button" data-ramp="ember">Ember</button><button type="button" data-ramp="viridis">Viridis</button><span style="width:14px"></span><button type="button" data-bg="navy">Navy UI</button><button type="button" data-bg="graphite">Graphite UI</button></div>
+    <div class="readout">
+      <div><small>Lightness always rises?</small><b data-read="mono">—</b></div>
+      <div><small>Blue or green in the ramp?</small><b data-read="bg">—</b></div>
+      <div><small>The low end over sea</small><b data-read="low">—</b></div>
+    </div>
+    <p class="note">The curve under the map is CIE L*, perceived lightness, along each ramp. The rainbow's rises, peaks at yellow and falls: the "ridge" you see around the larger mode is an artefact of the colour map, not of the probability. Switch to Navy UI with the rainbow to see the app's old default.</p>
+  </div>
+</div>
+
+<p>The background matters as much as the ramp. For weeks ABYSSAL's dark theme was navy, which, on a tool mostly about the sea, put a sea-coloured interface around a sea-coloured map with a sea-coloured low end. The fix was neutral graphite surfaces, so that sea, land and probability colours carry all of the meaning and the chrome carries none. <a href="09-building-it-honestly.html">Part 9</a> tells that story properly.</p>
+
+<h2><span class="num">03</span>Lines that mean something</h2>
+
+<p>Colour shows the shape of belief; it is bad at quantity. So the map also draws <strong>credible regions</strong>: the solid contour encloses the smallest area holding 50% of the probability, the dashed one 90%. Formally, sort cells by probability density \(p_i/A_i\) and accumulate until the mass reaches \(\alpha\):</p>
+
+<div class="eq"><span class="tag">highest-density region</span>
+\[ R_\alpha = \Big\{\, i \;:\; \tfrac{p_i}{A_i} \ge \tau_\alpha \Big\}, \qquad \sum_{i \in R_\alpha} p_i = \alpha, \qquad \text{area}(R_\alpha) = \sum_{i\in R_\alpha} A_i . \]
+</div>
+
+<p>The area of the 90% region is the single most useful number on a search map: it is the size of the problem, in square kilometres, at a stated confidence. It sits in the status bar of every case. When the declared outside share is large enough that reaching 90% would need probability that lives outside the map, the 90% area is withheld rather than reported as if the map contained everything.</p>
+
+<h2><span class="num">04</span>Resolution you actually have</h2>
+
+<p>A map can be zoomed far beyond the resolution of the model behind it. Pinch into a smooth glowing blob on most tools and it stays smooth, implying a precision the model never had. ABYSSAL's status line says, at every zoom level, how big a model cell is ("Model cells ≈ 97 × 97 m") and when you have passed the point where "only the basemap gains detail".</p>
+
+<p>Two mechanisms make resolution a choice rather than an accident. <strong>Fast preview</strong> loads a capped 96 × 96 grid first, so a case opens in about a second, and says so; one click on <em>Sharpen map</em> fetches full detail, and panels that report exact numbers (the Evidence Map, Search Information, Where-next) switch to full detail automatically. <strong>Viewport detail</strong> recomputes just the visible area on a finer 160 × 160 grid when you zoom in, so a coarse ocean-scale model can be inspected at harbour scale without recomputing the ocean.</p>
+
+<p>Edges get the same honesty. Area statements are applied by a cell-centre test, so a polygon edge can be off by up to half a cell, and the documentation says so. "Certain" statements (<em>only here</em>, <em>not here</em>) are clipped on screen so nothing is ever drawn outside them, and the bundled 1:10m coastline gives one-click sea and land statements: a shipwreck is not on land, a hiker is not in the middle of the lake.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/surface-3d.webp" alt="The 3D data explorer showing probability as a height surface with two peaks" loading="lazy"><figcaption><b>Probability as a surface.</b> The 3D explorer draws density as height, which makes the relative size of competing modes unmistakable in a way colour alone does not. Its caption states what the height is (relative probability density) and what it is not (seabed or terrain relief).</figcaption></figure>
+
+<h2><span class="num">05</span>Drawing what a witness saw</h2>
+
+<p>People in the field think geometrically: "about ten leagues off Land's End", "a bearing of roughly 045 from the ridge", "she can't be in the lake and must be south of the river". Bayesian search tools tend to make them fill in forms instead. ABYSSAL's <strong>Sketch evidence</strong> palette lets them draw: a point, a bearing, a range ring, a range and bearing, or a corridor, directly on the map, with live dimensions, snapping and nudging, and a preview of the effect before anything is saved.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/sketch-crop.webp" alt="Sketching a range and bearing: a line from an observer with a label reading 053 degrees plus or minus 5, 2.60 km plus or minus 200 m, and a preview of the map change" loading="lazy"><figcaption><b>A range and bearing, sketched.</b> The observer is the yellow dot; the label reads 053° ± 5° · 2.60 km ± 200 m. Trust is chosen in words (<em>Doubtful</em>, <em>Plausible</em>, <em>Trusted</em>), which map to stated reliability values. The panel reports "Preview on the map: this would move the belief by 3.66 bits" before you choose <em>Include in model</em> or <em>Save as draft</em>.</figcaption></figure>
+
+<p>The words for trust are deliberate. Asking a volunteer for "reliability 0.6" produces false precision; asking whether a report is doubtful, plausible or trusted produces an honest judgement that the software then maps to a stated number, visible and editable. Each sketch maps onto an existing likelihood (a corridor uses the ellipse likelihood oriented along the route), and editing an included sketch retires the original through a recorded "disable" decision, so history is never rewritten.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/sketch-live.webp" alt="The sketch tools over the Merchant Royal case with a bearing drawn from Land's End" loading="lazy"><figcaption><b>Sketching on a real case.</b> The <em>Merchant Royal</em> workspace with real basemap tiles: the Ember annulus from the admitted "ten leagues" claim, and the sketch palette ready to draw a bearing.</figcaption></figure>
+
+<h2><span class="num">06</span>Map first</h2>
+
+<p>An early measurement found that the map, the thing the whole product is about, occupied 47% of a 1440 × 900 window; at 1280 × 720 it was 403 pixels tall. Toolbars, panels and summaries had accreted around it. The map-first redesign gave the map the whole window under a 46-pixel header and a 40-pixel toolbar; sources, model and tools became drawers that reserve their own space beside the map rather than covering it; eight view toggles became an icon rail; the legend, time scrubber and model summary moved onto the map itself. With both drawers open, the map still keeps 60% of the width at 1500 pixels.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/demo-live.webp" alt="The map-first workspace over real terrain imagery with both drawers closed" loading="lazy"><figcaption><b>Map first.</b> The demo over real terrain tiles: the Search Ledger across the top, the icon rail on the right, the probability key and time scrubber on the map. Everything else is one click or one keystroke away.</figcaption></figure>
+
+<div class="duo reveal">
+  <figure class="shot"><img src="../assets/abyssal/landing-dark.webp" alt="The landing page in the dark theme" loading="lazy"><figcaption><b>Dark</b>: neutral graphite, so the map's colours carry the meaning.</figcaption></figure>
+  <figure class="shot"><img src="../assets/abyssal/landing-light.webp" alt="The landing page in the light theme" loading="lazy"><figcaption><b>Light</b>: the same hierarchy; the theme follows the operating system on first load.</figcaption></figure>
+</div>
+
+<p>Smaller decisions add up. A command palette (<span class="keys">⌘</span> <span class="keys">K</span>) finds any action by name. Single-key shortcuts open the common tools (<span class="keys">K</span> sketch, <span class="keys">L</span> layers, <span class="keys">W</span> where next, <span class="keys">E</span> Evidence Map, <span class="keys">?</span> for the list), and can be switched off. The theme follows the operating system on first load. The smallest text is 10 pixels and every secondary text colour meets WCAG AA contrast in both themes. A new case opens with a short checklist (add what you know, import data, review and admit, see where to search next) rather than an empty map.</p>
+
+<figure class="shot reveal" style="max-width:460px"><img src="../assets/abyssal/valley-checklist-panel.webp" alt="The case checklist panel: Build your search map, with steps and data import options" loading="lazy"><figcaption><b>The case checklist.</b> "Start with what you know. Every new item stays Context or Draft until you choose to admit it." Import tracks (AIS, ADS-B, IGC, GPX, NMEA), points and areas, completed searches and rasters from one place.</figcaption></figure>
+
+<h2><span class="num">07</span>A map that can leave the building</h2>
+
+<p>A probability map that lives only on one analyst's laptop cannot be checked by a sceptic, an insurer or a coroner. ABYSSAL exports two kinds of record. The <strong>case dossier</strong> is a PDF: the map, the admitted evidence, the assumptions, and the hashes that tie them to a specific computation. The <strong>offline audit pack</strong> is a single self-contained HTML file with a strict content-security policy that blocks all network access (its one script is allowed by hash, not by a blanket exception): an embedded image of the probability grid, a filterable ledger of admitted evidence and search assumptions, and a machine-readable JSON receipt for verification. Both apply the same rules as the screen: protected sites and war graves have exact coordinates withheld by default, and fictional cases are stamped <code>SCENARIO</code> on every page.</p>
+
+<div class="callout key">
+  <div class="t">The design principle, in one line</div>
+  <p>Nothing on the screen may claim more than the model: no colour that invents a ridge, no zoom that invents precision, no layer that slips into the belief without a decision, and no number without the assumptions that produced it.</p>
+</div>
+
+<p>Next, <a href="03-the-arithmetic-of-not-finding.html">Part 3</a> derives the mathematics underneath every pixel described here.</p>

@@ -3,46 +3,75 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Independent writing and research by Rory Millard.">
   <title>About — Rory Millard</title>
-  <link rel="stylesheet" href="assets/style.css">
+  <meta name="description" content="About Rory Millard: Oxford Engineering Science (First, ranked first in cohort), interested in Bayesian inference, AI, autonomy and national security.">
+  <meta property="og:title" content="About — Rory Millard">
+  <meta property="og:description" content="About Rory Millard: Oxford Engineering Science (First, ranked first in cohort), interested in Bayesian inference, AI, autonomy and national security.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://millardr.github.io/assets/abyssal/demo-live.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#0d0d0d">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+  
+  <link rel="stylesheet" href="assets/series.css">
+  <script defer src="assets/series.js"></script>
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <a class="brand" href="index.html">Rory Millard</a>
-      <nav aria-label="Main navigation">
-        <a href="writing.html">Writing</a>
-        <a href="projects.html">Projects</a>
-        <a href="about.html" aria-current="page">About</a>
-        <a href="contact.html">Contact</a>
-      </nav>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <header class="topbar">
+    <div class="in">
+      <a class="brand" href="index.html"><span class="mark" aria-hidden="true"></span>Rory Millard</a>
+      <span class="crumb"></span>
+      <nav aria-label="Main navigation" id="site-nav"><a href="writing.html">Writing</a><a href="projects.html">Projects</a><a href="abyssal/index.html">ABYSSAL</a><a href="about.html" aria-current="page">About</a><a href="contact.html">Contact</a></nav>
+      <button class="theme-btn" type="button" aria-label="Toggle theme"></button>
+      <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
     </div>
   </header>
-
-  <main>
-    <div class="wrap">
-      <div class="narrow">
-        <div class="page-head">
-          <h1>About</h1>
-        </div>
-
-        <div class="prose">
-          <p>I'm Rory Millard. I studied Engineering Science at the University of Oxford, graduating with a First in 2026 and ranking first overall in my cohort.</p>
-          <p>My research has ranged from high-dimensional optimisation and mathematical modelling to Bayesian estimation and machine-learning robustness. My master's project investigated efficient methods for optimising supersonic nozzle geometries.</p>
-          <p>I'm interested in the places where mathematical ideas meet complicated real systems: artificial intelligence, uncertainty, aerospace, autonomous technology, scientific computing and national security.</p>
-          <p>This site is a place to develop those interests in public. I write notes to clarify ideas, build small experiments when it helps, and sometimes develop them into longer technical work.</p>
-          <p>ABYSSAL is one such project, but not the whole of my research. It began as an attempt to reason honestly about where something might be when searches are imperfect.</p>
-          <p>If any of this overlaps with your work, I'd be glad to hear from you.</p>
-        </div>
-      </div>
+  <section class="hero short">
+    <canvas class="field" aria-hidden="true"></canvas>
+    <div class="in">
+      <div class="kicker"><span class="dot"></span><span>About</span></div>
+      <h1>About</h1>
+      <p class="dek">Mathematics where it meets complicated real systems.</p>
+      
+      
+      
     </div>
-  </main>
+  </section>
+  <main class="page" id="main">
+<div class="prose-page">
+  <p>I'm Rory Millard. I studied Engineering Science at the University of Oxford, graduating with a First in 2026 and ranking first overall in my cohort.</p>
+  <p>My research has ranged from high-dimensional optimisation and mathematical modelling to Bayesian estimation and machine-learning robustness. My master's project investigated efficient methods for optimising supersonic nozzle geometries.</p>
+  <p>I'm interested in the places where mathematical ideas meet complicated real systems: artificial intelligence, uncertainty, aerospace, autonomous technology, scientific computing and national security.</p>
+  <p>This site is where I develop those interests in public. I write notes to clarify ideas, build small experiments when it helps, and sometimes develop them into longer technical work. <a href="abyssal/index.html">ABYSSAL</a> is the largest of these: a Bayesian workbench for finding lost things, built to reason honestly about where something might be when searches are imperfect and evidence is messy. It is also an experiment in how one person can build serious, auditable software by directing AI coding agents under written invariants.</p>
+  <p>If any of this overlaps with your work, I'd be glad to hear from you: <a href="contact.html">contact</a>.</p>
+</div>
+<div class="cards3">
+  <div class="card"><div class="k">Education</div><h3>Oxford, Engineering Science</h3><p>First class, 2026; ranked first overall in the cohort. Master's project on efficient optimisation of supersonic nozzle geometries.</p></div>
+  <div class="card"><div class="k">Methods</div><h3>What I reach for</h3><p>Bayesian inference, information theory, optimisation, numerical methods, signal processing; Python, TypeScript and a habit of testing the maths.</p></div>
+  <div class="card"><div class="k">Currently</div><h3>Building ABYSSAL</h3><p>Next: calibrating radar detection on real satellite scenes, tracking dark vessels across passes, and long-range ocean acoustics.</p></div>
+</div>
 
-  <footer>
-    <div class="wrap">
-      <span>© Rory Millard</span>
-      <span><a href="mailto:millard.rge@outlook.com">Email</a> &nbsp;·&nbsp; <a href="writing.html">Writing</a></span>
+  </main>
+  <footer class="foot">
+    <div class="in">
+      <div>
+        <b>Rory Millard</b>
+        <span>Bayesian inference, search under uncertainty, and the places where mathematics meets messy physical systems.</span>
+      </div>
+      <nav aria-label="Footer">
+        <a href="abyssal/index.html">ABYSSAL series</a>
+        <a href="writing.html">Writing</a>
+        <a href="projects.html">Projects</a>
+        <a href="about.html">About</a>
+        <a href="mailto:j7yma3egrrm9nxaa.16ls4@aleeas.com">Email</a>
+        <a href="https://www.linkedin.com/in/rorymillard1/" rel="noopener noreferrer">LinkedIn</a>
+      </nav>
     </div>
   </footer>
 </body>

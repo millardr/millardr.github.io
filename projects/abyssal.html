@@ -3,73 +3,81 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="ABYSSAL — a local-first probabilistic workbench for reasoning about search under imperfect observation, uncertain provenance, and live operational context.">
   <title>ABYSSAL — Rory Millard</title>
-  <link rel="stylesheet" href="../assets/style.css">
+  <meta name="description" content="ABYSSAL: a local-first probabilistic workbench for search under imperfect detection, uncertain provenance and explicit assumptions.">
+  <meta property="og:title" content="ABYSSAL — Rory Millard">
+  <meta property="og:description" content="ABYSSAL: a local-first probabilistic workbench for search under imperfect detection, uncertain provenance and explicit assumptions.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://millardr.github.io/assets/abyssal/demo-live.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#0d0d0d">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+  
+  <link rel="stylesheet" href="../assets/series.css">
+  <script defer src="../assets/series.js"></script>
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <a class="brand" href="../index.html">Rory Millard</a>
-      <nav aria-label="Main navigation">
-        <a href="../writing.html">Writing</a>
-        <a href="../projects.html" aria-current="page">Projects</a>
-        <a href="../about.html">About</a>
-        <a href="../contact.html">Contact</a>
-      </nav>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <header class="topbar">
+    <div class="in">
+      <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>Rory Millard</a>
+      <span class="crumb"></span>
+      <nav aria-label="Main navigation" id="site-nav"><a href="../writing.html">Writing</a><a href="../projects.html" aria-current="page">Projects</a><a href="../abyssal/index.html">ABYSSAL</a><a href="../about.html">About</a><a href="../contact.html">Contact</a></nav>
+      <button class="theme-btn" type="button" aria-label="Toggle theme"></button>
+      <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
     </div>
   </header>
-
-  <main>
-    <div class="wrap">
-      <div class="narrow">
-        <div class="page-head">
-          <div class="eyebrow"><a href="../projects.html">Projects</a> / Ongoing</div>
-          <h1>ABYSSAL</h1>
-          <p>A local-first probabilistic workbench for search under imperfect detection, uncertain provenance, and explicit assumptions.</p>
-        </div>
-
-        <div class="prose">
-          <p>ABYSSAL began with a simple question: <em>if you've looked for something and failed to find it, what have you actually learned?</em></p>
-          <p>Over rapid iteration it has grown into a full spatial reasoning workstation: a double-precision log-space Bayesian engine, provenance-root pooling that refuses to count echoes twice, an Evidence Map measuring whole-source counterfactual influence in bits, multi-asset Plan Studio economics with search-to-exhaustion stopping curves, a multi-target Dark-Fleet Watchlist, and a 17-tool Ops Console spanning live air/sea traffic, orbit detection, track-gap reachability ellipses, leeway drift Monte Carlo, shadow chronolocation, 3D terrain, and a 30-day NASA satellite time-machine.</p>
-
-          <figure class="shot wide">
-            <img src="../assets/images/series/live-plan-studio-ev.png" alt="ABYSSAL workspace showing Plan Studio economics, Ember probability map over Yosemite Valley, and Model Inspector" loading="lazy">
-            <figcaption><strong>ABYSSAL workspace:</strong> Map-first Graphite &amp; Ember cartography, Plan Studio expected-value exhaustion curves, and human-admitted evidence provenance.</figcaption>
-          </figure>
-
-          <div class="spotlight-card">
-            <div class="spotlight-meta">
-              <span class="level-tag" style="margin:0">Complete 6-Part Series</span>
-              <span>Interactive models · Full maths · 15+ live screenshots</span>
-            </div>
-            <h3><a href="../notes/abyssal.html">Read the ABYSSAL Series →</a></h3>
-            <p>Explore the full architecture, mathematics, thought experiments, UI walkthroughs, and honest limits across six standalone essays.</p>
-            <div class="spotlight-links">
-              <a class="primary-cta" href="../notes/abyssal.html">Series Hub</a>
-              <a href="../notes/abyssal-map-first.html">I · Philosophy &amp; UI</a>
-              <a href="../notes/abyssal-five-echoes.html">II · Five Reports, One Source</a>
-              <a href="../notes/abyssal-negative-evidence.html">III · Negative Evidence</a>
-              <a href="../notes/abyssal-when-to-stop.html">IV · When to Stop Looking</a>
-              <a href="../notes/abyssal-ops-console.html">V · Ops Console &amp; Watchlist</a>
-              <a href="../notes/abyssal-epistemic-humility.html">VI · Discipline of Refusal</a>
-            </div>
-          </div>
-
-          <div class="note">
-            <p><strong>Honest scope:</strong> ABYSSAL runs locally on one machine and is backed by over 2,500 automated tests, but it has not yet been independently validated against real operational search outcomes. All detection rates, valuations, and scenario tracks are explicitly labelled as analyst assumptions or <code>SCENARIO</code> simulations.</p>
-          </div>
-        </div>
-      </div>
+  <section class="hero">
+    <canvas class="field" aria-hidden="true"></canvas>
+    <div class="in">
+      <div class="kicker"><span class="dot"></span><span>Project · ongoing</span></div>
+      <h1>ABYSSAL</h1>
+      <p class="dek">A local-first probabilistic workbench for search under imperfect detection, uncertain provenance and explicit assumptions.</p>
+      
+      <div class="cta"><a class="btn primary" href="../abyssal/index.html">Read the series →</a><a class="btn ghost" href="../abyssal/01-a-tour.html">Take the tour</a></div>
+      <figure class="figure-peek reveal"><img src="../assets/abyssal/demo-live.webp" alt="The ABYSSAL workspace" fetchpriority="high"></figure>
     </div>
-  </main>
+  </section>
+  <main class="page" id="main">
+<div class="prose-page">
+  <p>ABYSSAL began with a simple question: if you have looked for something and failed to find it, what have you actually learned?</p>
+  <p>Over about a month it has grown into a full spatial reasoning workstation: a double-precision log-space Bayesian engine with six documented model versions; provenance-root pooling that refuses to count echoes twice; an Evidence Map that measures each item's and each source's influence in bits; a live search loop with exact undo; multi-asset planning with expected value, break-even and search-to-exhaustion stopping curves; a multi-target watchlist; an Ops console with live air and sea traffic, satellites, weather, terrain and field tools; and a Signal Lab of physics-screened detectors for radar wakes, hydrophone arrivals and debris rings.</p>
+  <p>It is a prototype. It runs on one machine, it is backed by roughly 2,500 Python tests, 330 frontend unit tests and 118 browser journeys, and it has not yet been validated against real operational outcomes. Every detection probability in it is labelled an analyst assumption until measured.</p>
+</div>
+<div class="section-title"><h2>Read the series</h2><span>22,414 words · 13 labs</span></div>
+<div class="compact">
+          <a class="row" href="../abyssal/01-a-tour.html"><span class="n">01</span><span class="t">Finding what is lost: a tour of ABYSSAL</span><span class="l">Showcase</span><span class="m">14 min</span></a>
+          <a class="row" href="../abyssal/02-a-map-that-refuses-to-lie.html"><span class="n">02</span><span class="t">A map that refuses to lie</span><span class="l">Design</span><span class="m">9 min</span></a>
+          <a class="row" href="../abyssal/03-the-arithmetic-of-not-finding.html"><span class="n">03</span><span class="t">The arithmetic of not finding</span><span class="l">Technical</span><span class="m">12 min</span></a>
+          <a class="row" href="../abyssal/04-five-echoes-one-witness.html"><span class="n">04</span><span class="t">Five echoes, one witness</span><span class="l">Essay</span><span class="m">10 min</span></a>
+          <a class="row" href="../abyssal/05-where-next-and-when-to-stop.html"><span class="n">05</span><span class="t">Where next, and when to stop</span><span class="l">Technical</span><span class="m">9 min</span></a>
+          <a class="row" href="../abyssal/06-signals-from-the-deep.html"><span class="n">06</span><span class="t">Signals from the deep</span><span class="l">Technical</span><span class="m">14 min</span></a>
+          <a class="row" href="../abyssal/07-the-operating-picture.html"><span class="n">07</span><span class="t">The operating picture</span><span class="l">Showcase</span><span class="m">10 min</span></a>
+          <a class="row" href="../abyssal/08-three-cases-two-refusals.html"><span class="n">08</span><span class="t">Three cases, two refusals</span><span class="l">Case studies</span><span class="m">10 min</span></a>
+          <a class="row" href="../abyssal/09-building-it-honestly.html"><span class="n">09</span><span class="t">Building it honestly</span><span class="l">Essay</span><span class="m">10 min</span></a>
+</div>
 
-  <footer>
-    <div class="wrap">
-      <span>© Rory Millard</span>
-      <span><a href="mailto:millard.rge@outlook.com">Email</a> &nbsp;·&nbsp; <a href="../writing.html">Writing</a></span>
+  </main>
+  <footer class="foot">
+    <div class="in">
+      <div>
+        <b>Rory Millard</b>
+        <span>Bayesian inference, search under uncertainty, and the places where mathematics meets messy physical systems.</span>
+      </div>
+      <nav aria-label="Footer">
+        <a href="../abyssal/index.html">ABYSSAL series</a>
+        <a href="../writing.html">Writing</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../about.html">About</a>
+        <a href="mailto:j7yma3egrrm9nxaa.16ls4@aleeas.com">Email</a>
+        <a href="https://www.linkedin.com/in/rorymillard1/" rel="noopener noreferrer">LinkedIn</a>
+      </nav>
     </div>
   </footer>
-  <script src="../assets/abyssal-series.js" defer></script>
 </body>
 </html>

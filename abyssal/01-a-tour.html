@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Finding what is lost: a tour of ABYSSAL — ABYSSAL, part 1 — Rory Millard</title>
+  <meta name="description" content="A guided, screenshot-led tour of ABYSSAL, a local-first Bayesian search workbench for finding lost aircraft, ships and people.">
+  <meta property="og:title" content="Finding what is lost: a tour of ABYSSAL — ABYSSAL, part 1 — Rory Millard">
+  <meta property="og:description" content="A guided, screenshot-led tour of ABYSSAL, a local-first Bayesian search workbench for finding lost aircraft, ships and people.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://millardr.github.io/assets/abyssal/demo-live.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#0d0d0d">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="../assets/series.css">
+  <script defer src="../assets/series.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <header class="topbar">
+    <div class="in">
+      <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>Rory Millard</a>
+      <span class="crumb"><a href="index.html">ABYSSAL series</a> / Part 1</span>
+      <nav aria-label="Main navigation" id="site-nav"><a href="../writing.html">Writing</a><a href="../projects.html">Projects</a><a href="../abyssal/index.html" aria-current="page">ABYSSAL</a><a href="../about.html">About</a><a href="../contact.html">Contact</a></nav>
+      <button class="theme-btn" type="button" aria-label="Toggle theme"></button>
+      <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
+    </div>
+  </header>
+  <section class="hero">
+    <canvas class="field" aria-hidden="true"></canvas>
+    <div class="in">
+      <div class="kicker"><span class="dot"></span><span>ABYSSAL · Part 1 of 9</span><span class="lv">Showcase · walkthrough</span></div>
+      <h1>Finding what is lost: a tour of ABYSSAL</h1>
+      <p class="dek">A guided walk through a Bayesian search workbench: what you see in the first ten seconds, what each panel is for, and why the map never moves unless a person says so.</p>
+      <div class="meta"><span><b>14 min</b> read · 3,209 words</span><span>Rory Millard · November 2026</span></div>
+      
+      <figure class="figure-peek reveal"><img src="../assets/abyssal/demo-live.webp" alt="The ABYSSAL workspace showing a probability map over a mountain valley, with searched areas and contours" fetchpriority="high"></figure>
+    </div>
+  </section>
+  <main class="page" id="main">
+    <div class="article-grid">
+      <aside class="toc" aria-label="On this page"></aside>
+      <article class="prose">
+<p class="lede">Something is lost. A hiker who did not come back down the valley, a trawler whose transponder went quiet, an aircraft that vanished over open ocean, a merchant ship that sank off Land's End in 1641 with a fortune in silver. Somebody has to decide where to look first, and then, after the first search finds nothing, where to look next.</p>
+
+<p>That decision is almost always made with a whiteboard, a paper chart, a spreadsheet and a lot of experienced intuition. The intuition is often excellent. The arithmetic underneath it is often wrong in ways that are predictable, quantifiable and expensive. ABYSSAL is the tool I have been building to fix the arithmetic without taking the decision away from the people who have the intuition.</p>
+
+<p>This first part of the series is a tour. No equations (those come in <a href="03-the-arithmetic-of-not-finding.html">Part 3</a>). Just the software, what it shows you, and why it is designed the way it is. Every screenshot is the real application running locally on fictional or historical cases.</p>
+
+<div class="callout key">
+  <div class="t">The one-sentence version</div>
+  <p>ABYSSAL keeps an honest probability map of where a lost thing might be, updates it every time someone searches and finds nothing, tells you which piece of evidence moved the map and by how much, suggests where to look next, and records who decided to trust each input.</p>
+</div>
+
+<h2><span class="num">01</span>The first ten seconds</h2>
+
+<p>The landing page offers one primary action, <em>Start a new search</em>, and three demonstrations you can open with a single click. I rebuilt this page several times. Earlier versions listed every capability; strangers read the list, felt they had understood the product, and never opened it. Now the page does one thing: put a real map in front of you as fast as possible.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/landing-dark.webp" alt="ABYSSAL landing page with the Start a new search button and three demo links" loading="lazy"><figcaption><b>The landing page.</b> One primary action and three demos: a fictional land search, the "one witness, five echoes" Evidence Map demo, and a multi-target watchlist of twelve invented vessels. Below are reference workspaces for AF447, MH370 and the <em>Merchant Royal</em>.</figcaption></figure>
+
+<p>Click <strong>See the Evidence Map: one witness, five echoes</strong>. In about four seconds you are looking at a probability map over real elevation data from a mountain valley. The case is fictional and labelled <code>SCENARIO</code> everywhere it appears, which is the first rule of the system: invented data can never leak into, or be mistaken for, a real case.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/demo-workspace.webp" alt="The demo workspace: a terrain map with two bright probability regions, dashed 90% contours and solid 50% contours, searched rectangles, and a source library on the left" loading="lazy"><figcaption><b>The workspace.</b> Left: the archive of retained sources (every file kept with its original). Centre: the belief map, with solid lines enclosing 50% of the probability and dashed lines enclosing 90%. The two faint rectangles are searches that found nothing. Top: the Search Ledger bar. Bottom: the time scrubber and the map status line.</figcaption></figure>
+
+<p>Here is what you are looking at, from the outside in.</p>
+
+<ul>
+  <li><strong>The colour is belief, not fact.</strong> Brighter means more of the probability sits there. The colour ramp is called <em>Ember</em>: it runs from near-black through violet and magenta to orange and pale amber, its brightness rises strictly, and it contains no blue or green. That last property is deliberate. Blue and green are the colours of sea and land; a probability ramp that uses them makes low-probability water look identical to the ocean underneath it. (<a href="09-building-it-honestly.html">Part 9</a> tells the slightly embarrassing story of how long the app shipped with a navy dark theme before anyone noticed.)</li>
+  <li><strong>The contours are credible regions.</strong> The solid line is the smallest area holding 50% of the belief; the dashed line holds 90%. On this case the 90% region is 13 km². That number, not the colour, is what a search coordinator plans against.</li>
+  <li><strong>The rectangles are searches that found nothing.</strong> A foot team swept the west valley corridor; a scent dog worked the valley floor. Neither found the hiker. Notice the map is darker inside them, but not black. A search that finds nothing is evidence, but weak evidence, because searches miss.</li>
+  <li><strong>The bar across the top is the Search Ledger.</strong> It splits the remaining belief into three honest parts: <span style="color:#3fae84">unsearched</span> (78.3%), <span style="color:#e8962e">searched and missed</span> (10.9%), and <span style="color:#a678d8">outside the mapped area</span> (10.8%). That third segment is the one almost every search tool leaves out.</li>
+</ul>
+
+<div class="callout think">
+  <div class="t">Thought experiment · the coverage fallacy</div>
+  <p>A team reports "we have covered 80% of the area". Most people hear "we are 80% done". But if the search method spots the target seven times in ten when it is actually there, and the planners were only 90% sure the target was inside the drawn area at all, then after an empty search the largest single share of the remaining belief, 43.5%, sits in ground already marked "done", and a fifth of it now sits outside the line. The Search Ledger bar makes that visible at a glance. <a href="03-the-arithmetic-of-not-finding.html#the-coverage-fallacy">Part 3</a> derives it and lets you play with it.</p>
+</div>
+
+<h2><span class="num">02</span>Where the belief comes from</h2>
+
+<p>The left drawer is the archive. Every source you bring in, a PDF, a GPX track, a witness statement typed into a text file, a scanned 1641 pamphlet, is kept as the original file with a SHA-256 hash, the time it was retrieved, where from and under what licence. A source on its own changes nothing. It has to be turned into an <em>observation</em> (a point, a bearing, a range ring, an area, a completed search) and that observation has to be <strong>admitted by a person</strong> before the map moves.</p>
+
+<p>This is the most important design decision in ABYSSAL, so it is worth saying plainly: <strong>importing, downloading, extracting, detecting, or an AI agent finding something never changes the map.</strong> Agents propose. Deterministic code acquires. Humans admit. Every admitted item records who admitted it and when, and can be switched off again to see what the map would look like without it.</p>
+
+<div class="duo reveal">
+  <figure class="shot"><img src="../assets/abyssal/sketch-crop.webp" alt="Sketching a range and bearing from an observer on the map, with live distance and angle labels" loading="lazy"><figcaption><b>Sketch evidence.</b> Draw what a witness saw: a point, a bearing, a range ring, a range plus bearing, or a corridor. Live labels show bearing ± spread and range ± tolerance, and the panel previews how many bits the sketch would move the map before you commit.</figcaption></figure>
+  <figure class="shot"><img src="../assets/abyssal/layers.webp" alt="The Layers panel listing measured grids, opt-in fetches of bathymetry, gravity and magnetics, and live seabed layers" loading="lazy"><figcaption><b>Layers.</b> Case records (UKHO wrecks and surveys), measured grids, live EMODnet, GEBCO, BGS and OpenSeaMap overlays, and opt-in fetches of ETOPO depth, marine gravity and EMAG2 magnetics for the visible area. Layers are context: they never change the probability unless you turn one into evidence.</figcaption></figure>
+</div>
+
+<p>The <strong>Sketch evidence</strong> tool is where most people first feel the product click. A witness on a ridge says the smoke was "north-east, maybe two and a half kilometres away". You pick <em>Range + bearing</em>, click the observer, drag towards the smoke, and type the uncertainty: 53° ± 5°, 2.6 km ± 200 m. You choose how much you trust it (<em>Doubtful</em>, <em>Plausible</em>, <em>Trusted</em>), and the panel tells you, before anything is saved, that including it would move the map by 3.66 bits. Then you decide: include it, or save it as a draft for someone else to review.</p>
+
+<p>Tracks come in the same way. GPX from a hiker's watch, KML from Google Earth, GeoJSON, IGC glider flights, raw GPS NMEA sentences, AIS ship reports, OpenSky ADS-B aircraft data and plain CSV are all parsed into whole tracks on the map, and any fix on a track can be turned into a pre-filled draft observation.</p>
+
+<h2><span class="num">03</span>Why did the map move? The Evidence Map</h2>
+
+<p>The single question a sceptical expert asks of any probability map is: <em>why does it say that?</em> Most systems cannot answer except by pointing at the code. ABYSSAL answers in a unit everyone can compare: <strong>bits</strong>.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/evidence-map.webp" alt="The Evidence Map panel open on the right, listing each observation with a bar showing how many bits the map moves if only that report is removed" loading="lazy"><figcaption><b>The Evidence Map.</b> For each admitted observation, the bar shows how far the map would move (in bits of Kullback–Leibler divergence) if <em>only that item</em> were removed, and whether it supports or opposes the leading cell. A guided four-step tour explains the demo on first open. "What would change my mind" ranks candidate next observations (a search, a re-interview, a spot check) by how many bits each is expected to move the map.</figcaption></figure>
+
+<p>Each row is a counterfactual: remove this one observation, recompute the whole map, and measure the difference. The foot-team sweep is worth 0.014 bits; the dog sweep 0.009 bits. Further down is the interesting row: five trail-register reports that all turn out to be copies of a single logbook entry. ABYSSAL groups them under one <em>provenance root</em> and counts them once. Remove any single echo and almost nothing changes; remove the whole source and the map shifts substantially. That is the lesson the demo is named after, and it is the subject of <a href="04-five-echoes-one-witness.html">Part 4</a>.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/provenance-graph.webp" alt="The Provenance graph: sources on the left connected to claims, observations and the map, with five echo reports converging on one register entry" loading="lazy"><figcaption><b>The Provenance (Fusion) graph.</b> Sources on the left, then claims, observations and the map. Solid edges are in the model; dashed are drafts; dotted are context only. Thicker edges carry more bits. The five echoes visibly converge on one root.</figcaption></figure>
+
+<p>Two other panels answer neighbouring questions. <strong>Search Information</strong> gives the map's overall uncertainty: 9.93 bits of Shannon entropy here, equivalent to about 975 equally likely cells, and the 50/90/99% credible areas. <strong>Evidence geometry</strong> draws each admitted observation's footprint on the map, so you can see the range ring and bearing wedge that a clue actually contributes.</p>
+
+<div class="duo reveal">
+  <figure class="shot"><img src="../assets/abyssal/search-information.webp" alt="Search Information popover showing Shannon uncertainty, effective states and credible areas" loading="lazy"><figcaption><b>Search Information.</b> Shannon uncertainty in bits, effective number of equally likely places, credible areas, leave-one-out information per item, and an absence-assurance calculator.</figcaption></figure>
+  <figure class="shot"><img src="../assets/abyssal/evidence-geometry.webp" alt="Evidence geometry overlay drawing green rings around observations on the map" loading="lazy"><figcaption><b>Evidence geometry.</b> Every admitted observation drawn where it acts, so a reviewer can check that a 2 km ring really is 2 km and really is centred on the right spot.</figcaption></figure>
+</div>
+
+<h2><span class="num">04</span>The search loop: mark, update, re-rank</h2>
+
+<p>The heart of the product is a loop that a search coordinator runs all day: send a team somewhere, get the result, update the picture, decide what next. ABYSSAL turns that into three clicks.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/live-search-loop.webp" alt="Where next panel on the left with search assets and POD presets; the map shows a searched cell highlighted and a toast reporting the belief change" loading="lazy"><figcaption><b>Where next? and the live search loop.</b> Pick an asset (on foot, scent dog, multirotor drone with EO camera, helicopter), pick a thoroughness preset (35% Quick to 95% Exhaustive, or 0% "Uncalibrated"), and the panel ranks cells by chance of success per hour. Mark a cell searched and nothing found: the map updates and the toast reports the change exactly, here "Search included: searched #1 cell (44,20) · map changed 10.57 → 10.58 bits · unsearched 78.3% → 78.2% · found-so-far 6.9% → 7.1%", with one-click Undo.</figcaption></figure>
+
+<p>Three things in that screenshot are worth slowing down for.</p>
+
+<p><strong>First, the 0% "Uncalibrated" preset.</strong> If you do not know how good a sensor is, the honest probability of detection to assume is not 50%; it is "I don't know", and an unknown sensor must not be allowed to make an empty search count against a place. ABYSSAL enforces this: a search with an uncalibrated sensor is recorded, drawn and kept, but it cannot lower belief anywhere. You would be amazed how much bad search planning comes from a confident-sounding number nobody measured.</p>
+
+<p><strong>Second, every update is undoable and exact.</strong> The undo restores the posterior to the bit, and the test suite checks that it does for searches, echo reports and area statements.</p>
+
+<p><strong>Third, the map can be stale.</strong> If you change something while a slow panel is computing, the panel knows its numbers were computed for a different map (it carries the posterior's SHA-256) and says so rather than showing you something out of date.</p>
+
+<h3>Plan Studio: many assets, one plan</h3>
+
+<p>Where-next ranks cells for one asset. Real searches have a dog team, two foot teams and a drone, each with its own speed, sweep width, endurance and detection probability. <strong>Plan Studio</strong> allocates all of them at once, draws each asset's track, and exports tasking sheets as CSV, GPX (load straight into a handheld) or PDF.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/plan-studio.webp" alt="Plan Studio with two assets auto-allocated: tracks drawn on the map as orange boxes around the highest-probability areas, with hours, marginal POS and track length per asset" loading="lazy"><figcaption><b>Plan Studio.</b> Speed, endurance and an explicit "assumption basis" per asset; auto-allocate; draw a track or area by hand; recompute the multi-asset plan; export. The assumptions box at the bottom is never hidden: the expected probability of success is conditional on a stationary target and on the stated sweep widths, speeds and PODs.</figcaption></figure>
+
+<p>Plan Studio also carries a money layer: the value of a find, the cost per hour of each asset and a fixed mobilisation cost turn bits into expected value, return on investment and a break-even find value; and a <em>search-to-exhaustion</em> curve shows the point where one more pass costs more than it is expected to return. That is the subject of <a href="05-where-next-and-when-to-stop.html">Part 5</a>.</p>
+
+<h3>Search Health: seven traps, checked automatically</h3>
+
+<p>Experienced search managers know the classic failures by name. ABYSSAL checks for them continuously and says so in plain sentences, never hiding a number and never blocking a decision.</p>
+
+<figure class="shot reveal"><img src="../assets/abyssal/search-health-panel.webp" alt="Search Health panel: T1 coverage fallacy and T2 convenience bias, with a curve comparing search effort to belief mass" loading="lazy" style="max-width:520px"><figcaption><b>Search Health.</b> T1 (coverage fallacy) shows the three-part ledger. T2 (convenience bias, or the streetlight effect) compares where the effort went with where the belief was: "4.5% of search effort went to the lowest-probability half of mapped ground, holding 1.7% of pre-search belief". The green and amber curves are belief and effort, cumulated from least to most likely ground.</figcaption></figure>
+
+<p>The full list: T1 the coverage fallacy; T2 convenience bias (searching where it is easy rather than where it is likely); T3 cleared-ground complacency (a moving subject can walk back into "cleared" ground); T4 single-story anchoring (most of the weight resting on one source); T5 the fragile clue (remove one sighting and the top area changes); T6 repeating a failing method (a third dog pass over the same ground buys almost nothing; a different sensor might buy a lot); and T7 sunk-cost continuation. Four of the seven are live today; three wait on data the app does not yet collect, and they say <code>needs</code> rather than pretending to pass.</p>
+
+<h2><span class="num">05</span>Time: people walk, things drift</h2>
+
+<p>A lost person does not stay put. <strong>Movement &amp; time</strong> projects the belief forward under explicit movement assumptions: for land, a walking prior built from least-cost distance over real terrain (slope, trails, water); for sea, a current-plus-leeway drift.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/movement.webp" alt="Movement and time panel showing the map projected 12 hours ahead; the probability blobs have spread and softened" loading="lazy"><figcaption><b>Movement &amp; time, +12 h.</b> "Assumes a person on foot moving for 12.0 hours at a median speed of 0.5 km/h; slope penalty 4.0." Uncertainty grows from 10.58 to 10.64 bits and the 90% region from 13.5 to 14.0 km². This view is exploratory and read-only: it never modifies saved evidence.</figcaption></figure>
+
+<p>There is also a <strong>retrospective replay</strong>, which recomputes the map as it stood at every saved revision of the case, a "fog-of-war" view that shows what the searchers knew at each moment (and can be exported as a video), and a <strong>shift handover</strong> report that compares two moments: what was searched, what was admitted, and how the numbers moved. Handovers between search shifts are where institutional memory leaks; a deterministic, hash-stamped handover stops the leak.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/replay.webp" alt="Retrospective replay: a play bar under the map, showing an earlier frame with the probability concentrated in one area before later searches" loading="lazy"><figcaption><b>Retrospective replay.</b> Frames are recomputed from the captured ledger, filtered by event time. The panel is explicit that this is the <em>current</em> admitted ledger replayed, not a reconstruction of what people believed at the time.</figcaption></figure>
+
+<h2><span class="num">06</span>Three real cases</h2>
+
+<p>ABYSSAL ships with three historical reference cases. They are not the product; they are stress tests, because each is hard in a different way.</p>
+
+<div class="trio reveal">
+  <figure class="shot"><img src="../assets/abyssal/merchant-royal-live.webp" alt="Merchant Royal case: a probability disc off Land's End" loading="lazy"><figcaption><b><em>Merchant Royal</em>, 1641.</b> 114 retained sources: pamphlets, state papers, catalogues. One admitted range claim ("ten leagues from Land's End") shapes the map. A study in reading old documents honestly.</figcaption></figure>
+  <figure class="shot"><img src="../assets/abyssal/mh370-live.webp" alt="MH370 case: a thin probability arc in the southern Indian Ocean" loading="lazy"><figcaption><b>MH370, 2014.</b> The famous seventh satellite arc, debris drift studies and published search reports. Also the home of an honest refusal: a flight-path particle filter that did not converge and therefore publishes no prior.</figcaption></figure>
+  <figure class="shot"><img src="../assets/abyssal/af447-live.webp" alt="AF447 case: the search box over the Atlantic with the recovered wreck location" loading="lazy"><figcaption><b>AF447, 2009–2011.</b> The case where the wreck <em>was</em> found, using Bayesian search. ABYSSAL replays it chronologically and scores each phase against the held-out answer, with six named hindsight-bias traps.</figcaption></figure>
+</div>
+
+<p>The AF447 backtest is a good example of the house style. The headline numbers flatter the model: the Phase 1 prior ranks the wreck cell tenth out of 6,400. The write-up immediately tells you not to cite that, because the Phase 1 prior is a Gaussian centred on the last known position and the wreck happened to lie 0.27 standard deviations from it, so the rank follows almost mechanically. What the negative-search accounting actually added over Phase 1 was between 0.08 and 0.28 bits. Small. Reported as small.</p>
+
+<h2><span class="num">07</span>The fictional land search, end to end</h2>
+
+<p>The second landing-page demo, <em>Try the fictional land search</em>, runs a complete lost-hiker case on real Yosemite Valley elevation: a last-known position, a terrain-aware walking prior, three completed searches with stated detection probabilities, and an answer card that says where the hiker most plausibly is and how much the searches changed that.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/land-search.webp" alt="Valley hiker search: an answer card at the top reading 'Where might the hiker be?', three candidate sectors, and the map with searched track patterns" loading="lazy"><figcaption><b>The valley hiker.</b> "The fictional hiker is still most plausibly within a 90% region of 35 km² under the stated walking and sighting assumptions." Three candidate sectors, each with before/after probability. Searched tracks are drawn as they were walked. The inspector on the right lists the four admitted observations and lets you switch each off.</figcaption></figure>
+
+<h2><span class="num">08</span>Beyond the single target</h2>
+
+<p>The last third of the product, built over the past fortnight, pushes outwards in two directions.</p>
+
+<p>The <strong>Ops console</strong> is a live operating picture: aircraft (ADS-B) with emergency-squawk alerts, ships (AIS) with dark-vessel flags, satellites propagated with SGP4 and their sensor swaths, wind and current particles, day and night, rain radar, earthquakes, a 3D globe, terrain, and a set of field tools, including leeway drift Monte Carlo, bearings-only fixes, shadow chronolocation, IAMSAR search patterns and photo EXIF geolocation. <a href="07-the-operating-picture.html">Part 7</a> tours it.</p>
+
+<p>The <strong>Signal Lab</strong> is the second engine: physics-screened detectors that turn raw measurements into calibrated detections. It finds ships in satellite radar images, reads their wakes to recover heading, speed and true position, matches them against AIS and flags vessels with no transponder; it localises underwater explosions and implosions from hydrophone arrival times; it finds rings (debris fields, crater rims, slicks). Everything it finds is a <em>contact</em>, not evidence, until its detection rates are measured. <a href="06-signals-from-the-deep.html">Part 6</a> is about the physics.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/signal-dark-vessels.webp" alt="Signal Lab running a synthetic SAR scene: detected ships circled in green when matched to AIS, red when dark, with wake lines and heading arrows" loading="lazy"><figcaption><b>Signal Lab, dark vessels.</b> A synthetic (SCENARIO) radar scene: green circles are ships matched to AIS reports, red are DARK (no AIS), magenta is a ghost (an AIS position where the radar should have seen a ship and did not). Lines are recovered wakes; arrows are headings. The panel scores the run against the scene's answer key.</figcaption></figure>
+
+<h2><span class="num">09</span>What it is not</h2>
+
+<p>I want to be as clear about this as about the features. ABYSSAL runs on one laptop. It has been built in about a month by one person directing AI coding agents under a written set of invariants. It is covered by roughly 2,500 Python tests, 330 frontend unit tests and 118 browser journeys. It has <strong>not</strong> been validated against real search outcomes beyond one backtest, it has no external users yet, and every detection probability in it is labelled as an analyst assumption unless it has been measured. It provides decision support. It never says "the target is here", and it never issues a clearance certificate.</p>
+
+<p>A stop rule is written into the roadmap: if fewer than five outside practitioners across at least two fields have used it on a real or replayed case by late January 2027, feature work stops and the engine is released with a written method. I would rather find out early.</p>
+
+<div class="callout try">
+  <div class="t">Read on</div>
+  <p><a href="03-the-arithmetic-of-not-finding.html">Part 3</a> derives the arithmetic behind every screenshot above, with a grid you can search yourself. If you prefer ideas to equations, jump to <a href="04-five-echoes-one-witness.html">Part 4</a> on correlated evidence, or <a href="09-building-it-honestly.html">Part 9</a> on how the thing was built.</p>
+</div>
+
+        <nav class="series-nav" aria-label="The ABYSSAL series"><div class="label">The ABYSSAL series</div><ol><li class="cur"><a href="01-a-tour.html"><span class="n">01</span><span>Finding what is lost: a tour of ABYSSAL</span></a></li><li><a href="02-a-map-that-refuses-to-lie.html"><span class="n">02</span><span>A map that refuses to lie</span></a></li><li><a href="03-the-arithmetic-of-not-finding.html"><span class="n">03</span><span>The arithmetic of not finding</span></a></li><li><a href="04-five-echoes-one-witness.html"><span class="n">04</span><span>Five echoes, one witness</span></a></li><li><a href="05-where-next-and-when-to-stop.html"><span class="n">05</span><span>Where next, and when to stop</span></a></li><li><a href="06-signals-from-the-deep.html"><span class="n">06</span><span>Signals from the deep</span></a></li><li><a href="07-the-operating-picture.html"><span class="n">07</span><span>The operating picture</span></a></li><li><a href="08-three-cases-two-refusals.html"><span class="n">08</span><span>Three cases, two refusals</span></a></li><li><a href="09-building-it-honestly.html"><span class="n">09</span><span>Building it honestly</span></a></li></ol></nav><div class="prevnext"><a class="next" href="02-a-map-that-refuses-to-lie.html"><small>Part 2 →</small><b>A map that refuses to lie</b></a></div>
+      </article>
+      <div></div>
+    </div>
+  </main>
+  <footer class="foot">
+    <div class="in">
+      <div>
+        <b>Rory Millard</b>
+        <span>Bayesian inference, search under uncertainty, and the places where mathematics meets messy physical systems.</span>
+      </div>
+      <nav aria-label="Footer">
+        <a href="../abyssal/index.html">ABYSSAL series</a>
+        <a href="../writing.html">Writing</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../about.html">About</a>
+        <a href="mailto:j7yma3egrrm9nxaa.16ls4@aleeas.com">Email</a>
+        <a href="https://www.linkedin.com/in/rorymillard1/" rel="noopener noreferrer">LinkedIn</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

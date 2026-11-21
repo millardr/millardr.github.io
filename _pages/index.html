@@ -1,0 +1,64 @@
+<!--meta
+{"out": "index.html", "title": "Rory Millard — Bayesian inference, search and honest probability", "desc": "Rory Millard: Oxford Engineering Science graduate building ABYSSAL, a Bayesian workbench for finding lost aircraft, ships and people, and writing about inference, search, sensing and AI.", "active": "home", "layout": "home", "image": "demo-live.webp"}
+-->
+  <section class="hero home">
+    <canvas class="field" aria-hidden="true"></canvas>
+    <div class="in">
+      <div class="kicker"><span class="dot"></span><span>Rory Millard</span><span class="lv">Engineering Science, Oxford · First, ranked first in cohort</span></div>
+      <h1>Honest probability for hard, physical problems.</h1>
+      <p class="dek">I build <b>ABYSSAL</b>, a Bayesian workbench for finding lost aircraft, ships and people, and write about inference, search, sensing and AI: the places where mathematics meets messy systems and expensive decisions.</p>
+      <div class="cta"><a class="btn primary" href="abyssal/index.html">Read the ABYSSAL series →</a><a class="btn ghost" href="about.html">About me</a><a class="btn ghost" href="contact.html">Get in touch</a></div>
+      <div class="meta"><span>Behind this text, a live Bayesian search is running: a hidden target, a probability map, and a searcher sweeping where belief is highest, updating after every miss.</span></div>
+    </div>
+  </section>
+
+  <div class="page">
+    <div class="split reveal">
+      <div>
+        <div class="eyebrow-k">Featured project</div>
+        <h2>ABYSSAL: a probability map that cannot overclaim</h2>
+        <p>Searches fail in predictable ways: "we covered 80%" heard as "we are 80% done", five retellings of one sighting counted as five witnesses, a failing sensor repeated over the same ground. ABYSSAL replaces those habits with arithmetic. It keeps an honest belief map, updates it after every empty search, explains every change in bits, says where the next hour should go and what it is worth, and records who decided to trust each piece of evidence.</p>
+        <p>It has grown into a full workstation: an evidence engine with provenance pooling, multi-asset planning with expected value and stopping rules, a live operating picture of aircraft, ships and satellites, and physics-screened detectors for radar wakes, hydrophones and debris rings.</p>
+        <div class="tags"><span>Bayesian search theory</span><span>Information theory</span><span>Provenance</span><span>Optimal allocation</span><span>SAR &amp; hydroacoustics</span><span>React · MapLibre · deck.gl</span><span>Python · NumPy · FastAPI</span></div>
+        <p style="margin-top:22px"><a class="btn primary" href="abyssal/01-a-tour.html">Take the tour</a></p>
+      </div>
+      <figure class="shot"><img src="assets/abyssal/demo-live.webp" alt="The ABYSSAL workspace over real terrain with the Ember probability map, contours and the Search Ledger" loading="lazy"><figcaption><b>The workspace.</b> Belief over real terrain, 50% and 90% credible regions, searched areas, and the three-part Search Ledger across the top.</figcaption></figure>
+    </div>
+
+    <div class="stats reveal">
+      <div><b>{{NPARTS}}</b><small>essays in the ABYSSAL series, {{TOTAL_WORDS}} words</small></div>
+      <div><b>{{NLABS}}</b><small>interactive maths labs, running in the page</small></div>
+      <div><b>~170k</b><small>lines of Python, tests and TypeScript, built in about a month</small></div>
+      <div><b>3</b><small>physics engines: radar wakes, hydrophones, rings</small></div>
+    </div>
+
+    <div class="section-title"><h2>The ABYSSAL series</h2><a href="abyssal/index.html">Series page and labs →</a></div>
+    <div class="compact reveal">
+          {{PARTS_COMPACT}}
+    </div>
+
+    <div class="mosaic reveal">
+      <a class="a" href="abyssal/04-five-echoes-one-witness.html"><img src="assets/abyssal/evidence-map-live.webp" alt="" loading="lazy"><span>Evidence Map: what moved the belief, in bits</span></a>
+      <a class="b" href="abyssal/07-the-operating-picture.html"><img src="assets/abyssal/ops-globe-satellites.webp" alt="" loading="lazy"><span>Ops console: satellites over the search</span></a>
+      <a class="d" href="abyssal/06-signals-from-the-deep.html"><img src="assets/abyssal/signal-dark-vessel-wake.webp" alt="" loading="lazy"><span>A ship beside its wake</span></a>
+      <a class="d" href="abyssal/08-three-cases-two-refusals.html"><img src="assets/abyssal/mh370-live.webp" alt="" loading="lazy"><span>MH370</span></a>
+      <a class="d" href="abyssal/05-where-next-and-when-to-stop.html"><img src="assets/abyssal/plan-studio-ev.webp" alt="" loading="lazy"><span>Expected value</span></a>
+      <a class="c" href="abyssal/07-the-operating-picture.html"><img src="assets/abyssal/watchlist-live.webp" alt="" loading="lazy"><span>Twelve dark vessels</span></a>
+      <a class="c" href="abyssal/02-a-map-that-refuses-to-lie.html"><img src="assets/abyssal/sketch-crop.webp" alt="" loading="lazy"><span>Sketching what a witness saw</span></a>
+      <a class="c" href="abyssal/08-three-cases-two-refusals.html"><img src="assets/abyssal/merchant-royal-live.webp" alt="" loading="lazy"><span><i>Merchant Royal</i>, 1641</span></a>
+    </div>
+
+    <div class="section-title"><h2>Other writing</h2><a href="writing.html">All writing →</a></div>
+    <div class="entries reveal">
+      <article class="entry2"><div class="d">Working note · 001</div><div><h3><a href="notes/the-fifth-miss.html">The Fifth Miss</a></h3><p>Five searches of the same ground with the same sensor, and nothing. How sure should you be? It depends less on how good the sensor is than on how it fails. A small model of shared failure, with an interactive calculator.</p></div></article>
+      <article class="entry2"><div class="d">Planned</div><div><h3>Learning to Learn from a Bad Sensor <span class="soon">soon</span></h3><p>Calibration, latent-variable models and adaptive experiments: how much data distinguishes an absent target from an unreliable instrument, and which observation resolves it fastest.</p></div></article>
+    </div>
+
+    <div class="section-title"><h2>What I work on</h2><a href="about.html">About me →</a></div>
+    <div class="cards3 reveal">
+      <div class="card"><div class="k">Inference</div><h3>Bayesian search and estimation</h3><p>Probability over space and time from messy, correlated, partly wrong evidence; negative evidence; calibration; value of information.</p></div>
+      <div class="card"><div class="k">Sensing</div><h3>Physics-screened detection</h3><p>Turning radar images, acoustic recordings and other raw measurements into detections whose error rates are measured, not assumed.</p></div>
+      <div class="card"><div class="k">AI</div><h3>Reliability and evaluation</h3><p>How learning systems behave, fail and should be evaluated; building with AI agents under written invariants; multi-agent coordination.</p></div>
+      <div class="card"><div class="k">Optimisation</div><h3>High-dimensional design</h3><p>Mathematical modelling and optimisation; my master's project developed efficient methods for optimising supersonic nozzle geometries.</p></div>
+    </div>
+  </div>
