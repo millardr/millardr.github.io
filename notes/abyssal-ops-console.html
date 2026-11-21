@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Part V of the ABYSSAL Series: a visual tour of the Ops Console, live flight and ship tracking, orbit detection, dark-vessel track gaps, leeway drift Monte Carlo, shadow chronolocation, 3D terrain, satellite time-machines, and multi-target Watchlists.">
+  <title>Part V: From Static Grids to a Living Ocean — ABYSSAL Series — Rory Millard</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+</head>
+<body>
+  <div class="reading-progress" aria-hidden="true"></div>
+  <header>
+    <div class="wrap">
+      <a class="brand" href="../index.html">Rory Millard</a>
+      <nav aria-label="Main navigation">
+        <a href="../writing.html" aria-current="page">Writing</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <article class="narrow">
+        <div class="page-head">
+          <div class="eyebrow"><a href="abyssal.html">The ABYSSAL Series</a> / Part V · Operational UI Showcase</div>
+          <h1>From Static Grids to a Living Ocean</h1>
+          <p class="subtitle">A visual walkthrough of the Ops Console, physical field geometry, satellite time-machines, track-gap analytics, and tracking twelve dark vessels at once.</p>
+        </div>
+
+        <div class="series-banner">
+          <span><strong>ABYSSAL Series · Part V of VI</strong> — Ops Console, Field Geometry &amp; Watchlists</span>
+          <a href="abyssal.html">All 6 chapters →</a>
+        </div>
+
+        <div class="prose">
+          <p>Up to this point we have focused on the mathematical spine of ABYSSAL: priors, provenance roots, negative searches, and expected value. Yet real analysts do not work in an abstract grid—they work in a moving, weather-beaten world of winds, currents, circling helicopters, silent transponders, orbital passes, and terrain shadows.</p>
+          <p>Press <strong>O</strong> anywhere inside ABYSSAL (or click the radar icon on the right rail) and the workspace opens its <strong>Ops Console</strong>—seventeen live situational-awareness and field-geometry tools built around one strict rule: <strong>everything in the Ops Console is Context.</strong> Nothing here silently alters a belief map. Instead, whenever a tool spots something meaningful—an orbiting search helicopter, a drifted life-raft cloud, a vessel's dark-gap reachability ellipse—one click proposes it as an editable <strong>Draft</strong> for a human to review and admit.</p>
+
+          <h2>1. Live air &amp; sea picture—with Orbit Detection</h2>
+          <p>The live picture streams open ADS-B aircraft traffic (with altitude colour-coding, trails, smooth dead reckoning, follow-camera, and automatic emergency squawk alerts for <code>7500</code>, <code>7600</code>, and <code>7700</code>) alongside live AIS maritime shipping. Two analytical detectors run directly on top of the live streams:</p>
+          <ul>
+            <li><strong>Orbiting-aircraft detector:</strong> An aircraft flying low and slow that turns continuously through more than 300° is flagged <code>⟳ ORBITING</code>—the classic signature of an active search, surveillance, or holding pattern. With one click, an analyst can propose that orbit (expanded by an assumed sweep radius) as a <strong>draft completed search</strong>—turning live flight-tracking straight into negative evidence once confirmed with a POD.</li>
+            <li><strong>Dark-vessel detector:</strong> Any AIS ship that falls silent for more than 15 minutes is flagged <code>DARK</code> with a growing kinematic reach ring representing how far it could have steamed since its last transmission.</li>
+          </ul>
+
+          <div class="shot-grid wide">
+            <figure class="shot">
+              <img src="../assets/images/series/01-live-air-sea-orbit.png" alt="ABYSSAL Ops Console showing live aircraft and ship traffic with a circling search helicopter flagged as ORBITING" loading="lazy">
+              <figcaption><strong>Live air, sea &amp; orbit detection (<code>SCENARIO</code> traffic preview):</strong> Aircraft heading icons, trails, maritime AIS vessels, and an automated <code>⟳ ORBITING</code> flag ready to be proposed as a draft negative-evidence sweep.</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="../assets/images/series/02-wind-currents.png" alt="Animated wind and ocean surface-current particle flow layered over the Merchant Royal probability map" loading="lazy">
+              <figcaption><strong>Wind &amp; ocean-current particle flow:</strong> Live open-weather wind vectors and surface-current streamlines flow across the search domain—essential physical context for drift modelling and search-sensor feasibility.</figcaption>
+            </figure>
+          </div>
+
+          <h2>2. Physical field geometry: Drift, Bearings, and Shadow Chronolocation</h2>
+          <p>Field investigators rely on classical physical and geometric reasoning to turn raw clues into spatial regions. ABYSSAL brings four of the most powerful field-geometry tools directly onto the map canvas:</p>
+          <ul>
+            <li><strong>Leeway drift Monte Carlo:</strong> Click a last known position, choose an object class (person in water, life raft, capsized hull—using approximate leeway coefficients after Allen &amp; Plourde 1999), and watch <strong>700 stochastic particles</strong> advect through wind and current fields for up to 72 hours. One click proposes the resulting 90% containment circle as a draft observation.</li>
+            <li><strong>Bearings-only fix (Monte Carlo 95% ellipse):</strong> Drop two or more direction-finding bearings with angular uncertainty wedges; ABYSSAL samples intersections to construct the 95% confidence fix ellipse directly on the map.</li>
+            <li><strong>IAMSAR search patterns:</strong> Generate standard International Aeronautical and Maritime Search and Rescue patterns—Expanding Square (SS), Sector Search (VS), or Parallel Sweep (PS)—centred on the belief peak, instantly reporting total transit time at speed, the exact percentage of belief enclosed inside the sweep, and one-click GPX export.</li>
+            <li><strong>Shadow Clock (chronolocation) &amp; Photo EXIF:</strong> Drop a JPEG to extract GPS, camera azimuth, field-of-view cone, and UTC timestamp—or enter an object's height, shadow length, and UTC time to trace the exact circle of equal solar elevation on Earth where the photograph could have been taken, then intersect it with the shadow's compass bearing to narrow the location down to a handful of candidate points.</li>
+          </ul>
+
+          <div class="shot-grid wide">
+            <figure class="shot">
+              <img src="../assets/images/series/03-leeway-drift.png" alt="Leeway drift Monte Carlo simulation showing 700 particles drifting from a clicked last known position with a 90 percent containment ring" loading="lazy">
+              <figcaption><strong>Leeway drift Monte Carlo:</strong> 700 particles drift downwind and down-current from a clicked last known position; the 90% envelope can be promoted to a draft observation in one click.</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="../assets/images/series/04-bearings-fix.png" alt="Three radio or visual bearings with angular uncertainty wedges converging on a 95 percent Monte Carlo error ellipse" loading="lazy">
+              <figcaption><strong>Bearings-only fix:</strong> Three directional bearings with explicit angular uncertainty cones yield a Monte Carlo 95% error ellipse ready for review.</figcaption>
+            </figure>
+          </div>
+
+          <div class="shot-grid wide">
+            <figure class="shot">
+              <img src="../assets/images/series/06-iamsar-pattern.png" alt="IAMSAR parallel sweep search pattern laid directly over the glowing probability peak with time and enclosed belief metrics" loading="lazy">
+              <figcaption><strong>IAMSAR search patterns:</strong> Parallel sweep, expanding square, and sector patterns snapped to the belief peak with instant enclosed-probability calculations and GPX export.</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="../assets/images/series/09-shadow-chronolocation.png" alt="Shadow clock chronolocation tool showing the equal-sun-elevation circle and azimuth intersection points across the globe" loading="lazy">
+              <figcaption><strong>Shadow clock chronolocation:</strong> Given object height, shadow length, and UTC time, ABYSSAL traces the global equal-solar-elevation circle and intersects it with shadow azimuth.</figcaption>
+            </figure>
+          </div>
+
+          <h2>3. Orbital radar, 3D terrain, and the Satellite View Time Machine</h2>
+          <p>When you zoom out below zoom 5.5, the flat map transitions smoothly into an interactive <strong>3D globe</strong> with atmosphere, stars, day/night twilight terminators (civil, nautical, and astronomical twilight on a \(\pm 12\text{ h}\) scrubber), and real <strong>SGP4 orbital propagation</strong> tracking imaging satellites, their ground swaths, and "next pass over your view" countdowns. Zoom back into alpine valleys and toggle <strong>3D Terrain &amp; Relief</strong> to drape the workspace over open elevation tiles—or press <strong>I</strong> to open the <strong>Satellite View Time Machine</strong>: a 30-day strip of dated NASA HLS (Sentinel-2 / Landsat 8–9) and daily VIIRS scenes showing exact coverage and cloud percentage per day, a one-click <em>Best clear day</em> jump, and an A/B crossfade wiper.</p>
+
+          <div class="shot-grid wide">
+            <figure class="shot">
+              <img src="../assets/images/series/05-globe-satellites.png" alt="ABYSSAL 3D globe mode showing satellite orbits, ground swaths, and day-night terminator" loading="lazy">
+              <figcaption><strong>3D Globe &amp; SGP4 Orbital Radar:</strong> Real SGP4 orbital tracks, sensor swaths, ×1–×300 time warp, and next-pass countdowns over the active view centre (opt-in CelesTrak fetch, or labelled <code>SCENARIO</code> orbits offline).</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="../assets/images/series/07-3d-terrain.png" alt="ABYSSAL 3D terrain relief view showing mountain topography beneath the Ember probability map" loading="lazy">
+              <figcaption><strong>3D Terrain &amp; Relief shading:</strong> Keyless AWS elevation tiles render alpine ridges and valleys beneath the search area, paired with MGRS grid references on the cursor readout.</figcaption>
+            </figure>
+          </div>
+
+          <figure class="shot wide">
+            <img src="../assets/images/series/08-satellite-view.png" alt="ABYSSAL Satellite View Time Machine showing a 30-day imagery strip with cloud cover and coverage percentages per day" loading="lazy">
+            <figcaption><strong>Satellite View Time Machine:</strong> Thirty days of dated NASA imagery indexed by cloud cover and scene overlap over the current viewport, with instant A/B crossfade comparison—strictly Context until an analyst turns an observation into a draft.</figcaption>
+          </figure>
+
+          <h2>4. Track gaps: "Where could it have gone while dark?"</h2>
+          <p>When you import an AIS, GPX, KML, IGC, or NMEA track, silent gaps often matter more than the points that were transmitted. Suppose a vessel transmits Fix \(A\) at time \(t_A\), switches off its transponder for \(\Delta t\) hours, and reappears at Fix \(B\) at distance \(D\). Under an assumed maximum speed \(v_{\max}\) (defaulting transparently to \(1.25\times\) the vessel's 90th-percentile speed outside gaps), every point \(x\) the vessel could physically have visited while dark must satisfy the triangle-budget inequality:</p>
+
+          <div class="math-display">
+            $$\|x - A\| + \|x - B\| \le v_{\max} \cdot \Delta t$$
+          </div>
+
+          <p>That is the exact geometric definition of an <strong>ellipse</strong> with foci at \(A\) and \(B\), semi-major axis \(a = \tfrac{1}{2}v_{\max}\Delta t\), focal half-distance \(c = \tfrac{1}{2}D\), and semi-minor axis \(b = \sqrt{a^2 - c^2}\). And whenever \(D > v_{\max}\Delta t\), no physical trajectory exists at that speed—ABYSSAL flags the segment immediately as an <strong>impossible jump (spoofing / speed anomaly)</strong>. Try the geometry yourself below.</p>
+
+          <div class="panel" aria-label="Interactive dark-vessel track-gap reachability ellipse">
+            <h3>Interactive: Track-gap reachability ellipse &amp; spoofing check</h3>
+            <div class="controls">
+              <label class="control">
+                <span>Silent gap \(\Delta t\) <strong id="gap-hours-val">8 h</strong></span>
+                <input id="gap-hours" type="range" min="2" max="18" value="8" step="1">
+              </label>
+              <label class="control">
+                <span>Assumed max speed \(v_{\max}\) <strong id="gap-speed-val">16 kn</strong></span>
+                <input id="gap-speed" type="range" min="6" max="24" value="16" step="1">
+              </label>
+              <label class="control">
+                <span>Fix separation \(D\) <strong id="gap-dist-val">80 nm</strong></span>
+                <input id="gap-dist" type="range" min="10" max="240" value="80" step="5">
+              </label>
+            </div>
+
+            <svg id="gap-svg" class="viz-svg" viewBox="0 0 640 220" style="margin-top:18px" role="img" aria-label="Reachable ellipse between two vessel fixes"></svg>
+
+            <div class="results">
+              <div>
+                <small>Max travel budget (\(v_{\max}\Delta t\))</small>
+                <strong id="gap-budget-val">—</strong>
+              </div>
+              <div>
+                <small>Reachable dark area (\(\pi a b\))</small>
+                <strong id="gap-area-val">—</strong>
+              </div>
+              <div>
+                <small>Kinematic assessment</small>
+                <strong id="gap-status-val">—</strong>
+              </div>
+            </div>
+            <p class="explain">Push Fix separation \(D\) past the travel budget \(v_{\max}\Delta t\) to trigger the impossible-jump spoofing flag. In the real Ops Console, this ellipse ignores land and currents (stated explicitly) and can be proposed as an area draft in one click.</p>
+          </div>
+
+          <h2>5. Watchlist: tracking many dark targets at once</h2>
+          <p>For most of its early life, ABYSSAL assumed you were looking for <em>one</em> lost thing. Yet maritime compliance analysts, coast guards, and commodity desks rarely watch one ship—they watch dozens or hundreds simultaneously and ask: <strong>"I have four sensors available right now; which targets should each sensor look at first?"</strong></p>
+          <p>ABYSSAL's <strong>Watchlist</strong> view demonstrates this multi-target slice on a fictional Mediterranean scenario of <strong>twelve vessels gone dark</strong>. Each vessel propagates a kinematic ring and loiter mixture around its last fix as you scrub the scenario clock forward. Across all twelve targets and four heterogeneous sensors (a SAR satellite pass, a maritime patrol aircraft, a coastal UAV, and a patrol vessel), the engine computes exact expected information gain in bits for every target–sensor pairing and solves the optimal one-to-one assignment.</p>
+
+          <figure class="shot wide">
+            <img src="../assets/images/series/live-watchlist.png" alt="ABYSSAL Dark-Fleet Watchlist over the Central Mediterranean showing twelve dark vessels with expanding kinematic rings and the optimal four-sensor tasking recommendation ranked in bits" loading="lazy">
+            <figcaption><strong>Watchlist (<code>SCENARIO · Twelve vessels gone dark</code>):</strong> Four sensors are optimally tasked by value-weighted information gain (40.5 bits total: maritime patrol aircraft → <em>cargo Eider</em> at 7.5 bits, coastal UAV → <em>ro-ro Gannet</em> at 3.6 bits, patrol vessel → <em>dhow Kestrel</em> at 3.2 bits, SAR pass → <em>tanker Aster</em> at 3.0 bits). Crucially, the engine refuses to waste sensors on <em>tanker Bellwether</em> (575,000 km²) or <em>tanker Jabiru</em> (537,000 km²), stating plainly: <em>"Too spread out, or not worth a sensor, for any sensor here to help yet."</em></figcaption>
+          </figure>
+
+          <p>Notice that last sentence in the screenshot—it captures the entire ethos of ABYSSAL. A flashy dashboard would assign sensors to the scariest-looking tankers regardless of whether the sweep has any chance of finding them. An honest engine tells you when a target has diffused beyond your sensor's reach. In our sixth and final essay, we examine the hardest test of that honesty: <strong>what happens when ABYSSAL's own models are tested against real historical disasters—and when the right engineering decision is to refuse to publish an answer at all.</strong></p>
+
+          <nav class="series-pager" aria-label="Series navigation">
+            <a class="pager-link" href="abyssal-when-to-stop.html">
+              <span class="pager-dir">← Previous: Part IV</span>
+              <span class="pager-title">When to Stop Looking: Water-Filling, Mutual Information &amp; Search Economics</span>
+            </a>
+            <a class="pager-link next" href="abyssal-epistemic-humility.html">
+              <span class="pager-dir">Next: Part VI →</span>
+              <span class="pager-title">The Discipline of Refusal: AF447, MH370 &amp; Knowing What a Model Cannot Say</span>
+            </a>
+          </nav>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© Rory Millard</span>
+      <span><a href="mailto:millard.rge@outlook.com">Email</a> &nbsp;·&nbsp; <a href="../writing.html">Writing</a></span>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" defer onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+  <script src="../assets/abyssal-series.js" defer></script>
+</body>
+</html>

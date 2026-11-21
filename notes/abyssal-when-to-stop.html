@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Part IV of the ABYSSAL Series: Koopman water-filling allocation, exact location mutual information per dollar, greedy search-to-exhaustion curves, optimal stopping, and where calibrated tails are actually priced.">
+  <title>Part IV: When to Stop Looking — ABYSSAL Series — Rory Millard</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+</head>
+<body>
+  <div class="reading-progress" aria-hidden="true"></div>
+  <header>
+    <div class="wrap">
+      <a class="brand" href="../index.html">Rory Millard</a>
+      <nav aria-label="Main navigation">
+        <a href="../writing.html" aria-current="page">Writing</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <article class="narrow">
+        <div class="page-head">
+          <div class="eyebrow"><a href="abyssal.html">The ABYSSAL Series</a> / Part IV · Search Economics &amp; Stopping Rules</div>
+          <h1>When to Stop Looking</h1>
+          <p class="subtitle">Water-filling effort allocation, exact mutual information per dollar, search-to-exhaustion curves, and why calibrated probability tails only matter where the tails are priced.</p>
+        </div>
+
+        <div class="series-banner">
+          <span><strong>ABYSSAL Series · Part IV of VI</strong> — Optimisation, Information Value &amp; Economics</span>
+          <a href="abyssal.html">All 6 chapters →</a>
+        </div>
+
+        <div class="prose">
+          <p>A probability map tells you where something might be. It does not, by itself, tell you what to do tomorrow morning. In any real search—whether chartering an autonomous underwater vehicle at tens of thousands of dollars a day, deploying mountain rescue teams before nightfall, or tasking a radar satellite over a dark tanker—every hour of observation has an opportunity cost. The central question shifts from <em>"where is the peak?"</em> to <strong>"what is the next hour of search actually worth—and when is the rational move to stop?"</strong></p>
+
+          <div class="thought-exp">
+            <span class="thought-exp-label">Thought Experiment · The Streetlight Effect in Search</span>
+            <p>Imagine two sectors of seabed. Sector A holds 35% of the remaining probability, lies in smooth flat sand, and can be swept cleanly in four hours. Sector B holds 40% of the probability, but lies in jagged volcanic gullies where sonar takes four times as long per square kilometre and misses half the targets in acoustic shadow.</p>
+            <p>Where should you send your first four hours of ship time? Not to the highest probability—to the highest <strong>marginal detection per unit cost</strong>. Conversely, what happens if a team keeps returning to easy, flat Sector A because it is cheap to survey, pouring 70% of its budget into ground that now holds only 15% of the probability? ABYSSAL's <em>Search Health</em> diagnostics flag that exact failure mode as the <strong>Streetlight Trap</strong>.</p>
+          </div>
+
+          <h2>1. Koopman water-filling: optimal allocation under exponential detection</h2>
+          <p>Classical search theory—pioneered by Bernard Koopman during the Second World War and extended by Lawrence Stone—models random search inside cell \(i\) with effort \(e_i \ge 0\) and sweep effectiveness \(a_i > 0\) via the exponential detection function:</p>
+
+          <div class="math-display">
+            $$d_i(e_i) = 1 - \exp(-a_i e_i)$$
+          </div>
+
+          <p>Given a current posterior \(p_i\) and a total effort budget \(B = \sum_{i=1}^N e_i\), we want to maximise total probability of detection \(\sum_i p_i \bigl(1 - e^{-a_i e_i}\bigr)\) subject to \(e_i \ge 0\). Because the objective is strictly concave in \(e_i\), the Karush–Kuhn–Tucker (KKT) optimality conditions have an elegant closed-form geometric interpretation known as <strong>water-filling</strong>:</p>
+
+          <div class="theorem-box">
+            <span class="theorem-label">Optimal Effort Allocation · Water-Filling</span>
+            <p>There exists a unique Lagrange multiplier \(\mu > 0\) (the common marginal probability of detection per unit effort across all active cells) such that the optimal effort in cell \(i\) is:</p>
+            <div class="math-display">
+              $$e_i^* = \max\!\left(0,\; \frac{\ln p_i + \ln a_i - \ln \mu}{a_i}\right)$$
+            </div>
+            <p>Cells whose initial marginal return \(p_i a_i\) falls below the waterline \(\mu\) receive <strong>zero</strong> effort. Active cells receive effort precisely until their remaining marginal return \(p_i a_i e^{-a_i e_i^*}\) drops down to the shared waterline \(\mu\). By sorting cells by \(\ln p_i + \ln a_i\), the exact threshold \(\mu\) is computed in \(O(N \log N)\) time in overflow-safe log space.</p>
+          </div>
+
+          <p>Water-filling is a theoretical upper bound—it ignores transit time between disconnected cells and assumes continuous divisibility of effort. In ABYSSAL's <strong>Where next?</strong> panel, it serves as an instant, honest benchmark: showing the highest-marginal-return ground and the upper bound on expected Probability of Success (POS) before you step into multi-asset route planning.</p>
+
+          <figure class="shot wide">
+            <img src="../assets/images/abyssal-where-next.png" alt="ABYSSAL Where next water-filling effort allocation panel showing ranked cells and expected probability of success" loading="lazy">
+            <figcaption><strong>Where next? (water-filling benchmark):</strong> Under a stated effort budget and assumed sweep rate, water-filling ranks the exact cells that equalise marginal return while explicitly flagging that the detection rate is an analyst assumption—and that the allocation is an optimistic bound, not an executable vehicle path.</figcaption>
+          </figure>
+
+          <h2>2. Exact location mutual information per dollar</h2>
+          <p>Probability of detection measures whether you find the target on this sortie. Sometimes, however, an observation is valuable even when it comes back empty—because it rules out a large hypothesis and collapses uncertainty for the next sortie. In information theory, the expected uncertainty removed by a binary search outcome \(Y \in \{\text{detect}, \text{miss}\}\) over target location \(X\) is the <strong>mutual information</strong> \(I(X; Y)\).</p>
+          <p>Suppose a planned sweep covers cells with current probability mass \(m_c\) and conditional detection probability \(d_c \in [0, 1]\). Letting \(H_2(u) = -u \log_2 u - (1-u)\log_2(1-u)\) denote binary Shannon entropy, the total probability of detection is \(\bar{d} = \sum_c m_c d_c\), and the exact location mutual information gained by running the sweep is:</p>
+
+          <div class="math-display">
+            $$I(X; Y) = H(Y) - H(Y \mid X) = H_2\!\left(\sum_c m_c d_c\right) - \sum_c m_c \, H_2(d_c) \quad \text{bits}$$
+          </div>
+
+          <p>Look closely at the two terms. \(H_2(\bar{d})\) is the total surprise in the yes/no outcome; \(\sum_c m_c H_2(d_c)\) is the <em>noise entropy</em> caused by an imperfect sensor (\(0 < d_c < 1\)). If a sensor is perfect (\(d_c \in \{0, 1\}\)), the noise term vanishes and you gain the full binary entropy of the searched mass. If a sensor is completely blind (\(d_c = 0.5\) everywhere), the two terms cancel identically and \(I(X; Y) = 0\) bits. Dividing \(I(X; Y)\) by the sortie's dollar cost yields <strong>bits per \$1,000 spent</strong>—a clean, currency-denominated measure of information efficiency.</p>
+
+          <h2>3. Search-to-exhaustion curves and the optimal stopping rule</h2>
+          <p>ABYSSAL's <strong>Plan Studio</strong> extends single-sortie allocation into full economic planning with two linked modules: <strong>Expected Value (EV) &amp; Economics</strong> and the <strong>Search-to-Exhaustion EV Curve</strong>.</p>
+          <p>Suppose the target has an analyst-stated recovery value \(V\), launching the campaign carries a fixed mobilisation cost \(C_0\), and each hour of search costs \(c\) dollars. As the campaign runs hour by hour, a greedy cell-pass allocator repeatedly directs the next pass to the cell with the highest marginal detection per cost, updating that cell's surviving mass by \((1 - \text{POD})\) after every empty pass. After \(t\) hours of cumulative effort, the cumulative probability of having found the target is \(P_{\text{find}}(t)\), the cumulative expenditure is \(C(t) = C_0 + c t\), and the expected net economic value of planning a campaign up to horizon \(t\) is:</p>
+
+          <div class="math-display">
+            $$\operatorname{EV}(t) = V \cdot P_{\text{find}}(t) - \bigl(C_0 + c \, t\bigr)$$
+          </div>
+
+          <p>Because each subsequent hour sweeps lower-probability ground (or re-sweeps depleted ground), \(P_{\text{find}}(t)\) is concave while cost \(C(t)\) grows linearly. The net EV curve rises steeply during the early high-density passes, reaches a unique <strong>EV-maximising stopping point</strong> \(t^*\) where marginal expected recovery equals the hourly operating cost:</p>
+
+          <div class="math-display">
+            $$V \cdot \frac{\Delta P_{\text{find}}}{\Delta t}\bigg|_{t^*} \approx c$$
+          </div>
+
+          <p>and then slopes steadily downward as every additional hour burns more charter fees than the remaining probability mass can justify. Plan Studio plots this entire trajectory—reporting the exact stopping hour, peak Net EV, break-even find value, ROI, and a POD-only sensitivity fan (illustrative Beta concentration \(k = 10\), explicitly labelled as excluding uncertainty in the map, valuation, and charter cost).</p>
+
+          <div class="panel" aria-label="Interactive search-to-exhaustion and optimal stopping simulator">
+            <h3>Interactive: Search-to-exhaustion &amp; optimal stopping curve</h3>
+            <div class="controls">
+              <label class="control">
+                <span>Find value \(V\) <strong id="stop-val-lbl">$3.0M</strong></span>
+                <input id="stop-val" type="range" min="0.5" max="10" value="3.0" step="0.5">
+              </label>
+              <label class="control">
+                <span>Charter cost \(c\) <strong id="stop-cost-lbl">$12k / hr</strong></span>
+                <input id="stop-cost" type="range" min="2" max="40" value="12" step="2">
+              </label>
+              <label class="control">
+                <span>Per-pass POD <strong id="stop-pod-lbl">55%</strong></span>
+                <input id="stop-pod" type="range" min="15" max="90" value="55" step="5">
+              </label>
+            </div>
+
+            <svg id="stop-svg" class="viz-svg" viewBox="0 0 640 230" style="margin-top:18px" role="img" aria-label="Net expected value and cumulative probability of find over search hours"></svg>
+            <div class="legend-row" style="margin-top:8px">
+              <span><span class="legend-dot" style="background:#425f6a"></span>Net Expected Value \(\text{EV}(t)\) (left axis)</span>
+              <span><span class="legend-dot" style="background:#c78d4e"></span>Cumulative \(P(\text{find})\) (right axis)</span>
+              <span><span class="legend-dot" style="background:#c75d2c"></span>Break-even (\(\$0\))</span>
+            </div>
+
+            <div class="results">
+              <div>
+                <small>EV-maximising stopping time</small>
+                <strong id="stop-best-hr">—</strong>
+              </div>
+              <div>
+                <small>Peak Net EV</small>
+                <strong id="stop-peak-ev">—</strong>
+              </div>
+              <div>
+                <small>Cumulative \(P(\text{find})\) at stop</small>
+                <strong id="stop-pfind">—</strong>
+              </div>
+              <div>
+                <small>First-hour marginal EV</small>
+                <strong id="stop-marginal">—</strong>
+              </div>
+            </div>
+            <p class="explain">Assumes a 90% in-domain prior (10% outside), $60k fixed mobilisation, stationary target, and independent passes. Raise charter cost high enough and the rational decision flips cleanly to "Do not launch."</p>
+          </div>
+
+          <figure class="shot wide">
+            <img src="../assets/images/series/live-plan-studio-ev.png" alt="ABYSSAL Plan Studio open on the Yosemite scenario showing Expected Value and Economics, the Search-to-exhaustion EV curve stopping at 261.3 hours with $1.15M peak Net EV, multi-asset routes on the glowing Ember map, and the Model Inspector on the right" loading="lazy">
+            <figcaption><strong>Plan Studio in live operation:</strong> Multi-asset search tracks are planned directly over both glowing Ember modes while the left drawer computes Net EV, marginal EV/hour (<code>$41.1k/h</code> on the first pass), and the exact EV-maximising stopping point (<code>261.3 h · $402.0k · 77.5% find</code>) under explicitly disclosed analyst assumptions.</figcaption>
+          </figure>
+
+          <h2>4. Where a calibrated distribution is actually worth money</h2>
+          <p>Building the money layer forced a sharper strategic question: <em>who actually pays for a calibrated probability distribution over space and time, rather than a simple yes/no alert?</em></p>
+          <p>A subtle economic distinction separates buyers. Organisations that only act on a binary threshold (<em>"is the object in this box, yes or no?"</em>) care mostly about hit rate around the mode; a model with terrible tails and the right peak serves them surprisingly well. A well-calibrated full distribution—tails included—is worth real money wherever <strong>expected value is integrated over the entire shape of the distribution</strong>:</p>
+          <ul>
+            <li><strong>Marine and aviation insurance &amp; reinsurance:</strong> Loss reserves, salvage participation, and reinsurance layers are priced directly on the tail of recovery probability.</li>
+            <li><strong>Physical commodity flows &amp; dark-fleet compliance:</strong> Demurrage, floating storage, freight derivatives, and sanctions exposure depend on arrival-time and vessel-position distributions when transponders go dark.</li>
+            <li><strong>Salvage rights &amp; expedition financing:</strong> Chartering a deep-water survey vessel is a literal real-options problem governed by the exhaustion curve above.</li>
+          </ul>
+          <p>That insight—that the exact same engine serves both a single high-value search and a fleet of moving physical assets—gave birth to ABYSSAL's newest operational capabilities: the <strong>Ops Console</strong> and the <strong>Dark-Fleet Watchlist</strong>. Let's take a visual tour of both in Part V.</p>
+
+          <nav class="series-pager" aria-label="Series navigation">
+            <a class="pager-link" href="abyssal-negative-evidence.html">
+              <span class="pager-dir">← Previous: Part III</span>
+              <span class="pager-title">What Nothing Tells You: Negative Evidence &amp; Minimum-KL Constraints</span>
+            </a>
+            <a class="pager-link next" href="abyssal-ops-console.html">
+              <span class="pager-dir">Next: Part V →</span>
+              <span class="pager-title">From Static Grids to a Living Ocean: Ops Console &amp; Dark-Fleet Watchlists</span>
+            </a>
+          </nav>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© Rory Millard</span>
+      <span><a href="mailto:millard.rge@outlook.com">Email</a> &nbsp;·&nbsp; <a href="../writing.html">Writing</a></span>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" defer onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+  <script src="../assets/abyssal-series.js" defer></script>
+</body>
+</html>

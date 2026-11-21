@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Part I of the ABYSSAL Series: the philosophy of honest probability maps, human admission as an architectural firewall, perceptual Ember cartography, sketch tools, and offline audit packs.">
+  <title>Part I: Why a Probability Map Should Refuse to Lie — ABYSSAL Series — Rory Millard</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+</head>
+<body>
+  <div class="reading-progress" aria-hidden="true"></div>
+  <header>
+    <div class="wrap">
+      <a class="brand" href="../index.html">Rory Millard</a>
+      <nav aria-label="Main navigation">
+        <a href="../writing.html" aria-current="page">Writing</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <article class="narrow">
+        <div class="page-head">
+          <div class="eyebrow"><a href="abyssal.html">The ABYSSAL Series</a> / Part I · Philosophy &amp; Interface</div>
+          <h1>Why a Probability Map Should Refuse to Lie</h1>
+          <p class="subtitle">The coverage fallacy, perceptual cartography, human-admitted belief, and designing a workspace where context can never silently masquerade as truth.</p>
+        </div>
+
+        <div class="series-banner">
+          <span><strong>ABYSSAL Series · Part I of VI</strong> — Philosophy, Interface &amp; Workflow</span>
+          <a href="abyssal.html">All 6 chapters →</a>
+        </div>
+
+        <div class="prose">
+          <p>Suppose you lose your keys somewhere in your house. You spend five minutes searching the kitchen and come up empty. Two quiet thoughts follow immediately, though we rarely articulate them with precision:</p>
+          <ol>
+            <li><strong>Does an empty kitchen mean the keys are not in the kitchen?</strong> No. You may have missed them behind the kettle or under a tea towel. How much the search lowers the chance they are in the kitchen depends entirely on how thorough those five minutes were.</li>
+            <li><strong>Does an empty kitchen make the hallway more likely?</strong> Yes—and it also makes it slightly more likely that you left them in your coat pocket at the pub.</li>
+          </ol>
+          <p>Now scale that domestic moment up to a mountain range, an ocean basin, a hundred search volunteers, or a multi-million-dollar seabed survey. The arithmetic is identical, yet human teams—even highly trained ones—stumble into the same three cognitive traps with clockwork regularity.</p>
+
+          <h2>The three ways searchers deceive themselves</h2>
+          <ul>
+            <li><strong>The coverage fallacy:</strong> Hearing <em>"we covered 80% of the search box"</em> and mentally translating it into <em>"we had an 80% chance of finding the target."</em> If your sensor or search team only spots the target seven times in ten when it is actually in front of them, then covering 80% of a box that has a 90% chance of containing the target yields only \(0.90 \times 0.80 \times 0.70 = 50.4\%\) pre-search probability of success—not 80%.</li>
+            <li><strong>Boundary amnesia:</strong> Every map has an edge. If you began 90% confident the target lay inside your drawn polygon and 10% confident it lay outside, every empty search inside the polygon is quiet evidence that the target was never inside your box in the first place. Almost no operational dashboard updates the <em>outside-the-box</em> share.</li>
+            <li><strong>Conflating context with evidence:</strong> Modern mapping tools make it effortless to pile twenty layers onto a screen—bathymetry, satellite scenes, historical rumours, automated detections, weather models. When a tool automatically folds an unverified rumour or an uncalibrated detector into a heatmap, the map stops being a record of justified belief and becomes an impressive-looking hallucination.</li>
+          </ul>
+
+          <div class="thought-exp">
+            <span class="thought-exp-label">Thought Experiment · The 80% Illusion</span>
+            <p>Imagine a search coordinator briefing families after two days of sweeps: <em>"We have thoroughly covered 80% of the valley."</em> Everyone in the room hears that four-fifths of the uncertainty is gone. Now ask a sharper question: <strong>given that you found nothing, where does the remaining probability actually sit?</strong></p>
+            <p>Under a 90% inside-area prior and a 70% probability of detection, the largest single slice of remaining belief—<strong>43.55%</strong>—sits in the ground you just finished calling "done." A further <strong>20.16%</strong> now sits completely outside your drawn boundary—double what it was when you started. Only <strong>36.29%</strong> sits in the unsearched strip everyone is pointing at on the wall.</p>
+          </div>
+
+          <div class="panel" aria-label="Coverage fallacy and honest progress bar">
+            <h3>Interactive: The coverage fallacy &amp; the honest three-part ledger</h3>
+            <div class="controls">
+              <label class="control">
+                <span>Inside-area belief \(a\) <strong id="cov-inside-val">90%</strong></span>
+                <input id="cov-inside" type="range" min="50" max="100" value="90" step="5">
+              </label>
+              <label class="control">
+                <span>Area covered \(c\) <strong id="cov-coverage-val">80%</strong></span>
+                <input id="cov-coverage" type="range" min="10" max="100" value="80" step="5">
+              </label>
+              <label class="control">
+                <span>Detection if there (POD) \(d\) <strong id="cov-pod-val">70%</strong></span>
+                <input id="cov-pod" type="range" min="10" max="95" value="70" step="5">
+              </label>
+            </div>
+
+            <div class="progress-bar-track" aria-hidden="true">
+              <div id="seg-missed" class="seg-missed" style="width: 43.55%"></div>
+              <div id="seg-unsearched" class="seg-unsearched" style="width: 36.29%"></div>
+              <div id="seg-outside" class="seg-outside" style="width: 20.16%"></div>
+            </div>
+            <div class="legend-row">
+              <span><span class="legend-dot" style="background:#425f6a"></span>Searched &amp; missed</span>
+              <span><span class="legend-dot" style="background:#b5c3c8"></span>Not yet searched</span>
+              <span><span class="legend-dot" style="background:#c78d4e"></span>Outside drawn area</span>
+            </div>
+
+            <div class="results">
+              <div>
+                <small>Pre-search chance of success (\(a \cdot c \cdot d\))</small>
+                <strong id="cov-found-val">50.4%</strong>
+              </div>
+              <div>
+                <small>Remaining: searched &amp; missed</small>
+                <strong id="cov-missed-val">43.55%</strong>
+              </div>
+              <div>
+                <small>Remaining: unsearched ground</small>
+                <strong id="cov-unsearched-val">36.29%</strong>
+              </div>
+              <div>
+                <small>Remaining: outside the boundary</small>
+                <strong id="cov-outside-val">20.16%</strong>
+              </div>
+            </div>
+            <p class="explain">Drag the detection slider down to 35% (typical for visual ground search in dense timber) and watch the "Searched &amp; missed" bar dominate the entire remaining belief. These numbers are model-relative beliefs, valid only under the declared prior and POD assumptions.</p>
+          </div>
+
+          <h2>The firewall: nothing moves the map until a human admits it</h2>
+          <p>ABYSSAL was built around one architectural conviction: <strong>there must be an uncrossable firewall between Context and Evidence.</strong></p>
+          <p>You can download a high-resolution bathymetry grid, import a hundred historical pamphlets, stream live aircraft and shipping traffic, run a satellite time-machine over thirty days of NASA imagery, or run an automated anomaly scan. Every single one of those actions produces <strong>Context</strong>. None of them moves a single cell of the probability map by even one millionth of a percent.</p>
+          <p>For a piece of information to alter belief, it must pass through a strict, auditable chain: a raw <strong>Source</strong> (stamped with its origin URL, retrieval timestamp, byte size, licence, and SHA-256 hash) yields a <strong>Claim</strong> linked to its provenance root, which is translated into a typed <strong>Observation</strong> with explicit units and analyst assumptions—and sits harmlessly as an inactive <strong>Draft</strong> until a named human inspects a live preview and clicks <strong>Admit</strong>.</p>
+
+          <div class="viz-box">
+            <h4>The Provenance &amp; Admission Firewall</h4>
+            <svg class="viz-svg" viewBox="0 0 680 178" role="img" aria-label="Evidence flow from Source to Claim to Observation to Human Decision before updating the Belief Map">
+              <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#425f6a"/>
+                </marker>
+              </defs>
+              <rect x="12" y="26" width="122" height="64" rx="5" fill="#fffefa" stroke="#cbc5b9"/>
+              <text x="73" y="52" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#25231f">Source</text>
+              <text x="73" y="70" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10.5" fill="#6e6961">URL · SHA-256 · Licence</text>
+
+              <rect x="166" y="26" width="112" height="64" rx="5" fill="#fffefa" stroke="#cbc5b9"/>
+              <text x="222" y="52" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#25231f">Claim</text>
+              <text x="222" y="70" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10.5" fill="#6e6961">Provenance root</text>
+
+              <rect x="310" y="26" width="128" height="64" rx="5" fill="#fffefa" stroke="#cbc5b9"/>
+              <text x="374" y="52" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#25231f">Draft Observation</text>
+              <text x="374" y="70" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10.5" fill="#6e6961">Typed · Explicit units</text>
+
+              <rect x="470" y="18" width="196" height="80" rx="5" fill="#425f6a" stroke="#425f6a"/>
+              <text x="568" y="47" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12.5" font-weight="600" fill="#fffefa">Human Admission</text>
+              <text x="568" y="65" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10.5" fill="#e4e0d8">Admits → Updates Belief</text>
+              <text x="568" y="82" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#b5c3c8">Hash-chained audit log</text>
+
+              <line x1="134" y1="58" x2="160" y2="58" stroke="#425f6a" stroke-width="2" class="flow-dash" marker-end="url(#arrow)"/>
+              <line x1="278" y1="58" x2="304" y2="58" stroke="#425f6a" stroke-width="2" class="flow-dash" marker-end="url(#arrow)"/>
+              <line x1="438" y1="58" x2="464" y2="58" stroke="#425f6a" stroke-width="2" class="flow-dash" marker-end="url(#arrow)"/>
+
+              <rect x="166" y="118" width="500" height="44" rx="5" fill="#fffefa" stroke="#e4e0d8" stroke-dasharray="4 3"/>
+              <text x="416" y="137" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#6e6961">Live radar, AIS ships, satellite scenes, 3D terrain, and uncalibrated detectors stay Context only.</text>
+              <text x="416" y="152" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#6e6961">They may propose a Draft—they can never silently alter the posterior.</text>
+            </svg>
+          </div>
+
+          <h2>Cartography that stops lying: Graphite &amp; Ember</h2>
+          <p>Visual design in scientific software is not decoration; it is part of the inference pipeline. Early versions of ABYSSAL made two classic cartographic mistakes. First, the dark interface used a navy-blue palette over dark-blue water. Second, the default probability heatmap used a rainbow ramp running from blue through green and yellow to red.</p>
+          <p>Both choices quietly lie to the eye. Blue and green are the colours of sea and forest, so a low-probability cell blends invisibly into the ocean behind it while a mid-probability cell looks like coastline. Worse, rainbow colour ramps are not perceptually monotonic: bright yellow jumps out visually even when red represents higher density, creating phantom ridges that do not exist in the underlying distribution.</p>
+          <p>In the latest map-first redesign, ABYSSAL stripped away the navy tint and rebuilt the workspace around neutral <strong>graphite surfaces</strong> and a perceptually ordered <strong>Ember</strong> ramp—moving strictly upward in luminance from deep plum through magenta and burnt orange to glowing amber, containing zero blue and zero green. Simultaneously, the layout collapsed redundant toolbars so the map canvas itself occupies more than 82% of the viewport, with Sources, Model, and tools sliding cleanly beside the map rather than crushing it.</p>
+
+          <figure class="shot wide">
+            <img src="../assets/images/series/live-evidence-map.png" alt="ABYSSAL map-first workspace in graphite dark theme over Yosemite Valley showing glowing Ember probability modes, 50% solid and 90% dashed contours, and the top three-part Search Ledger strip" loading="lazy">
+            <figcaption><strong>Map-first Graphite &amp; Ember over Yosemite Valley (<code>SCENARIO · One witness, five echoes</code>):</strong> Two competing probability modes glow against real elevation shading without colliding with green forest or blue rivers. Across the top, the three-part Search Ledger strip reports <code>Unsearched 78.3%</code>, <code>Searched and missed 10.9%</code>, and <code>Outside area 10.8%</code> in one glance.</figcaption>
+          </figure>
+
+          <h2>Sketching evidence directly onto the world</h2>
+          <p>A recurring flaw of Bayesian search tools is that they feel like filling out tax forms. In the field, people think geometrically: <em>"the vessel was last seen roughly 10 leagues off Land's End"</em>, <em>"a witness heard an engine along a bearing of 045°"</em>, <em>"the hiker definitely cannot be in the lake, and must be south of the ridge"</em>.</p>
+          <p>ABYSSAL's <strong>Sketch Evidence</strong> palette lets an analyst draw points, bearings, range rings, range-and-bearing wedges, and travel corridors directly onto the map with live metric dimensions, snap-to-feature geometry, and instant preview—before saving them as editable drafts. For hard physical boundaries, <strong>Certain Area Statements</strong> allow 100% <em>only-here</em> or 0% <em>not-here</em> masks (including one-click sea/land masks derived from bundled 1:10m coastline geometry) that clip the posterior cleanly without distorting the relative ratios inside supported ground.</p>
+
+          <div class="shot-grid wide">
+            <figure class="shot">
+              <img src="../assets/images/series/live-merchant-royal-dark.png" alt="Merchant Royal 1641 reference case off Land's End in Graphite dark theme with Ember probability annulus" loading="lazy">
+              <figcaption><strong><em>Merchant Royal</em> (1641) off Land's End:</strong> A single admitted historical pamphlet ("ten leagues from Land's End", no bearing) produces a glowing Ember annulus over real marine bathymetry, while 113 other archival documents remain honestly separated as Context.</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="../assets/images/series/live-sketch-tools.png" alt="ABYSSAL Sketch Evidence palette open over Merchant Royal showing point, bearing, range ring, range plus bearing, and corridor drawing tools" loading="lazy">
+              <figcaption><strong>Sketch Evidence on the canvas:</strong> Bearings, range rings, corridors, and area constraints are sketched directly over the map with live distances, previewed against the current posterior, and held as drafts until explicitly admitted.</figcaption>
+            </figure>
+          </div>
+
+          <h2>Zoom detail, exact edges, and the Offline Audit Pack</h2>
+          <p>Two practical touches turn a neat prototype into a trustworthy instrument:</p>
+          <ul>
+            <li><strong>Viewport zoom detail:</strong> Global grids over an ocean or mountain range inevitably have finite cell sizes (tens of metres to kilometres). As you zoom into a hotspot, ABYSSAL can recompute the visible viewport on a finer local grid while transparently displaying the exact model cell size in the status bar—telling you plainly when zooming further only sharpens the basemap, not the probability model.</li>
+            <li><strong>Zero-network Offline Audit Packs:</strong> A probability map that only lives inside one analyst's laptop cannot be audited by a sceptic, an insurer, or a court. From the Case Dossier, ABYSSAL exports a single, self-contained offline HTML file with a strict zero-network security policy: embedded posterior map, filterable admitted-evidence ledger, disclosed analyst assumptions, and a machine-readable SHA-256 verification receipt. Anyone can open it air-gapped and verify exactly how the map was made.</li>
+          </ul>
+
+          <p>Once the interface refuses to blur context with evidence, a deeper mathematical problem steps onto the stage: <em>what happens when five different documents in your archive are all repeating the exact same source?</em> That is the subject of Part II.</p>
+
+          <nav class="series-pager" aria-label="Series navigation">
+            <a class="pager-link" href="abyssal.html">
+              <span class="pager-dir">← Series Hub</span>
+              <span class="pager-title">ABYSSAL: Honest Belief Under Imperfect Search</span>
+            </a>
+            <a class="pager-link next" href="abyssal-five-echoes.html">
+              <span class="pager-dir">Next: Part II →</span>
+              <span class="pager-title">Five Reports, One Source: The Mathematics of Correlated Evidence</span>
+            </a>
+          </nav>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© Rory Millard</span>
+      <span><a href="mailto:millard.rge@outlook.com">Email</a> &nbsp;·&nbsp; <a href="../writing.html">Writing</a></span>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" defer onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+  <script src="../assets/abyssal-series.js" defer></script>
+</body>
+</html>
