@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Inside ABYSSAL: fourteen heads, one contract — Rory Millard</title>
+  <meta name="description" content="The whole of ABYSSAL in one chart: inputs with receipts, fourteen physics-screened signal heads that share one contract, an admission gate, a log-space belief engine and the decisions on top. Plus every new engine, with screenshots, maths and calibration.">
+  <meta property="og:title" content="Inside ABYSSAL: fourteen heads, one contract — Rory Millard">
+  <meta property="og:description" content="The whole of ABYSSAL in one chart: inputs with receipts, fourteen physics-screened signal heads that share one contract, an admission gate, a log-space belief engine and the decisions on top. Plus every new engine, with screenshots, maths and calibration.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://millardr.github.io/assets/abyssal/eng-persistence.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#0d0d0d">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="../assets/series.css">
+  <script defer src="../assets/series.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <header class="topbar">
+    <div class="in">
+      <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>Rory Millard</a>
+      <span class="crumb"><a href="index.html">ABYSSAL series</a> / Inside the machine</span>
+      <nav aria-label="Main navigation" id="site-nav"><a href="../writing.html">Writing</a><a href="../projects.html">Projects</a><a href="../abyssal/index.html" aria-current="page">ABYSSAL</a><a href="../about.html">About</a><a href="../contact.html">Contact</a></nav>
+      <button class="theme-btn" type="button" aria-label="Toggle theme"></button>
+      <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
+    </div>
+  </header>
+  <section class="hero">
+    <canvas class="field" aria-hidden="true"></canvas>
+    <div class="in">
+      <div class="kicker"><span class="dot"></span><span>ABYSSAL · Features</span><span class="lv">The machine, in full</span></div>
+      <h1>Fourteen heads, one contract</h1>
+      <p class="dek">How ABYSSAL turns radar images, hydrophone recordings, magnetometer surveys, witness statements and searched-and-missed ground into one honest map: the architecture in one chart, and every new engine, with what it measured.</p>
+      <div class="meta"><span><b>14</b> signal heads · <b>2</b> engines · <b>1</b> gate</span><span>Rory Millard · November 2026</span></div>
+      <div class="cta"><a class="btn primary" href="#machine">See the architecture ↓</a><a class="btn ghost" href="#heads">Jump to the engines</a></div>
+      <figure class="figure-peek reveal"><img src="../assets/abyssal/eng-persistence.webp" alt="Eight Sentinel-1 passes over the Santa Barbara Channel stacked into one median image, with two fixed structures seen in every pass" fetchpriority="high"></figure>
+    </div>
+  </section>
+  <main class="page" id="main">
+<div class="lede-block">
+  <p>ABYSSAL has two engines. One turns explicit evidence into a probability map. The other turns raw measurements (a radar image, an hour of hydrophone audio, a magnetometer survey) into contacts that a person can review. This round added nine new signal heads to the second engine, and every one of them obeys the same contract and comes in through the same gate.</p>
+  <p>This page is the whole machine on one sheet, then a tour of the new heads with real screenshots, the physics each one rests on, and what each one measured when it was tested against an answer key.</p>
+</div>
+
+<div class="stats">
+  <div><b>14</b><small>signal heads, each a physics model, an inference step and a calibration</small></div>
+  <div><b>6</b><small>selectable model versions of the log-space belief engine</small></div>
+  <div><b>3</b><small>public archives read live: Sentinel-1 radar, NOAA BlueTopo bathymetry, ETOPO relief</small></div>
+  <div><b>2,600+</b><small>Python tests, plus 128 browser journeys and 330 frontend tests</small></div>
+</div>
+
+<div class="section-title" id="machine"><h2>The machine, in full</h2><span>hover, focus or tap any box</span></div>
+
+<div class="arch">
+  <div class="arch-scroll"><svg class="arch-svg" viewBox="0 0 1200 1700" role="img" aria-labelledby="arch-title arch-desc" xmlns="http://www.w3.org/2000/svg"><title id="arch-title">ABYSSAL architecture</title><desc id="arch-desc">Read from the bottom up. Inputs (documents, tracks, recordings, public layers, sketches) get receipts and an origin tag. Raw measurements go through fourteen signal heads that share one contract: physics forward model, inference, calibration, contact. Contacts pass an admission gate (calibrated, then admitted by a person) into the evidence-to-belief engine: observations, log likelihood, provenance pooling, negative evidence, add and normalise. Decisions (where next, plan, ledger) and outputs (belief map, next search, evidence map, dossier) come out of the top. Interfaces on both sides show where people lay data on and steer; the band at the bottom lists where maps and data come from.</desc><defs><marker id="ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0 0 L10 5 L0 10 z"/></marker></defs><text class="band" x="236" y="34">OUTPUTS</text><g class="node out" data-k="o-map" data-title="Belief map" data-desc="The probability map of where the object is, with credible regions. Only admitted observations ever change it." tabindex="0"><title>Belief map</title><rect x="236" y="44" width="176" height="68" rx="9"/><text class="t" x="324.0" y="68.5">Belief map</text><text class="s" x="324.0" y="85.5">posterior and credible</text><text class="s" x="324.0" y="99.5">regions on the grid</text></g><g class="node out" data-k="o-plan" data-title="Next search" data-desc="Which area to search next, with which asset, what it is worth and the point at which searching stops paying." tabindex="0"><title>Next search</title><rect x="424" y="44" width="176" height="68" rx="9"/><text class="t" x="512.0" y="68.5">Next search</text><text class="s" x="512.0" y="85.5">the plan, its value and</text><text class="s" x="512.0" y="99.5">when to stop</text></g><g class="node out" data-k="o-evmap" data-title="Evidence Map" data-desc="How far each item and each whole source moved the map (Kullback–Leibler divergence in bits), with exact undo." tabindex="0"><title>Evidence Map</title><rect x="612" y="44" width="176" height="68" rx="9"/><text class="t" x="700.0" y="68.5">Evidence Map</text><text class="s" x="700.0" y="85.5">influence of every item and</text><text class="s" x="700.0" y="99.5">source, in bits</text></g><g class="node out" data-k="o-dossier" data-title="Dossier" data-desc="An exportable record of the case: every source with its receipt, every computation with its model version, code commit and input hashes." tabindex="0"><title>Dossier</title><rect x="800" y="44" width="176" height="68" rx="9"/><text class="t" x="888.0" y="68.5">Dossier</text><text class="s" x="888.0" y="85.5">audit pack: receipts,</text><text class="s" x="888.0" y="99.5">hashes, model versions</text></g><text class="band" x="236" y="150">DECIDE</text><g class="node plan" data-k="d-next" data-title="Where next?" data-desc="Ranks candidate searches by how much they are expected to reduce uncertainty, and names the observation that would change the map most." tabindex="0"><title>Where next?</title><rect x="236" y="160" width="238" height="68" rx="9"/><text class="t" x="355.0" y="184.5">Where next?</text><text class="s" x="355.0" y="201.5">expected information gain per search,</text><text class="s" x="355.0" y="215.5">in bits</text></g><g class="node plan" data-k="d-plan" data-title="Plan Studio" data-desc="Splits effort across assets and areas to maximise the chance of finding, prices it, and draws the search-to-exhaustion curve." tabindex="0"><title>Plan Studio</title><rect x="487" y="160" width="238" height="68" rx="9"/><text class="t" x="606.0" y="184.5">Plan Studio</text><text class="s" x="606.0" y="201.5">allocation (water-filling), cost,</text><text class="s" x="606.0" y="215.5">value, stop rule</text></g><g class="node plan" data-k="d-ledger" data-title="Search Ledger &amp; Health" data-desc="Where the probability has gone: still unsearched, searched and missed, or outside the drawn area; plus checks on the case&#x27;s own health." tabindex="0"><title>Search Ledger &amp; Health</title><rect x="738" y="160" width="238" height="68" rx="9"/><text class="t" x="857.0" y="184.5">Search Ledger &amp; Health</text><text class="s" x="857.0" y="201.5">unsearched · searched and missed ·</text><text class="s" x="857.0" y="215.5">outside area</text></g><path class="edge" data-e="decide outputs" d="M355 160 L355 116" marker-end="url(#ah)"/><path class="edge" data-e="decide outputs" d="M606 160 L606 116" marker-end="url(#ah)"/><path class="edge" data-e="decide outputs" d="M857 160 L857 116" marker-end="url(#ah)"/><g class="node gate" data-k="gate" data-title="Admission gate" data-desc="The only way into the belief map. A detector&#x27;s output is a contact; only a calibrated detector (measured detection and false-alarm rates) can propose an observation, and a person must admit it. Agents propose, code acquires, humans admit. Automatic fusion of engine output is parked for now." tabindex="0"><title>Admission gate</title><rect x="496" y="258" width="240" height="58" rx="9"/><text class="t" x="616.0" y="284.5">Admission gate</text><text class="s" x="616.0" y="301.5">calibrated? then a person admits</text></g><rect class="tower sigt" x="236" y="350" width="360" height="800" rx="16"/><text class="tower-t" x="416" y="378">ENGINE II · HIDDEN SIGNALS</text><rect class="sheet back" x="286" y="392" width="270" height="350" rx="12"/><rect class="sheet back" x="276" y="402" width="270" height="350" rx="12"/><rect class="sheet" x="266" y="412" width="270" height="350" rx="12"/><text class="nx" x="252" y="590" transform="rotate(-90 252 590)">14 heads ×</text><g class="node sig" data-k="h-contact" data-title="Contact" data-desc="What every head returns: a position (or time, depth, identity), its uncertainty, a score, and the provenance needed to reproduce it. A contact is never evidence by itself." tabindex="0"><title>Contact</title><rect x="284" y="430" width="234" height="58" rx="9"/><text class="t" x="401.0" y="449.5">Contact</text><text class="s" x="401.0" y="466.5">estimate, uncertainty, score · model</text><text class="s" x="401.0" y="480.5">version · input hashes</text></g><g class="node sig hot" data-k="h-cal" data-title="Calibration" data-desc="Every head is scored on SCENARIO data with a known answer: how often it finds the target, how often it raises false alarms, and whether its uncertainty intervals contain the truth as often as they claim. SAR heads can also self-calibrate on REAL data from ships that broadcast AIS." tabindex="0"><title>Calibration</title><rect x="284" y="508" width="234" height="62" rx="9"/><text class="t" x="401.0" y="529.5">Calibration</text><text class="s" x="401.0" y="546.5">detection and false-alarm rates,</text><text class="s" x="401.0" y="560.5">interval coverage vs an answer key</text></g><g class="node sig" data-k="h-inf" data-title="Inference" data-desc="Turns measurements into an estimate: matched filters and constant-false-alarm detectors, multi-target tracking with optimal assignment, Levenberg–Marquardt fits, stationary-phase chirps, cepstra, likelihood grids with analytic marginalisation." tabindex="0"><title>Inference</title><rect x="284" y="590" width="234" height="62" rx="9"/><text class="t" x="401.0" y="611.5">Inference</text><text class="s" x="401.0" y="628.5">matched filter · CFAR · Kalman +</text><text class="s" x="401.0" y="642.5">Hungarian · least squares · cepstrum</text></g><g class="node sig" data-k="h-phys" data-title="Physics forward model" data-desc="Each head starts from the physics: Kelvin wakes and azimuth shift, dispersion of impact waves, sound in the SOFAR channel, a magnetic dipole in Earth&#x27;s field, leeway drift, bubble oscillation, radar backscatter of the wind-roughened sea." tabindex="0"><title>Physics forward model</title><rect x="284" y="672" width="234" height="62" rx="9"/><text class="t" x="401.0" y="693.5">Physics forward model</text><text class="s" x="401.0" y="710.5">what the data would look like if the</text><text class="s" x="401.0" y="724.5">target were at x</text></g><path class="edge" data-e="h-phys h-inf" d="M401 672 L401 656" marker-end="url(#ah)"/><path class="edge" data-e="h-inf h-cal" d="M401 590 L401 574" marker-end="url(#ah)"/><path class="edge" data-e="h-cal h-contact" d="M401 508 L401 492" marker-end="url(#ah)"/><path class="edge loop" data-e="h-contact h-cal" d="M518 470 C560 476 560 532 522 538" marker-end="url(#ah)"/><text class="tiny" x="548" y="508" transform="rotate(-90 548 508)">self-cal</text><a href="#eng-sar" class="node chip" data-k="head-sar" data-title="SAR vessels &amp; wakes" data-desc="Finds ships in radar images (CFAR), reads their wakes for heading and speed, and matches them to AIS; ships with no AIS are dark." tabindex="0"><title>SAR vessels &amp; wakes</title><rect x="266" y="828" width="164" height="34" rx="17"/><text class="t" x="348.0" y="849.5" style="font-size:12.5px">SAR vessels &amp; wakes</text></a><a href="#eng-tracks" class="node chip" data-k="head-tracks" data-title="Dark tracks" data-desc="Links dark detections across satellite passes with Kalman filters and optimal assignment; flags loitering, rendezvous and possible identities." tabindex="0"><title>Dark tracks</title><rect x="441" y="828" width="164" height="34" rx="17"/><text class="t" x="523.0" y="849.5" style="font-size:12.5px">Dark tracks</text></a><a href="#eng-selfcal" class="node chip" data-k="head-selfcal" data-title="Self-calibration (AIS)" data-desc="Every AIS ship the radar should have seen is a free labelled trial: detection rate by length and wind, on your own sensor." tabindex="0"><title>Self-calibration (AIS)</title><rect x="266" y="872" width="164" height="34" rx="17"/><text class="t" x="348.0" y="893.5" style="font-size:12.5px">Self-calibration (AIS)</text></a><a href="#eng-wind" class="node chip" data-k="head-wind" data-title="Wind from radar" data-desc="Reads sea-surface wind from the radar backscatter (CMOD5.n) and wind streaks, because wind decides what a miss means." tabindex="0"><title>Wind from radar</title><rect x="441" y="872" width="164" height="34" rx="17"/><text class="t" x="523.0" y="893.5" style="font-size:12.5px">Wind from radar</text></a><a href="#eng-persist" class="node chip" data-k="head-persist" data-title="Persistence" data-desc="Stacks many passes: what is always there (platforms, buoys), what keeps coming back (anchorages), what passes through." tabindex="0"><title>Persistence</title><rect x="266" y="916" width="164" height="34" rx="17"/><text class="t" x="348.0" y="937.5" style="font-size:12.5px">Persistence</text></a><a href="#eng-identity" class="node chip" data-k="head-identity" data-title="Who went dark?" data-desc="Ranks vessels whose AIS went silent before a pass against each dark contact: reach, dead reckoning, length." tabindex="0"><title>Who went dark?</title><rect x="441" y="916" width="164" height="34" rx="17"/><text class="t" x="523.0" y="937.5" style="font-size:12.5px">Who went dark?</text></a><a href="#eng-impact" class="node chip" data-k="head-impact" data-title="Impact rings" data-desc="The splash clock: an impact&#x27;s ring waves disperse, so one image gives the centre and the time since impact." tabindex="0"><title>Impact rings</title><rect x="266" y="960" width="164" height="34" rx="17"/><text class="t" x="348.0" y="981.5" style="font-size:12.5px">Impact rings</text></a><a href="#eng-rings" class="node chip" data-k="head-rings" data-title="Ring finder" data-desc="Matched-filter bank for debris rings, crater rims and slick rings at many radii." tabindex="0"><title>Ring finder</title><rect x="441" y="960" width="164" height="34" rx="17"/><text class="t" x="523.0" y="981.5" style="font-size:12.5px">Ring finder</text></a><a href="#eng-tdoa" class="node chip" data-k="head-tdoa" data-title="Hydrophone TDOA" data-desc="Locates a bang from arrival-time differences at a few hydrophones, with a correlated error model and a mispick alarm." tabindex="0"><title>Hydrophone TDOA</title><rect x="266" y="1004" width="164" height="34" rx="17"/><text class="t" x="348.0" y="1025.5" style="font-size:12.5px">Hydrophone TDOA</text></a><a href="#eng-sofar" class="node chip" data-k="head-sofar" data-title="SOFAR basin" data-desc="Locates an event across an ocean basin from distant hydrophones; land blocks paths, and silence on open water is evidence." tabindex="0"><title>SOFAR basin</title><rect x="441" y="1004" width="164" height="34" rx="17"/><text class="t" x="523.0" y="1025.5" style="font-size:12.5px">SOFAR basin</text></a><a href="#eng-bubble" class="node chip" data-k="head-bubble" data-title="Implosion forensics" data-desc="Reads the bubble-pulse period of an implosion or explosion: size against depth, and depth when the hull volume is known." tabindex="0"><title>Implosion forensics</title><rect x="266" y="1048" width="164" height="34" rx="17"/><text class="t" x="348.0" y="1069.5" style="font-size:12.5px">Implosion forensics</text></a><a href="#eng-magnetic" class="node chip" data-k="head-magnetic" data-title="Magnetic dipole" data-desc="Fits a magnetic dipole to a survey in Earth&#x27;s field: position, depth and moment, induced or remanent." tabindex="0"><title>Magnetic dipole</title><rect x="441" y="1048" width="164" height="34" rx="17"/><text class="t" x="523.0" y="1069.5" style="font-size:12.5px">Magnetic dipole</text></a><a href="#eng-seabed" class="node chip" data-k="head-seabed" data-title="Seabed &amp; sonar" data-desc="Finds compact relief in multibeam (including NOAA BlueTopo) and highlight–shadow pairs in side-scan." tabindex="0"><title>Seabed &amp; sonar</title><rect x="266" y="1092" width="164" height="34" rx="17"/><text class="t" x="348.0" y="1113.5" style="font-size:12.5px">Seabed &amp; sonar</text></a><a href="#eng-debris" class="node chip" data-k="head-debris" data-title="Debris back-track" data-desc="Runs recovered debris backwards through wind and current to where it entered the water, sharing the uncertain environment." tabindex="0"><title>Debris back-track</title><rect x="441" y="1092" width="164" height="34" rx="17"/><text class="t" x="523.0" y="1113.5" style="font-size:12.5px">Debris back-track</text></a><rect class="tower belt" x="636" y="350" width="340" height="470" rx="16"/><text class="tower-t" x="806" y="378">ENGINE I · EVIDENCE → BELIEF</text><g class="node bel hot" data-k="b-norm" data-title="Add &amp; normalise" data-desc="The posterior is a sum in log space: the prior (terrain, drift, leeway or walking motion) plus every admitted likelihood, then normalised. Probability outside the drawn area is kept explicitly, never silently renormalised away. Six model versions (v1–v6), each selectable." tabindex="0"><title>Add &amp; normalise</title><rect x="656" y="398" width="300" height="62" rx="9"/><text class="t" x="806.0" y="419.5">Add &amp; normalise</text><text class="s" x="806.0" y="436.5">log prior (terrain, drift, leeway) + Σ log L;</text><text class="s" x="806.0" y="450.5">outside-area mass kept</text></g><g class="node bel" data-k="b-neg" data-title="Negative evidence" data-desc="A search that found nothing still moves the map: each searched cell is multiplied by the chance of missing, 1 − POD, which is a sum of log(1 − POD) in log space." tabindex="0"><title>Negative evidence</title><rect x="656" y="480" width="300" height="56" rx="9"/><text class="t" x="806.0" y="505.5">Negative evidence</text><text class="s" x="806.0" y="522.5">searched and missed: log(1 − POD)</text></g><g class="node bel" data-k="b-pool" data-title="Provenance pooling" data-desc="Five reports that all trace back to one witness are one piece of evidence, not five. Items that share a provenance root are pooled before they enter the map." tabindex="0"><title>Provenance pooling</title><rect x="656" y="556" width="300" height="56" rx="9"/><text class="t" x="806.0" y="581.5">Provenance pooling</text><text class="s" x="806.0" y="598.5">echoes of one root count once</text></g><g class="node bel" data-k="b-lik" data-title="Likelihood, in log space" data-desc="Each observation becomes a likelihood over the grid, weighted by its reliability and grouped by family so correlated evidence is not double counted." tabindex="0"><title>Likelihood, in log space</title><rect x="656" y="632" width="300" height="56" rx="9"/><text class="t" x="806.0" y="657.5">Likelihood, in log space</text><text class="s" x="806.0" y="674.5">log L(x | claim, reliability, family)</text></g><g class="node bel" data-k="b-obs" data-title="Observations" data-desc="Explicit, reviewable claims: a point with uncertainty, a bearing, a range ring, a corridor, a &#x27;not here&#x27; area statement, a completed search with its POD." tabindex="0"><title>Observations</title><rect x="656" y="708" width="300" height="82" rx="9"/><text class="t" x="806.0" y="739.5">Observations</text><text class="s" x="806.0" y="756.5">point · bearing · range · corridor · area</text><text class="s" x="806.0" y="770.5">statement · completed search</text></g><path class="edge" data-e="b-obs b-lik" d="M806 708 L806 692" marker-end="url(#ah)"/><path class="edge" data-e="b-lik b-pool" d="M806 632 L806 616" marker-end="url(#ah)"/><path class="edge" data-e="b-pool b-neg" d="M806 556 L806 540" marker-end="url(#ah)"/><path class="edge" data-e="b-neg b-norm" d="M806 480 L806 464" marker-end="url(#ah)"/><path class="edge flow" data-e="b-norm d-next d-plan d-ledger" d="M806 398 L806 232" marker-end="url(#ah)"/><path class="edge flow" data-e="h-contact gate" d="M401 430 L401 287 L492 287" marker-end="url(#ah)"/><path class="edge flow" data-e="gate b-obs" d="M616 316 L616 742 L652 742" marker-end="url(#ah)"/><g class="node ctx" data-k="ctx" data-title="Context, never evidence" data-desc="Everything in the Ops console and most map layers is context: it helps a person see and reason, but it cannot change the belief map. To count, it must become an explicit observation and be admitted." tabindex="0"><title>Context, never evidence</title><rect x="636" y="852" width="340" height="150" rx="9"/><text class="t" x="806.0" y="910.5">Context, never evidence</text><text class="s" x="806.0" y="927.5">basemaps · relief and imagery · live air and sea</text><text class="s" x="806.0" y="941.5">traffic · weather · day and night · field tools:</text><text class="s" x="806.0" y="955.5">drawn for orientation, never multiplied into belief</text></g><a href="#eng-drill" class="node sig" data-k="ctx2" data-title="Composites" data-desc="Engines chain: a hydrophone fix, a collapse depth from the bubble pulse with the hull volume, and the seabed together rule out water too shallow for the implosion." tabindex="0"><title>Composites</title><rect x="636" y="1022" width="340" height="120" rx="9"/><text class="t" x="806.0" y="1072.5">Composites</text><text class="s" x="806.0" y="1089.5">the lost-submarine drill: where (SOFAR) + how deep</text><text class="s" x="806.0" y="1103.5">(bubble pulse) + where that is possible (bathymetry)</text></a><g class="node enc" data-k="origin" data-title="Origin encoding" data-desc="Every item carries its origin: REAL or SCENARIO. Synthetic data is tagged end to end and can never enter a real case, so simulators and answer keys can live alongside real evidence safely." tabindex="0"><title>Origin encoding</title><rect x="236" y="1180" width="740" height="46" rx="9"/><circle class="oplus" cx="282" cy="1203" r="13"/><path class="oplusx" d="M273 1203 L291 1203 M282 1194 L282 1212"/><text class="t left" x="310" y="1199">Origin encoding</text><text class="s left" x="310" y="1215">REAL or SCENARIO on every item: synthetic never enters a real case</text></g><g class="node in" data-k="receipts" data-title="Receipt embedding" data-desc="Every acquired file and every fetched window gets a receipt, and every item records the root it descends from. Results record model version, code commit and input hashes, so anything can be reproduced and defended later." tabindex="0"><title>Receipt embedding</title><rect x="236" y="1246" width="740" height="54" rx="9"/><text class="t" x="606.0" y="1270.5">Receipt embedding</text><text class="s" x="606.0" y="1287.5">URL · retrieval time · size · SHA-256 · licence · provenance root (which items share a source)</text></g><path class="edge" data-e="receipts origin" d="M606 1246 L606 1230" marker-end="url(#ah)"/><path class="edge flow" data-e="origin h-phys" d="M251 1180 L251 790 L401 790 L401 738" marker-end="url(#ah)"/><path class="edge flow" data-e="origin b-obs" d="M626 1180 L626 772 L652 772" marker-end="url(#ah)"/><text class="tiny left" x="258" y="1170">measurements</text><text class="tiny left" x="632" y="1170">claims</text><text class="band" x="236" y="1336">INPUTS</text><g class="node in" data-k="i-docs" data-title="Documents" data-desc="Witness statements, logs, reports and papers. Read by a person or proposed by an agent; a person decides what each one claims." tabindex="0"><title>Documents</title><rect x="236" y="1346" width="140" height="70" rx="9"/><text class="t" x="306.0" y="1371.5">Documents</text><text class="s" x="306.0" y="1388.5">reports, testimony,</text><text class="s" x="306.0" y="1402.5">logs</text></g><path class="edge" data-e="i-docs receipts" d="M306 1346 L306 1304" marker-end="url(#ah)"/><g class="node in" data-k="i-tracks" data-title="Tracks" data-desc="Vessel and aircraft tracks: AIS archives (including NOAA MarineCadastre day files), ADS-B, GPS logs. Context until a fix is used as evidence." tabindex="0"><title>Tracks</title><rect x="386" y="1346" width="140" height="70" rx="9"/><text class="t" x="456.0" y="1371.5">Tracks</text><text class="s" x="456.0" y="1388.5">AIS · ADS-B · GPX ·</text><text class="s" x="456.0" y="1402.5">IGC</text></g><path class="edge" data-e="i-tracks receipts" d="M456 1346 L456 1304" marker-end="url(#ah)"/><g class="node in" data-k="i-sensors" data-title="Recordings" data-desc="Raw measurements for the signal heads: radar images, acoustic recordings, magnetometer surveys, multibeam and side-scan." tabindex="0"><title>Recordings</title><rect x="536" y="1346" width="140" height="70" rx="9"/><text class="t" x="606.0" y="1371.5">Recordings</text><text class="s" x="606.0" y="1388.5">SAR · hydrophone ·</text><text class="s" x="606.0" y="1402.5">magnetometer · sonar</text></g><path class="edge" data-e="i-sensors receipts" d="M606 1346 L606 1304" marker-end="url(#ah)"/><g class="node in" data-k="i-layers" data-title="Public layers" data-desc="Opt-in public datasets fetched with receipts: depth, relief, magnetics, gravity, satellite radar and imagery." tabindex="0"><title>Public layers</title><rect x="686" y="1346" width="140" height="70" rx="9"/><text class="t" x="756.0" y="1371.5">Public layers</text><text class="s" x="756.0" y="1388.5">bathymetry · imagery ·</text><text class="s" x="756.0" y="1402.5">fields</text></g><path class="edge" data-e="i-layers receipts" d="M756 1346 L756 1304" marker-end="url(#ah)"/><g class="node in" data-k="i-sketch" data-title="Sketches" data-desc="What an analyst draws or types: a sighting, a bearing, a corridor, a &#x27;not here&#x27; statement, a completed search." tabindex="0"><title>Sketches</title><rect x="836" y="1346" width="140" height="70" rx="9"/><text class="t" x="906.0" y="1371.5">Sketches</text><text class="s" x="906.0" y="1388.5">points · bearings ·</text><text class="s" x="906.0" y="1402.5">areas · searches</text></g><path class="edge" data-e="i-sketch receipts" d="M906 1346 L906 1304" marker-end="url(#ah)"/><g class="node ctx" data-k="sources" data-title="Where the maps and data come from" data-desc="All opt-in and fetched on request, each with a receipt. Most are context; a few feed engines directly: Sentinel-1 windows under the SAR heads, BlueTopo under the seabed head, bathymetry under the drill." tabindex="0"><title>Where the maps and data come from</title><rect x="236" y="1452" width="740" height="150" rx="9"/><text class="t left" x="258" y="1478">Where the maps and data come from</text><text class="s left srck" x="258" y="1500">Relief &amp; seabed</text><text class="s left" x="386" y="1500">ETOPO 2022 · GEBCO · EMODnet depth &amp; quality · NOAA BlueTopo · Natural Earth coastline</text><text class="s left srck" x="258" y="1524">Fields</text><text class="s left" x="386" y="1524">NOAA EMAG2v3 &amp; BGS magnetics · Scripps marine gravity · Open-Meteo wind &amp; currents</text><text class="s left srck" x="258" y="1548">Radar &amp; imagery</text><text class="s left" x="386" y="1548">Sentinel-1 RTC on AWS · NASA GIBS · RainViewer · OpenStreetMap &amp; OpenSeaMap basemaps</text><text class="s left srck" x="258" y="1572">Traffic &amp; events</text><text class="s left" x="386" y="1572">ADS-B (adsb.lol, OpenSky) · AIS (Digitraffic, MarineCadastre) · USGS quakes · satellite elements</text></g><path class="edge dash" data-e="sources i-layers" d="M636 1452 L636 1420" marker-end="url(#ah)"/><path class="edge dash" data-e="sources i-tracks" d="M386 1452 L386 1420" marker-end="url(#ah)"/><text class="rail-t" x="110" y="34">WHERE PEOPLE</text><text class="rail-t" x="110" y="48">LAY DATA ON</text><text class="rail-t" x="1098" y="34">INSPECT AND</text><text class="rail-t" x="1098" y="48">STEER</text><g class="node ui" data-k="ui-export" data-title="Export dossier" data-desc="Exports the dossier and audit pack: sources, receipts, model versions, input hashes." tabindex="0"><title>Export dossier</title><rect x="24" y="60" width="172" height="44" rx="22"/><text class="t" x="110.0" y="86.5" style="font-size:12.5px">Export dossier</text></g><path class="edge dot" data-e="ui-export" d="M196 78 L232 78"/><g class="node ui" data-k="ui-plan" data-title="Where next · Plan Studio" data-desc="Where next? ranks searches by expected information; Plan Studio allocates assets and prices the search." tabindex="0"><title>Where next · Plan Studio</title><rect x="24" y="176" width="172" height="48" rx="22"/><text class="t" x="110.0" y="204.5" style="font-size:12.5px">Where next · Plan Studio</text></g><path class="edge dot" data-e="ui-plan" d="M196 194 L232 194"/><g class="node ui" data-k="ui-review" data-title="Review &amp; history" data-desc="Admit, reject or undo observations; every change is in the history with exact undo." tabindex="0"><title>Review &amp; history</title><rect x="24" y="278" width="172" height="44" rx="22"/><text class="t" x="110.0" y="304.5" style="font-size:12.5px">Review &amp; history</text></g><path class="edge dot" data-e="ui-review" d="M196 300 L492 300"/><g class="node ui" data-k="ui-lab" data-title="Signal Lab" data-desc="Fourteen signal heads in one panel: run them on SCENARIO scenes with answer keys, or on your own data and public archives." tabindex="0"><title>Signal Lab</title><rect x="24" y="580" width="172" height="44" rx="22"/><text class="t" x="110.0" y="606.5" style="font-size:12.5px">Signal Lab</text></g><path class="edge dot" data-e="ui-lab" d="M196 604 L232 604"/><g class="node ui" data-k="ui-add" data-title="Add · Archive" data-desc="Add sources: documents, files, tracks, recordings. Originals are kept with their hashes." tabindex="0"><title>Add · Archive</title><rect x="24" y="1358" width="172" height="44" rx="22"/><text class="t" x="110.0" y="1384.5" style="font-size:12.5px">Add · Archive</text></g><path class="edge dot" data-e="ui-add" d="M196 1381 L232 1381"/><g class="node ui" data-k="ui-layers" data-title="Layers" data-desc="Opt-in public layers: bathymetry, magnetics, gravity, imagery, fetched with receipts." tabindex="0"><title>Layers</title><rect x="24" y="1506" width="172" height="44" rx="22"/><text class="t" x="110.0" y="1532.5" style="font-size:12.5px">Layers</text></g><path class="edge dot" data-e="ui-layers" d="M196 1528 L232 1528"/><g class="node ui" data-k="ui-evmap" data-title="Evidence Map" data-desc="See how much each item and each source moved the map, in bits, and the provenance graph." tabindex="0"><title>Evidence Map</title><rect x="1012" y="60" width="172" height="44" rx="22"/><text class="t" x="1098.0" y="86.5" style="font-size:12.5px">Evidence Map</text></g><path class="edge dot" data-e="ui-evmap" d="M1012 78 L980 78"/><g class="node ui" data-k="ui-ledger" data-title="Ledger · Search Health" data-desc="The Search Ledger bar and Search Health checks: where the probability has gone." tabindex="0"><title>Ledger · Search Health</title><rect x="1012" y="176" width="172" height="44" rx="22"/><text class="t" x="1098.0" y="202.5" style="font-size:12.5px">Ledger · Search Health</text></g><path class="edge dot" data-e="ui-ledger" d="M1012 194 L980 194"/><g class="node ui" data-k="ui-move" data-title="Movement &amp; time" data-desc="Drift, walking and leeway motion; particle previews; a shared clock for replay." tabindex="0"><title>Movement &amp; time</title><rect x="1012" y="406" width="172" height="44" rx="22"/><text class="t" x="1098.0" y="432.5" style="font-size:12.5px">Movement &amp; time</text></g><path class="edge dot" data-e="ui-move" d="M1012 429 L980 429"/><g class="node ui" data-k="ui-sketch" data-title="Sketch evidence" data-desc="Draw a point, bearing, range ring, corridor or area statement; it becomes a draft observation to review." tabindex="0"><title>Sketch evidence</title><rect x="1012" y="726" width="172" height="44" rx="22"/><text class="t" x="1098.0" y="752.5" style="font-size:12.5px">Sketch evidence</text></g><path class="edge dot" data-e="ui-sketch" d="M1012 749 L980 749"/><g class="node ui" data-k="ui-ops" data-title="Ops console" data-desc="Live air and sea traffic, satellites, wind, currents, radar, quakes and fires, plus field tools. Context only." tabindex="0"><title>Ops console</title><rect x="1012" y="904" width="172" height="44" rx="22"/><text class="t" x="1098.0" y="930.5" style="font-size:12.5px">Ops console</text></g><path class="edge dot" data-e="ui-ops" d="M1012 927 L980 927"/><g class="node sig key"><rect x="40" y="1636" width="18" height="14" rx="3"/></g><text class="s left" x="64" y="1647">Engine II · hidden signals</text><g class="node bel key"><rect x="255.6" y="1636" width="18" height="14" rx="3"/></g><text class="s left" x="279.6" y="1647">Engine I · evidence → belief</text><g class="node plan key"><rect x="484.4" y="1636" width="18" height="14" rx="3"/></g><text class="s left" x="508.4" y="1647">decision</text><g class="node out key"><rect x="581.1999999999999" y="1636" width="18" height="14" rx="3"/></g><text class="s left" x="605.1999999999999" y="1647">output</text><g class="node gate key"><rect x="664.8" y="1636" width="18" height="14" rx="3"/></g><text class="s left" x="688.8" y="1647">human gate</text><g class="node ctx key"><rect x="774.8" y="1636" width="18" height="14" rx="3"/></g><text class="s left" x="798.8" y="1647">context, never evidence</text><g class="node ui key"><rect x="970.5999999999999" y="1636" width="18" height="14" rx="3"/></g><text class="s left" x="994.5999999999999" y="1647">interface</text></svg>
+</div>
+  <div class="arch-inspect" aria-live="polite"><span class="k">How to read it</span><b>From the bottom up, like the Transformer figure</b><p>Inputs are embedded with receipts and tagged REAL or SCENARIO. Measurements go up the left tower through fourteen signal heads; claims go up the right tower into the belief engine. The only bridge between them is the admission gate. Decisions and outputs come out of the top, and the interfaces on either side are where people lay data on and steer.</p></div>
+</div>
+
+<div class="split">
+  <div>
+    <div class="eyebrow-k">Why the Transformer figure</div>
+    <h2>The same shape, a different kind of attention</h2>
+    <p>The Transformer paper drew a model as a stack of identical blocks, each attending to its input in parallel heads, with residual sums and a normalisation, and a softmax on top. ABYSSAL has the same skeleton, but each head attends to a different <em>physical</em> channel, and the sum is Bayes' rule.</p>
+    <p>The analogy is structural, not a claim that ABYSSAL is a neural network: nothing here is learned from data except the calibrations, and those are measured, not trained.</p>
+  </div>
+  <div class="board-wrap">
+    <table class="board">
+      <thead><tr><th>Transformer</th><th>ABYSSAL</th></tr></thead>
+      <tbody>
+        <tr><td>Input embedding</td><td>Receipt embedding: URL, time, SHA-256, licence, provenance root</td></tr>
+        <tr><td>Positional encoding ⊕</td><td>Origin encoding ⊕: REAL or SCENARIO, end to end</td></tr>
+        <tr><td>N× encoder layers, multi-head</td><td>14 signal heads sharing one contract</td></tr>
+        <tr><td>Cross-attention</td><td>The admission gate: calibrated, then admitted by a person</td></tr>
+        <tr><td>Add &amp; Norm</td><td>Σ log-likelihoods plus the log prior, normalised; outside-area mass kept</td></tr>
+        <tr><td>Linear + softmax</td><td>Decide: expected information gain, allocation, stop rule</td></tr>
+        <tr><td>Output probabilities</td><td>The belief map, the next search, the Evidence Map, the dossier</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section-title"><h2>One contract, many heads</h2><span>why every engine is the same kind of intelligence</span></div>
+<p class="lede-block" style="margin-top:24px">A radar wake detector and a bubble-pulse analyser have nothing in common physically. They are still the same kind of thing, because each one answers the same three questions in the same order, returns the same kind of object, and has to pass the same gate. No head is cleverer than another: each is exactly as trustworthy as its calibration says, and no more.</p>
+<div class="pillars">
+  <div class="pillar"><b>1 · What would I see?</b><p>A <strong>forward model</strong> of the physics: if the target were at \(x\), the data would look like \(d = f(x,\theta) + \varepsilon\). Kelvin wakes, dispersive ring waves, sound in the SOFAR channel, a dipole in Earth's field, leeway drift, an oscillating bubble.</p></div>
+  <div class="pillar"><b>2 · Where is it, how sure?</b><p><strong>Inference</strong> inverts the model: \(\hat x = \arg\max_x \log p(d\mid x,\theta)\) by matched filters, CFAR, Kalman filtering with optimal assignment, Levenberg–Marquardt, cepstra or a likelihood grid, always with an uncertainty attached.</p></div>
+  <div class="pillar"><b>3 · How often am I right?</b><p><strong>Calibration</strong> against an answer key: detection rate, false-alarm rate and interval coverage with Wilson and Poisson bounds. A head that has not been measured can make contacts, never admissible evidence.</p></div>
+  <div class="pillar"><b>4 · Can I prove it later?</b><p><strong>Receipts</strong> on everything: inputs by SHA-256, model version, code commit. Every head's output is a <em>contact</em> that reproduces bit for bit, and only the gate turns a contact into evidence.</p></div>
+</div>
+
+<div class="section-title" id="sources"><h2>Where the maps come from</h2><span>opt-in, fetched on request, each with a receipt</span></div>
+<div class="srcs">
+  <div class="src"><span class="k">Relief &amp; seabed</span><ul><li>NOAA ETOPO 2022 (30″)</li><li>GEBCO and EMODnet depth, source and quality</li><li>NOAA BlueTopo (US survey bathymetry, windowed)</li><li>Natural Earth 1:10m coastline</li></ul><div class="use">Terrain priors, sea/land statements, seabed search, the drill's depth check.</div></div>
+  <div class="src"><span class="k">Fields</span><ul><li>NOAA EMAG2v3 and BGS magnetic anomalies</li><li>Scripps marine free-air gravity</li><li>Open-Meteo 10 m wind and marine currents</li><li>IGRF-14 main field (computed)</li></ul><div class="use">Context layers; the main field under the magnetic dipole head.</div></div>
+  <div class="src"><span class="k">Radar &amp; imagery</span><ul><li>Sentinel-1 RTC on AWS (windowed range reads)</li><li>NASA GIBS: fires, sea temperature, night lights</li><li>RainViewer observed radar</li><li>OpenStreetMap and OpenSeaMap basemaps</li></ul><div class="use">Real radar for the SAR heads, wind and persistence; everything else is context.</div></div>
+  <div class="src"><span class="k">Traffic &amp; events</span><ul><li>ADS-B via adsb.lol and OpenSky</li><li>AIS via Digitraffic, and NOAA MarineCadastre day files</li><li>USGS real-time earthquakes</li><li>Satellite element sets (SGP4)</li></ul><div class="use">The live picture; AIS days for self-calibration and identities.</div></div>
+</div>
+
+<div class="section-title" id="interfaces"><h2>Where people lay data on</h2><span>every interface writes drafts, never belief</span></div>
+<div class="atlas">
+  <a href="../assets/abyssal/sketch-live.webp" data-lightbox><img src="../assets/abyssal/sketch-live.webp" alt="Sketch evidence on the map" loading="lazy"><span><b>Sketch evidence</b><em>points, bearings, range rings, corridors, area statements</em></span></a>
+  <a href="../assets/abyssal/layers.webp" data-lightbox><img src="../assets/abyssal/layers.webp" alt="The Layers panel" loading="lazy"><span><b>Layers</b><em>opt-in public data with receipts, context by default</em></span></a>
+  <a href="../assets/abyssal/evidence-map-live.webp" data-lightbox><img src="../assets/abyssal/evidence-map-live.webp" alt="The Evidence Map" loading="lazy"><span><b>Evidence Map</b><em>each source's influence in bits, provenance graph, exact undo</em></span></a>
+  <a href="../assets/abyssal/eng-identity.webp" data-lightbox><img src="../assets/abyssal/eng-identity.webp" alt="The Signal Lab" loading="lazy"><span><b>Signal Lab</b><em>fourteen heads, SCENARIO answer keys or your own data</em></span></a>
+  <a href="../assets/abyssal/where-next.webp" data-lightbox><img src="../assets/abyssal/where-next.webp" alt="Where next" loading="lazy"><span><b>Where next?</b><em>searches ranked by expected information gain</em></span></a>
+  <a href="../assets/abyssal/plan-studio-ev.webp" data-lightbox><img src="../assets/abyssal/plan-studio-ev.webp" alt="Plan Studio" loading="lazy"><span><b>Plan Studio</b><em>allocation, value and the stop rule</em></span></a>
+  <a href="../assets/abyssal/movement.webp" data-lightbox><img src="../assets/abyssal/movement.webp" alt="Movement and time" loading="lazy"><span><b>Movement &amp; time</b><em>drift, walking and leeway on a shared clock</em></span></a>
+  <a href="../assets/abyssal/ops-live-air-sea-orbit.webp" data-lightbox><img src="../assets/abyssal/ops-live-air-sea-orbit.webp" alt="The Ops console" loading="lazy"><span><b>Ops console</b><em>live air, sea, orbit and weather: context only</em></span></a>
+</div>
+
+<div class="section-title" id="heads"><h2>The new heads</h2><span>each tested against an answer key; real data where the sandbox could reach it</span></div>
+
+<section class="feature" id="eng-sar">
+  <div class="ft">
+    <div class="k">Radar · from orbit</div>
+    <h3>Real Sentinel-1, and a detector that calibrates itself</h3>
+    <p>The dark-vessel head now reads real radar. Pan to US coastal water, list the Sentinel-1 scenes over that point (it checks which ones actually cover it), and it reads just a 16 × 16 km window by HTTP range request, on a lon/lat grid, with the incidence angle from the scene's own raster and the ground-track heading from the product footprint.</p>
+    <p id="eng-selfcal">Add a NOAA AIS day file and every ship that was broadcasting becomes a free labelled trial: an echo is a hit, silence a miss. Pooled across a case, that measures the detector's detection rate by ship length <em>on your sensor</em>, the only route to a REAL calibration.</p>
+    <div class="nums"><div><b>16 km</b><small>window read in ~3 s</small></div><div><b>5/5</b><small>length classes where the AIS-only rate brackets the truth (SCENARIO)</small></div><div><b>0.30</b><small>what spoofed AIS drags one class to, and it is flagged</small></div></div>
+    <p class="honest"><span class="tag real">real</span> Runs on real Sentinel-1 scenes off San Francisco. <span class="tag scn">not yet</span> Self-calibration has not been run on real AIS: the AIS archive host was unreachable from the build sandbox.</p>
+  </div>
+  <figure><img src="../assets/abyssal/eng-sentinel1-wind.webp" alt="A real Sentinel-1 window off San Francisco with seven vessel contacts and per-block wind lines" loading="lazy"><figcaption>Sentinel-1, 28 December 2020, off San Francisco: seven vessel echoes, and the sea-surface wind read from the same image. Without AIS, none is called dark.</figcaption></figure>
+</section>
+
+<section class="feature flip" id="eng-wind">
+  <div class="ft">
+    <div class="k">Radar · the sea surface</div>
+    <h3>Wind from the radar itself</h3>
+    <p>A detector's miss means nothing without the sea state: calm water shows wakes and slicks; a gale washes them out and fills the image with clutter. So every calibrated window now gets its wind, from the image, with no weather service.</p>
+    <div class="eq"><span class="tag">CMOD5.n</span>\[ \sigma^0 = B_0(v,\theta)\,\bigl[1 + B_1(v,\theta)\cos\phi + B_2(v,\theta)\cos 2\phi\bigr]^{1.6} \]</div>
+    <p>Speed comes from inverting the C-band model function per 2 km block; direction from the orientation of wind streaks (the averaged structure tensor of the band-passed image), reported only when the streaks are coherent and always 180° ambiguous. Below Sentinel-1's noise floor it says so and gives only an upper bound.</p>
+    <div class="nums"><div><b>0.56 m/s</b><small>median speed error (SCENARIO)</small></div><div><b>0 / 20</b><small>directions invented on streak-free seas</small></div><div><b>6.9, 5.9 m/s</b><small>real readings off San Francisco</small></div></div>
+    <p class="honest">The real readings are not yet checked against NOAA buoy 46026, which sits at the window centre.</p>
+  </div>
+  <figure><img src="../assets/abyssal/eng-sentinel1-wind.webp" alt="Per-block wind speeds and streak directions drawn over a Sentinel-1 window" loading="lazy"><figcaption>Each line is a 2 km block's wind, drawn along the streaks; the detection rate is pooled per wind class.</figcaption></figure>
+</section>
+
+<section class="feature" id="eng-persist">
+  <div class="ft">
+    <div class="k">Radar · many passes</div>
+    <h3>Persistence: what is always there</h3>
+    <p>A ship is a contact in one pass. A platform, a turbine or a moored buoy is a contact in nearly every pass, at the same spot. The persistence head reads up to twelve passes on one grid, clusters contacts across them, and asks how likely it is that unrelated ships and clutter would land there that often:</p>
+    <div class="eq"><span class="tag">chance</span>\[ p = \min\!\Bigl(1,\; M \sum_{j \ge k-1} \binom{n-1}{j} q^{j}(1-q)^{n-1-j}\Bigr),\quad q = 1 - e^{-\lambda \pi r^2} \]</div>
+    <p>A candidate in a crowded neighbourhood is an anchoring berth, not a structure. The per-pixel median of all passes shows what stays: moving ships vanish.</p>
+    <div class="nums"><div><b>140 / 142</b><small>structures found (SCENARIO)</small></div><div><b>0</b><small>false fixed contacts per case</small></div><div><b>8 / 8</b><small>passes for each of two real platforms</small></div></div>
+    <p class="honest"><span class="tag real">real</span> Santa Barbara Channel, eight passes 2019–2020: exactly two fixed contacts, about 100 m from where Platforms Hondo and Harmony stand (to be checked against BOEM's list), and 188 transients.</p>
+  </div>
+  <figure><img src="../assets/abyssal/eng-persistence.webp" alt="Median image of eight passes with two fixed contacts and transient contacts coloured by pass" loading="lazy"><figcaption>Eight real passes, one median image: F01 and F02 seen 8/8; every dot is a ship seen once.</figcaption></figure>
+</section>
+
+<section class="feature flip" id="eng-identity">
+  <div class="ft">
+    <div class="k">Radar + AIS · inference</div>
+    <h3>Who could the dark ship be?</h3>
+    <p>A vessel that switches off its transponder still exists: its last reports say where it was, how fast and how long. For each dark radar contact, every vessel that fell silent in the three hours before the pass is tested for reach, for the miss from dead reckoning (uncertainty growing with silence) and for length, scored as a log-likelihood ratio against "an unrelated vessel":</p>
+    <div class="eq"><span class="tag">score</span>\[ \Lambda = \log\frac{\mathcal N(\text{miss};\,0,\sigma^2(t))}{1/\pi R(t)^2} + \log\frac{\mathcal N(\log L_\text{SAR}/L_\text{AIS};\,0,s^2)}{1/\log(400/15)} \]</div>
+    <p>A joint Hungarian pairing gives one vessel to one contact. The length test is pixel-aware: at 20 m pixels a 20 m boat looks 55 m long.</p>
+    <div class="nums"><div><b>42 / 77</b><small>true vessel paired (SCENARIO)</small></div><div><b>51 / 77</b><small>in the top three</small></div><div><b>10</b><small>confident wrong pairings</small></div></div>
+    <p class="honest">Leads to check, never identifications. Three ships going dark together inside one scene are genuinely hard to tell apart.</p>
+  </div>
+  <figure><img src="../assets/abyssal/eng-identity.webp" alt="Lines from silent vessels' last AIS positions to dark radar contacts, with ranked candidates" loading="lazy"><figcaption>Pink lines join each paired vessel's last AIS position to the dark contact it may be.</figcaption></figure>
+</section>
+
+<section class="feature" id="eng-tracks">
+  <div class="ft">
+    <div class="k">Radar · tracking</div>
+    <h3>Dark tracks across passes</h3>
+    <p>Dark detections are linked across passes by Kalman filters that mix a transit and a loiter model, scored against the density of new vessels plus clutter, and assigned optimally. A detection with no wake must line up with two others before it counts. A pass that covered a track and saw nothing lowers it, by exactly \(\log(1-P_D)\), as a searched area does. It flags loitering, rendezvous and possible identities.</p>
+    <div class="nums"><div><b>0.80</b><small>correct links (low clutter)</small></div><div><b>24 / 24</b><small>rendezvous flagged, 0 false</small></div><div><b>0.69</b><small>correct links at real-detector clutter</small></div></div>
+  </div>
+  <figure><img src="../assets/abyssal/eng-dark-tracks.webp" alt="Seven SAR pass footprints with dark detections linked into tracks and flags" loading="lazy"><figcaption>Seven passes, 193 detections, 4 confirmed tracks, loiterers and a rendezvous flagged against the answer key.</figcaption></figure>
+</section>
+
+<section class="feature flip" id="eng-impact">
+  <div class="ft">
+    <div class="k">Sea surface · the splash clock</div>
+    <h3>Impact rings: where, and how long ago</h3>
+    <p>An impact excites every wavelength and deep water sorts them: long waves run ahead, short ones trail. At distance \(r\) and time \(t\) the surface oscillates as</p>
+    <div class="eq"><span class="tag">Cauchy–Poisson</span>\[ \eta \propto \cos\!\Bigl(\frac{g t^2}{4r}\Bigr),\qquad \lambda(r,t) = \frac{8\pi r^2}{g\,t^2} \]</div>
+    <p>so a single image carries a clock. A quadrature matched-filter bank over time since impact recovers the centre and the time together.</p>
+    <div class="nums"><div><b>2.3%</b><small>median time error</small></div><div><b>25 / 25</b><small>time intervals cover the truth</small></div><div><b>0</b><small>false rings in 79 km²</small></div></div>
+  </div>
+  <figure><img src="../assets/abyssal/eng-impact-rings.webp" alt="A sea-surface image with an impact ring detected and its chirp profile" loading="lazy"><figcaption>One ring contact: impact 29 s before the image, ±1.4 s; the chirp profile through it in the panel.</figcaption></figure>
+</section>
+
+<section class="feature" id="eng-sofar">
+  <div class="ft">
+    <div class="k">Underwater · across a basin</div>
+    <h3>Ocean-basin acoustics</h3>
+    <p>Sound in the deep ocean is trapped in the SOFAR channel and crosses basins. This head locates an implosion or explosion from hydrophones thousands of kilometres apart: geodesic paths through a latitude climatology of channel speed, the origin time integrated out analytically, a shared speed error as a rank-one covariance term, and bearings from three-sensor triads. Land blocks paths. A silent station behind a continent is explained; a silent station on open water counts against a location.</p>
+    <div class="nums"><div><b>4.9 km</b><small>median error</small></div><div><b>37 / 40</b><small>95% ellipses contain the truth</small></div><div><b>286 km²</b><small>median 95% area</small></div></div>
+  </div>
+  <figure><img src="../assets/abyssal/eng-sofar.webp" alt="Six hydrophones across the South Atlantic with paths to a located event, one silent on open water, one blocked by land" loading="lazy"><figcaption>Five stations heard it; one silent on open water (evidence) and one silent behind Africa (explained).</figcaption></figure>
+</section>
+
+<section class="feature flip" id="eng-bubble">
+  <div class="ft">
+    <div class="k">Underwater · forensics</div>
+    <h3>Implosion forensics: the bubble clock</h3>
+    <p>When a hull collapses, or a charge goes off, the gas left behind rings: a primary pulse, then bubble pulses at a nearly fixed interval. That interval is the Rayleigh–Willis period of the bubble:</p>
+    <div class="eq"><span class="tag">Rayleigh–Willis</span>\[ T = 1.135\,\frac{\sqrt{\rho}\;V_\text{max}^{1/3}}{\sqrt{P}},\qquad P = P_\text{atm} + \rho g z \]</div>
+    <p>The period fixes only \(V^{1/3}/\sqrt{P}\): a small hull shallow and a large hull deep ring alike. Give it the hull's internal volume and it returns the collapse depth, and so the least depth of water where the loss can have happened. The period is read envelope first and corroborated by the cepstrum or a second pulse.</p>
+    <div class="nums"><div><b>0.75%</b><small>median period error</small></div><div><b>27 / 30</b><small>intervals cover, strong corroboration</small></div><div><b>0 / 30</b><small>false periods on noise</small></div></div>
+    <p class="honest">Calibrated on SCENARIO recordings only. With a single corroboration the interval covers just 11 of 16, and the panel says which kind you have.</p>
+  </div>
+  <figure><img src="../assets/abyssal/eng-bubble-depth.webp" alt="A bubble pulse train, its cepstrum, and the volume-against-depth curve with the true answer marked" loading="lazy"><figcaption>The curve of hulls that ring at the measured period; with the volume known, the depth (blue) contains the truth (green).</figcaption></figure>
+</section>
+
+<div class="lab wide" data-lab="bubble" style="margin-left:auto;margin-right:auto">
+  <div class="lab-head"><span class="t">Lab · the bubble clock</span><span class="s">size, depth and the period you would hear</span></div>
+  <div class="lab-body">
+    <canvas aria-label="Pressure at a hydrophone: the collapse pulse, then bubble pulses at the period T"></canvas>
+    <canvas class="curve" aria-label="Internal volume against depth for hulls that ring at this period" style="margin-top:10px"></canvas>
+    <div class="controls">
+      <label class="ctl"><span>Hull internal volume <output data-for="v">1,000 m³</output></span><input type="range" name="v" min="0.7" max="4" step="0.01" value="3"></label>
+      <label class="ctl"><span>Collapse depth <output data-for="z">500 m</output></span><input type="range" name="z" min="20" max="1500" step="10" value="500"></label>
+      <label class="ctl"><span>Rebound fraction η <output data-for="eta">0.50</output></span><input type="range" name="eta" min="30" max="80" value="50"></label>
+    </div>
+    <div class="btns"><button type="button" data-act="play">Replay the pulse</button></div>
+    <div class="readout">
+      <div><small>Bubble period T</small><b data-read="T">—</b></div>
+      <div><small>Pressure at depth</small><b data-read="p">—</b></div>
+      <div><small>Largest bubble radius</small><b data-read="r">—</b></div>
+      <div><small>Depths this volume allows</small><b data-read="zz">—</b></div>
+    </div>
+    <p class="note">Deeper means more pressure, a smaller bubble and a shorter period. The orange band is every hull that rings at this period, across the unknown rebound fraction; the blue bar is the depth range the stated volume allows. That range is what a search can use: the hull went down where the sea is at least that deep.</p>
+  </div>
+</div>
+
+<section class="feature" id="eng-drill">
+  <div class="ft">
+    <div class="k">Composite · three heads in a row</div>
+    <h3>The lost-submarine drill</h3>
+    <p>How an acoustic search cell would work a lost submarine. <strong>Where:</strong> the ocean-basin head locates the implosion. <strong>How deep:</strong> the bubble pulse and the hull volume give the collapse depth. <strong>Where that is possible:</strong> a hull only implodes after sinking past its crush depth, so the loss was over water at least that deep, and shallower water is ruled out.</p>
+    <div class="nums"><div><b>0.88</b><small>median area ratio near a shelf break</small></div><div><b>25 / 26</b><small>truth kept in the 95% region</small></div><div><b>1.00</b><small>open ocean: nothing to rule out, correctly</small></div></div>
+    <p class="honest">SCENARIO only, with synthetic bathymetry. Depth helps only where the location region includes water shallower than the collapse.</p>
+  </div>
+  <figure><img src="../assets/abyssal/eng-drill.webp" alt="A location ellipse cut off where a continental shelf is too shallow for the collapse depth" loading="lazy"><figcaption>The location heat cut where the shelf (red) is too shallow for a 252 m+ collapse: 788 km² becomes 578 km², and the truth stays inside.</figcaption></figure>
+</section>
+
+<section class="feature flip" id="eng-magnetic">
+  <div class="ft">
+    <div class="k">Underwater · magnetics</div>
+    <h3>Magnetic dipoles: position, depth, moment</h3>
+    <p>A compact ferrous object (an engine, an anchor, a landing gear) is a magnetic dipole sitting in Earth's field. The head fits the total-field anomaly</p>
+    <div class="eq"><span class="tag">dipole</span>\[ \Delta T = \hat F \cdot \frac{\mu_0}{4\pi}\,\frac{3(\mathbf m\cdot\hat u)\hat u - \mathbf m}{r^3} \]</div>
+    <p>by Levenberg–Marquardt, with the IGRF-14 main field, a regional trend and per-line levelling offsets, and chooses induced or remanent magnetisation by BIC. Depth comes with an interval.</p>
+    <div class="nums"><div><b>0.95</b><small>detection rate, 0 false</small></div><div><b>3 cm</b><small>median depth error</small></div><div><b>34 / 38</b><small>depth intervals cover (induced)</small></div></div>
+  </div>
+  <figure><img src="../assets/abyssal/eng-magnetic.webp" alt="Survey lines with two dipole anomalies fitted" loading="lazy"><figcaption>Two dipoles fitted from a towed survey, with depth intervals and the fit along the nearest line.</figcaption></figure>
+</section>
+
+<section class="feature" id="eng-seabed">
+  <div class="ft">
+    <div class="k">Seabed · multibeam and side-scan</div>
+    <h3>Something proud of the seabed</h3>
+    <p>Multibeam: a median filter wider than any target follows the seabed, and whatever stands proud of it is measured for height, footprint and shape. Side-scan: a bright highlight followed by an acoustic shadow, whose length gives the height, \(H = hL/(x+L)\). Real US bathymetry comes from NOAA BlueTopo by windowed range reads, with the tile's published hash and the window's own.</p>
+    <div class="nums"><div><b>47 / 48</b><small>wrecks found (multibeam)</small></div><div><b>58 / 64</b><small>side-scan targets, 0 false</small></div><div><b>22 m</b><small>proud: the Andrea Doria, from BlueTopo</small></div></div>
+    <p class="honest"><span class="tag real">real</span> One contact 22 m high, 364 × 255 m, about 1.3 km from the charted position of the <em>Andrea Doria</em> (sank 1956).</p>
+  </div>
+  <figure><img src="../assets/abyssal/eng-seabed-andrea-doria.webp" alt="NOAA BlueTopo hillshade with one relief contact at the Andrea Doria" loading="lazy"><figcaption>NOAA BlueTopo, 16 m grid: the wreck of the <em>Andrea Doria</em> stands 22 m proud of the seabed.</figcaption></figure>
+</section>
+
+<section class="feature flip" id="eng-debris">
+  <div class="ft">
+    <div class="k">Sea surface · drift</div>
+    <h3>Debris back-tracking</h3>
+    <p>Recovered debris drifted with the current plus a wind-driven leeway that depends on what it is. Running each find backwards gives the places it could have started. The trap is treating finds as independent: they all drifted through the <em>same</em> uncertain wind and current, so the head shares each environment realisation across items, multiplying inside a realisation and averaging across them. It is the five-echoes problem again, in fluid form.</p>
+    <div class="nums"><div><b>30 / 30</b><small>90% regions cover, shared environment</small></div><div><b>21 / 30</b><small>if finds are treated as independent</small></div><div><b>Allen &amp; Plourde</b><small>leeway classes</small></div></div>
+  </div>
+  <figure><img src="../assets/abyssal/eng-debris.webp" alt="Six debris finds back-tracked to an impact region" loading="lazy"><figcaption>Six finds over days, run back through 160 shared environments to one impact region.</figcaption></figure>
+</section>
+
+<section class="feature" id="eng-earlier">
+  <div class="ft">
+    <div class="k">From the first round</div>
+    <h3 id="eng-rings">The ring finder, the TDOA localiser and the wake reader</h3>
+    <p id="eng-tdoa">Three heads came first and are written up in <a href="06-signals-from-the-deep.html">Part 6, Signals from the deep</a>: the dark-vessel detector with Kelvin-wake physics and the radar's azimuth shift; a hydrophone localiser for a few stations with a correlated error model and a χ² alarm for a mispick; and a matched-filter ring finder for debris rings, crater rims and slick rings.</p>
+    <p>They share the contract too, which is why the new heads could be added in days: the gate, the receipts and the calibration harness were already there.</p>
+  </div>
+  <figure><img src="../assets/abyssal/signal-dark-vessel-wake.webp" alt="A dark vessel with its wake, azimuth shift and heading" loading="lazy"><figcaption>A dark vessel's wake: heading, speed from the Kelvin wavelength, and the azimuth shift back to its true position.</figcaption></figure>
+</section>
+
+<div class="section-title" id="board"><h2>The calibration board</h2><span>what each head measured, and on what</span></div>
+<div class="board-wrap">
+<table class="board">
+  <thead><tr><th>Head</th><th>What it measures</th><th>Calibration</th><th>Real data so far</th></tr></thead>
+  <tbody>
+    <tr><td>SAR vessels &amp; wakes</td><td>ships, heading, speed, dark vs AIS</td><td class="n">POD ≥ 0.89 lower bound at 80 m+; 2.45 FA / 1000 km²</td><td>Sentinel-1 off San Francisco</td></tr>
+    <tr><td>Self-calibration</td><td>detection rate by length and wind, on your sensor</td><td class="n">brackets the answer key 5/5 classes</td><td>awaits a real AIS day</td></tr>
+    <tr><td>Wind from radar</td><td>10 m wind speed, streak direction</td><td class="n">0.56 m/s median; 0/20 invented directions</td><td>two windows off San Francisco</td></tr>
+    <tr><td>Persistence</td><td>fixed, recurring, transient</td><td class="n">140/142 structures; 0 false fixed</td><td>Santa Barbara Channel, 8 passes</td></tr>
+    <tr><td>Who went dark?</td><td>candidate identities for dark contacts</td><td class="n">42/77 paired; 51/77 top three</td><td>none yet</td></tr>
+    <tr><td>Dark tracks</td><td>links, loitering, rendezvous</td><td class="n">0.80 correct links; 24/24 rendezvous</td><td>none yet</td></tr>
+    <tr><td>Impact rings</td><td>centre and time since impact</td><td class="n">2.3% time error; 25/25 coverage</td><td>none yet</td></tr>
+    <tr><td>SOFAR basin</td><td>event location across an ocean</td><td class="n">4.9 km median; 37/40 coverage</td><td>none yet</td></tr>
+    <tr><td>Implosion forensics</td><td>bubble period, size against depth</td><td class="n">0.75% error; 27/30 strong coverage</td><td>none yet</td></tr>
+    <tr><td>Magnetic dipole</td><td>position, depth, moment</td><td class="n">0.95 POD; 3 cm depth</td><td>none yet</td></tr>
+    <tr><td>Seabed &amp; sonar</td><td>relief and shadow contacts</td><td class="n">47/48 wrecks; 58/64 side-scan</td><td>NOAA BlueTopo, Andrea Doria</td></tr>
+    <tr><td>Debris back-track</td><td>where finds entered the water</td><td class="n">30/30 coverage, shared environment</td><td>none yet</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout honest">
+  <div class="t">What it does not do, yet</div>
+  <p>Every calibration above is SCENARIO: measured against simulators with known answers, which proves the mathematics but not a real sensor. Nothing a head produces enters the belief map on its own: heads make contacts, and automatic fusion of calibrated heads into belief is deliberately parked until real calibrations exist. ABYSSAL does not build tools to detect or track operating submarines; finding a lost one is in scope, hunting a working one is not. The whole thing is a prototype on one machine, not yet validated against real operational outcomes.</p>
+</div>
+
+<div class="cards3">
+  <div class="card"><span class="k">Read next</span><h3><a href="06-signals-from-the-deep.html">Signals from the deep</a></h3><p>The first three heads, the scope line, and why a submerged wake is invisible to radar.</p></div>
+  <div class="card"><span class="k">Read next</span><h3><a href="09-building-it-honestly.html">Building it honestly</a></h3><p>The gate, the receipts and the calibration discipline that this page rests on.</p></div>
+  <div class="card"><span class="k">The series</span><h3><a href="index.html">All nine parts and the labs</a></h3><p>22,474 words and 13 interactive labs, from the tour to the arithmetic of not finding.</p></div>
+</div>
+
+  </main>
+  <footer class="foot">
+    <div class="in">
+      <div>
+        <b>Rory Millard</b>
+        <span>Bayesian inference, search under uncertainty, and the places where mathematics meets messy physical systems.</span>
+      </div>
+      <nav aria-label="Footer">
+        <a href="../abyssal/index.html">ABYSSAL series</a>
+        <a href="../writing.html">Writing</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../about.html">About</a>
+        <a href="mailto:j7yma3egrrm9nxaa.16ls4@aleeas.com">Email</a>
+        <a href="https://www.linkedin.com/in/rorymillard1/" rel="noopener noreferrer">LinkedIn</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

@@ -92,11 +92,22 @@
   const closeLb = () => lb.classList.remove('open');
   lb.addEventListener('click', closeLb);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLb(); });
-  $$('figure.shot img').forEach((img) => {
+  $$('figure.shot img, .feature figure img').forEach((img) => {
     img.addEventListener('click', () => {
       $('img', lb).src = img.currentSrc || img.src;
       $('img', lb).alt = img.alt;
       const cap = img.closest('figure').querySelector('figcaption');
+      $('p', lb).innerHTML = cap ? cap.innerHTML : '';
+      lb.classList.add('open');
+    });
+  });
+  $$('a[data-lightbox]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const img = $('img', a);
+      $('img', lb).src = a.getAttribute('href');
+      $('img', lb).alt = img ? img.alt : '';
+      const cap = $('span', a);
       $('p', lb).innerHTML = cap ? cap.innerHTML : '';
       lb.classList.add('open');
     });
@@ -1181,5 +1192,140 @@
     window.addEventListener('resize', draw);
     window.addEventListener('themechange', draw);
     draw();
+  });
+  /* ================================================================
+     Architecture chart: hover, focus or tap a node to inspect it and light its connections
+     ================================================================ */
+  $$('.arch').forEach((root) => {
+    const svg = $('svg', root), box = $('.arch-inspect', root);
+    if (!svg || !box) return;
+    const nodes = $$('[data-k]', svg), edges = $$('[data-e]', svg);
+    const idle = box.innerHTML;
+    let pinned = null;
+    function show(n) {
+      const k = n.dataset.k;
+      root.classList.add('focus');
+      nodes.forEach((m) => m.classList.toggle('lit', m === n));
+      edges.forEach((e) => {
+        const ks = e.dataset.e.split(' ');
+        const on = ks.includes(k);
+        e.classList.toggle('lit', on);
+        if (on) ks.forEach((kk) => { const m = svg.querySelector(`[data-k="${kk}"]`); if (m) m.classList.add('lit'); });
+      });
+      box.innerHTML = `<span class="k">${n.classList.contains('ui') ? 'Interface' : n.classList.contains('chip') ? 'Signal head' : 'Component'}</span><b>${n.dataset.title}</b><p>${n.dataset.desc}</p>`;
+    }
+    function clear() {
+      if (pinned) return show(pinned);
+      root.classList.remove('focus');
+      nodes.forEach((m) => m.classList.remove('lit'));
+      edges.forEach((e) => e.classList.remove('lit'));
+      box.innerHTML = idle;
+    }
+    nodes.forEach((n) => {
+      n.addEventListener('mouseenter', () => show(n));
+      n.addEventListener('mouseleave', clear);
+      n.addEventListener('focus', () => show(n));
+      n.addEventListener('blur', clear);
+      if (n.tagName.toLowerCase() !== 'a') n.addEventListener('click', (ev) => { ev.stopPropagation(); pinned = pinned === n ? null : n; pinned ? show(n) : clear(); });
+    });
+    svg.addEventListener('click', () => { pinned = null; clear(); });
+  });
+
+  /* ================================================================
+     Lab: the bubble clock (Rayleigh–Willis period, size against depth)
+     ================================================================ */
+  $$('[data-lab="bubble"]').forEach((root) => {
+    const c = $('canvas', root), cv = $('canvas.curve', root);
+    const RHO = 1025, PA = 101325, K = 1.135;
+    const P = (z) => PA + RHO * G * z;
+    const period = (v0, z, eta) => (K * Math.sqrt(RHO) * Math.cbrt(eta * v0)) / Math.sqrt(P(z));
+    const depthFrom = (T, v0, eta) => (RHO * (K * Math.cbrt(eta * v0) / T) ** 2 - PA) / (RHO * G);
+    let t0 = 0, running = false, raf = 0;
+    function vals() {
+      const v0 = Math.round(10 ** +$('[name=v]', root).value);
+      const z = +$('[name=z]', root).value, eta = +$('[name=eta]', root).value / 100;
+      return { v0, z, eta, T: period(v0, z, eta) };
+    }
+    function trace(anim) {
+      const { T } = vals();
+      const { ctx, w, h } = fitCanvas(c, 3.2);
+      ctx.fillStyle = '#101010'; ctx.fillRect(0, 0, w, h);
+      const span = Math.max(0.25, 4.4 * T);
+      const pulses = [[0, 1, 1]];
+      let t = 0, per = T, a = 0.55, wid = 1;
+      for (let k = 0; k < 4; k++) { t += per; pulses.push([t, a, wid * 1.45]); per *= 0.85; a *= 0.45; wid *= 1.45; }
+      const base = Math.max(0.002, 0.035 * T);
+      const reveal = anim ? Math.min(1, ((performance.now() - t0) / 1600)) : 1;
+      ctx.strokeStyle = '#e8962e'; ctx.lineWidth = 1.5; ctx.beginPath();
+      const N = 900;
+      for (let i = 0; i <= N * reveal; i++) {
+        const tt = -0.08 * span + (i / N) * span;
+        let v = 0;
+        for (const [tp, amp, wd] of pulses) {
+          const s = base * wd, u = (tt - tp) / s;
+          v += amp * (1 - 2 * u * u) * Math.exp(-u * u);
+        }
+        const X = (i / N) * w, Y = h * 0.55 - v * h * 0.38;
+        i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y);
+      }
+      ctx.stroke();
+      ctx.font = '600 11px "JetBrains Mono", monospace'; ctx.textAlign = 'center';
+      pulses.slice(0, 4).forEach(([tp], k) => {
+        const X = ((tp + 0.08 * span) / span) * w;
+        ctx.strokeStyle = k ? 'rgba(232,150,46,0.45)' : 'rgba(255,90,90,0.7)'; ctx.setLineDash([3, 4]);
+        ctx.beginPath(); ctx.moveTo(X, 14); ctx.lineTo(X, h - 18); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = k ? '#fcd25c' : '#ff8a8a';
+        ctx.fillText(k ? (k === 1 ? 'T' : `+${k}`) : 'collapse', X, 12);
+      });
+      ctx.fillStyle = 'rgba(241,237,230,0.6)'; ctx.textAlign = 'left';
+      ctx.fillText(`${(span * 1000).toFixed(0)} ms shown · pressure at a hydrophone`, 10, h - 6);
+    }
+    function curve() {
+      const { v0, z, eta, T } = vals();
+      const { ctx, w, h } = fitCanvas(cv, 2.3);
+      ctx.fillStyle = '#101010'; ctx.fillRect(0, 0, w, h);
+      const zMax = 1600, lv0 = 0, lv1 = 4.3;
+      const X = (v) => 46 + ((Math.log10(v) - lv0) / (lv1 - lv0)) * (w - 60);
+      const Y = (d) => 16 + (d / zMax) * (h - 40);
+      // band over the unknown rebound fraction, for this period
+      ctx.fillStyle = 'rgba(232,150,46,0.18)'; ctx.beginPath();
+      const vol = (d, e) => ((T * Math.sqrt(P(d) / RHO)) / K) ** 3 / e;
+      for (let d = 0; d <= zMax; d += 20) { const x = X(vol(d, 0.8)); d ? ctx.lineTo(x, Y(d)) : ctx.moveTo(x, Y(d)); }
+      for (let d = zMax; d >= 0; d -= 20) ctx.lineTo(X(vol(d, 0.3)), Y(d));
+      ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = '#e8962e'; ctx.lineWidth = 1.6; ctx.beginPath();
+      for (let d = 0; d <= zMax; d += 10) { const x = X(vol(d, eta)); d ? ctx.lineTo(x, Y(d)) : ctx.moveTo(x, Y(d)); }
+      ctx.stroke();
+      // the known hull volume and the depths it allows
+      const zl = depthFrom(T, v0, 0.3), zh = depthFrom(T, v0, 0.8);
+      ctx.strokeStyle = 'rgba(120,200,255,0.8)'; ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(X(v0), 10); ctx.lineTo(X(v0), h - 22); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = 'rgba(120,200,255,0.25)';
+      ctx.fillRect(X(v0) - 5, Y(Math.max(0, zl)), 10, Y(Math.min(zMax, zh)) - Y(Math.max(0, zl)));
+      ctx.fillStyle = '#46e08a'; ctx.beginPath(); ctx.arc(X(v0), Y(z), 4.5, 0, 7); ctx.fill();
+      ctx.fillStyle = 'rgba(241,237,230,0.65)'; ctx.font = '11px "JetBrains Mono", monospace'; ctx.textAlign = 'left';
+      ctx.fillText('depth ↓', 4, 14);
+      ctx.fillText('0 m', 4, Y(0) + 4); ctx.fillText(`${zMax} m`, 4, Y(zMax));
+      [10, 100, 1000, 10000].forEach((v) => { if (Math.log10(v) <= lv1) ctx.fillText(v >= 1000 ? `${v / 1000}k m³` : `${v} m³`, X(v) - 14, h - 6); });
+      ctx.textAlign = 'right'; ctx.fillStyle = '#fcd25c';
+      ctx.fillText('hulls that ring at this period', w - 8, 14);
+      setRead(root, 'T', (T * 1000).toFixed(1) + ' ms');
+      setRead(root, 'p', (P(z) / 1e5).toFixed(1) + ' bar');
+      setRead(root, 'r', Math.cbrt((3 * eta * v0) / (4 * Math.PI)).toFixed(1) + ' m');
+      setRead(root, 'zz', `${Math.max(0, zl).toFixed(0)}–${zh.toFixed(0)} m`);
+    }
+    function draw(anim) {
+      const { v0, z, eta } = vals();
+      setOut(root, 'v', v0.toLocaleString() + ' m³'); setOut(root, 'z', z + ' m'); setOut(root, 'eta', eta.toFixed(2));
+      trace(anim); curve();
+    }
+    function loop() { trace(true); if (performance.now() - t0 < 1700) raf = requestAnimationFrame(loop); else running = false; }
+    function play() { t0 = performance.now(); if (!running && !reduced) { running = true; raf = requestAnimationFrame(loop); } }
+    $$('input', root).forEach((i) => i.addEventListener('input', () => draw(false)));
+    const btn = $('[data-act=play]', root);
+    if (btn) btn.addEventListener('click', play);
+    window.addEventListener('resize', () => draw(false));
+    draw(false);
+    onVisible(c, play, () => {});
   });
 })();

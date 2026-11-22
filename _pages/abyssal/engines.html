@@ -1,0 +1,278 @@
+<!--meta
+{"out": "abyssal/engines.html", "title": "Inside ABYSSAL: fourteen heads, one contract — Rory Millard", "desc": "The whole of ABYSSAL in one chart: inputs with receipts, fourteen physics-screened signal heads that share one contract, an admission gate, a log-space belief engine and the decisions on top. Plus every new engine, with screenshots, maths and calibration.", "active": "abyssal", "layout": "page", "maths": true, "image": "eng-persistence.webp", "crumb": "<a href=\"index.html\">ABYSSAL series</a> / Inside the machine", "kicker": "<span>ABYSSAL · Features</span><span class=\"lv\">The machine, in full</span>", "h1": "Fourteen heads, one contract", "dek": "How ABYSSAL turns radar images, hydrophone recordings, magnetometer surveys, witness statements and searched-and-missed ground into one honest map: the architecture in one chart, and every new engine, with what it measured.", "meta": "<span><b>14</b> signal heads · <b>2</b> engines · <b>1</b> gate</span><span>Rory Millard · November 2026</span>", "hero_cls": "", "peek": "eng-persistence.webp", "peek_alt": "Eight Sentinel-1 passes over the Santa Barbara Channel stacked into one median image, with two fixed structures seen in every pass", "cta": "<a class=\"btn primary\" href=\"#machine\">See the architecture ↓</a><a class=\"btn ghost\" href=\"#heads\">Jump to the engines</a>"}
+-->
+<div class="lede-block">
+  <p>ABYSSAL has two engines. One turns explicit evidence into a probability map. The other turns raw measurements (a radar image, an hour of hydrophone audio, a magnetometer survey) into contacts that a person can review. This round added nine new signal heads to the second engine, and every one of them obeys the same contract and comes in through the same gate.</p>
+  <p>This page is the whole machine on one sheet, then a tour of the new heads with real screenshots, the physics each one rests on, and what each one measured when it was tested against an answer key.</p>
+</div>
+
+<div class="stats">
+  <div><b>14</b><small>signal heads, each a physics model, an inference step and a calibration</small></div>
+  <div><b>6</b><small>selectable model versions of the log-space belief engine</small></div>
+  <div><b>3</b><small>public archives read live: Sentinel-1 radar, NOAA BlueTopo bathymetry, ETOPO relief</small></div>
+  <div><b>2,600+</b><small>Python tests, plus 128 browser journeys and 330 frontend tests</small></div>
+</div>
+
+<div class="section-title" id="machine"><h2>The machine, in full</h2><span>hover, focus or tap any box</span></div>
+
+<div class="arch">
+  <div class="arch-scroll">{{INCLUDE:_svg/abyssal-architecture.svg}}</div>
+  <div class="arch-inspect" aria-live="polite"><span class="k">How to read it</span><b>From the bottom up, like the Transformer figure</b><p>Inputs are embedded with receipts and tagged REAL or SCENARIO. Measurements go up the left tower through fourteen signal heads; claims go up the right tower into the belief engine. The only bridge between them is the admission gate. Decisions and outputs come out of the top, and the interfaces on either side are where people lay data on and steer.</p></div>
+</div>
+
+<div class="split">
+  <div>
+    <div class="eyebrow-k">Why the Transformer figure</div>
+    <h2>The same shape, a different kind of attention</h2>
+    <p>The Transformer paper drew a model as a stack of identical blocks, each attending to its input in parallel heads, with residual sums and a normalisation, and a softmax on top. ABYSSAL has the same skeleton, but each head attends to a different <em>physical</em> channel, and the sum is Bayes' rule.</p>
+    <p>The analogy is structural, not a claim that ABYSSAL is a neural network: nothing here is learned from data except the calibrations, and those are measured, not trained.</p>
+  </div>
+  <div class="board-wrap">
+    <table class="board">
+      <thead><tr><th>Transformer</th><th>ABYSSAL</th></tr></thead>
+      <tbody>
+        <tr><td>Input embedding</td><td>Receipt embedding: URL, time, SHA-256, licence, provenance root</td></tr>
+        <tr><td>Positional encoding ⊕</td><td>Origin encoding ⊕: REAL or SCENARIO, end to end</td></tr>
+        <tr><td>N× encoder layers, multi-head</td><td>14 signal heads sharing one contract</td></tr>
+        <tr><td>Cross-attention</td><td>The admission gate: calibrated, then admitted by a person</td></tr>
+        <tr><td>Add &amp; Norm</td><td>Σ log-likelihoods plus the log prior, normalised; outside-area mass kept</td></tr>
+        <tr><td>Linear + softmax</td><td>Decide: expected information gain, allocation, stop rule</td></tr>
+        <tr><td>Output probabilities</td><td>The belief map, the next search, the Evidence Map, the dossier</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section-title"><h2>One contract, many heads</h2><span>why every engine is the same kind of intelligence</span></div>
+<p class="lede-block" style="margin-top:24px">A radar wake detector and a bubble-pulse analyser have nothing in common physically. They are still the same kind of thing, because each one answers the same three questions in the same order, returns the same kind of object, and has to pass the same gate. No head is cleverer than another: each is exactly as trustworthy as its calibration says, and no more.</p>
+<div class="pillars">
+  <div class="pillar"><b>1 · What would I see?</b><p>A <strong>forward model</strong> of the physics: if the target were at \(x\), the data would look like \(d = f(x,\theta) + \varepsilon\). Kelvin wakes, dispersive ring waves, sound in the SOFAR channel, a dipole in Earth's field, leeway drift, an oscillating bubble.</p></div>
+  <div class="pillar"><b>2 · Where is it, how sure?</b><p><strong>Inference</strong> inverts the model: \(\hat x = \arg\max_x \log p(d\mid x,\theta)\) by matched filters, CFAR, Kalman filtering with optimal assignment, Levenberg–Marquardt, cepstra or a likelihood grid, always with an uncertainty attached.</p></div>
+  <div class="pillar"><b>3 · How often am I right?</b><p><strong>Calibration</strong> against an answer key: detection rate, false-alarm rate and interval coverage with Wilson and Poisson bounds. A head that has not been measured can make contacts, never admissible evidence.</p></div>
+  <div class="pillar"><b>4 · Can I prove it later?</b><p><strong>Receipts</strong> on everything: inputs by SHA-256, model version, code commit. Every head's output is a <em>contact</em> that reproduces bit for bit, and only the gate turns a contact into evidence.</p></div>
+</div>
+
+<div class="section-title" id="sources"><h2>Where the maps come from</h2><span>opt-in, fetched on request, each with a receipt</span></div>
+<div class="srcs">
+  <div class="src"><span class="k">Relief &amp; seabed</span><ul><li>NOAA ETOPO 2022 (30″)</li><li>GEBCO and EMODnet depth, source and quality</li><li>NOAA BlueTopo (US survey bathymetry, windowed)</li><li>Natural Earth 1:10m coastline</li></ul><div class="use">Terrain priors, sea/land statements, seabed search, the drill's depth check.</div></div>
+  <div class="src"><span class="k">Fields</span><ul><li>NOAA EMAG2v3 and BGS magnetic anomalies</li><li>Scripps marine free-air gravity</li><li>Open-Meteo 10 m wind and marine currents</li><li>IGRF-14 main field (computed)</li></ul><div class="use">Context layers; the main field under the magnetic dipole head.</div></div>
+  <div class="src"><span class="k">Radar &amp; imagery</span><ul><li>Sentinel-1 RTC on AWS (windowed range reads)</li><li>NASA GIBS: fires, sea temperature, night lights</li><li>RainViewer observed radar</li><li>OpenStreetMap and OpenSeaMap basemaps</li></ul><div class="use">Real radar for the SAR heads, wind and persistence; everything else is context.</div></div>
+  <div class="src"><span class="k">Traffic &amp; events</span><ul><li>ADS-B via adsb.lol and OpenSky</li><li>AIS via Digitraffic, and NOAA MarineCadastre day files</li><li>USGS real-time earthquakes</li><li>Satellite element sets (SGP4)</li></ul><div class="use">The live picture; AIS days for self-calibration and identities.</div></div>
+</div>
+
+<div class="section-title" id="interfaces"><h2>Where people lay data on</h2><span>every interface writes drafts, never belief</span></div>
+<div class="atlas">
+  <a href="../assets/abyssal/sketch-live.webp" data-lightbox><img src="../assets/abyssal/sketch-live.webp" alt="Sketch evidence on the map" loading="lazy"><span><b>Sketch evidence</b><em>points, bearings, range rings, corridors, area statements</em></span></a>
+  <a href="../assets/abyssal/layers.webp" data-lightbox><img src="../assets/abyssal/layers.webp" alt="The Layers panel" loading="lazy"><span><b>Layers</b><em>opt-in public data with receipts, context by default</em></span></a>
+  <a href="../assets/abyssal/evidence-map-live.webp" data-lightbox><img src="../assets/abyssal/evidence-map-live.webp" alt="The Evidence Map" loading="lazy"><span><b>Evidence Map</b><em>each source's influence in bits, provenance graph, exact undo</em></span></a>
+  <a href="../assets/abyssal/eng-identity.webp" data-lightbox><img src="../assets/abyssal/eng-identity.webp" alt="The Signal Lab" loading="lazy"><span><b>Signal Lab</b><em>fourteen heads, SCENARIO answer keys or your own data</em></span></a>
+  <a href="../assets/abyssal/where-next.webp" data-lightbox><img src="../assets/abyssal/where-next.webp" alt="Where next" loading="lazy"><span><b>Where next?</b><em>searches ranked by expected information gain</em></span></a>
+  <a href="../assets/abyssal/plan-studio-ev.webp" data-lightbox><img src="../assets/abyssal/plan-studio-ev.webp" alt="Plan Studio" loading="lazy"><span><b>Plan Studio</b><em>allocation, value and the stop rule</em></span></a>
+  <a href="../assets/abyssal/movement.webp" data-lightbox><img src="../assets/abyssal/movement.webp" alt="Movement and time" loading="lazy"><span><b>Movement &amp; time</b><em>drift, walking and leeway on a shared clock</em></span></a>
+  <a href="../assets/abyssal/ops-live-air-sea-orbit.webp" data-lightbox><img src="../assets/abyssal/ops-live-air-sea-orbit.webp" alt="The Ops console" loading="lazy"><span><b>Ops console</b><em>live air, sea, orbit and weather: context only</em></span></a>
+</div>
+
+<div class="section-title" id="heads"><h2>The new heads</h2><span>each tested against an answer key; real data where the sandbox could reach it</span></div>
+
+<section class="feature" id="eng-sar">
+  <div class="ft">
+    <div class="k">Radar · from orbit</div>
+    <h3>Real Sentinel-1, and a detector that calibrates itself</h3>
+    <p>The dark-vessel head now reads real radar. Pan to US coastal water, list the Sentinel-1 scenes over that point (it checks which ones actually cover it), and it reads just a 16 × 16 km window by HTTP range request, on a lon/lat grid, with the incidence angle from the scene's own raster and the ground-track heading from the product footprint.</p>
+    <p id="eng-selfcal">Add a NOAA AIS day file and every ship that was broadcasting becomes a free labelled trial: an echo is a hit, silence a miss. Pooled across a case, that measures the detector's detection rate by ship length <em>on your sensor</em>, the only route to a REAL calibration.</p>
+    <div class="nums"><div><b>16 km</b><small>window read in ~3 s</small></div><div><b>5/5</b><small>length classes where the AIS-only rate brackets the truth (SCENARIO)</small></div><div><b>0.30</b><small>what spoofed AIS drags one class to, and it is flagged</small></div></div>
+    <p class="honest"><span class="tag real">real</span> Runs on real Sentinel-1 scenes off San Francisco. <span class="tag scn">not yet</span> Self-calibration has not been run on real AIS: the AIS archive host was unreachable from the build sandbox.</p>
+  </div>
+  <figure><img src="../assets/abyssal/eng-sentinel1-wind.webp" alt="A real Sentinel-1 window off San Francisco with seven vessel contacts and per-block wind lines" loading="lazy"><figcaption>Sentinel-1, 28 December 2020, off San Francisco: seven vessel echoes, and the sea-surface wind read from the same image. Without AIS, none is called dark.</figcaption></figure>
+</section>
+
+<section class="feature flip" id="eng-wind">
+  <div class="ft">
+    <div class="k">Radar · the sea surface</div>
+    <h3>Wind from the radar itself</h3>
+    <p>A detector's miss means nothing without the sea state: calm water shows wakes and slicks; a gale washes them out and fills the image with clutter. So every calibrated window now gets its wind, from the image, with no weather service.</p>
+    <div class="eq"><span class="tag">CMOD5.n</span>\[ \sigma^0 = B_0(v,\theta)\,\bigl[1 + B_1(v,\theta)\cos\phi + B_2(v,\theta)\cos 2\phi\bigr]^{1.6} \]</div>
+    <p>Speed comes from inverting the C-band model function per 2 km block; direction from the orientation of wind streaks (the averaged structure tensor of the band-passed image), reported only when the streaks are coherent and always 180° ambiguous. Below Sentinel-1's noise floor it says so and gives only an upper bound.</p>
+    <div class="nums"><div><b>0.56 m/s</b><small>median speed error (SCENARIO)</small></div><div><b>0 / 20</b><small>directions invented on streak-free seas</small></div><div><b>6.9, 5.9 m/s</b><small>real readings off San Francisco</small></div></div>
+    <p class="honest">The real readings are not yet checked against NOAA buoy 46026, which sits at the window centre.</p>
+  </div>
+  <figure><img src="../assets/abyssal/eng-sentinel1-wind.webp" alt="Per-block wind speeds and streak directions drawn over a Sentinel-1 window" loading="lazy"><figcaption>Each line is a 2 km block's wind, drawn along the streaks; the detection rate is pooled per wind class.</figcaption></figure>
+</section>
+
+<section class="feature" id="eng-persist">
+  <div class="ft">
+    <div class="k">Radar · many passes</div>
+    <h3>Persistence: what is always there</h3>
+    <p>A ship is a contact in one pass. A platform, a turbine or a moored buoy is a contact in nearly every pass, at the same spot. The persistence head reads up to twelve passes on one grid, clusters contacts across them, and asks how likely it is that unrelated ships and clutter would land there that often:</p>
+    <div class="eq"><span class="tag">chance</span>\[ p = \min\!\Bigl(1,\; M \sum_{j \ge k-1} \binom{n-1}{j} q^{j}(1-q)^{n-1-j}\Bigr),\quad q = 1 - e^{-\lambda \pi r^2} \]</div>
+    <p>A candidate in a crowded neighbourhood is an anchoring berth, not a structure. The per-pixel median of all passes shows what stays: moving ships vanish.</p>
+    <div class="nums"><div><b>140 / 142</b><small>structures found (SCENARIO)</small></div><div><b>0</b><small>false fixed contacts per case</small></div><div><b>8 / 8</b><small>passes for each of two real platforms</small></div></div>
+    <p class="honest"><span class="tag real">real</span> Santa Barbara Channel, eight passes 2019–2020: exactly two fixed contacts, about 100 m from where Platforms Hondo and Harmony stand (to be checked against BOEM's list), and 188 transients.</p>
+  </div>
+  <figure><img src="../assets/abyssal/eng-persistence.webp" alt="Median image of eight passes with two fixed contacts and transient contacts coloured by pass" loading="lazy"><figcaption>Eight real passes, one median image: F01 and F02 seen 8/8; every dot is a ship seen once.</figcaption></figure>
+</section>
+
+<section class="feature flip" id="eng-identity">
+  <div class="ft">
+    <div class="k">Radar + AIS · inference</div>
+    <h3>Who could the dark ship be?</h3>
+    <p>A vessel that switches off its transponder still exists: its last reports say where it was, how fast and how long. For each dark radar contact, every vessel that fell silent in the three hours before the pass is tested for reach, for the miss from dead reckoning (uncertainty growing with silence) and for length, scored as a log-likelihood ratio against "an unrelated vessel":</p>
+    <div class="eq"><span class="tag">score</span>\[ \Lambda = \log\frac{\mathcal N(\text{miss};\,0,\sigma^2(t))}{1/\pi R(t)^2} + \log\frac{\mathcal N(\log L_\text{SAR}/L_\text{AIS};\,0,s^2)}{1/\log(400/15)} \]</div>
+    <p>A joint Hungarian pairing gives one vessel to one contact. The length test is pixel-aware: at 20 m pixels a 20 m boat looks 55 m long.</p>
+    <div class="nums"><div><b>42 / 77</b><small>true vessel paired (SCENARIO)</small></div><div><b>51 / 77</b><small>in the top three</small></div><div><b>10</b><small>confident wrong pairings</small></div></div>
+    <p class="honest">Leads to check, never identifications. Three ships going dark together inside one scene are genuinely hard to tell apart.</p>
+  </div>
+  <figure><img src="../assets/abyssal/eng-identity.webp" alt="Lines from silent vessels' last AIS positions to dark radar contacts, with ranked candidates" loading="lazy"><figcaption>Pink lines join each paired vessel's last AIS position to the dark contact it may be.</figcaption></figure>
+</section>
+
+<section class="feature" id="eng-tracks">
+  <div class="ft">
+    <div class="k">Radar · tracking</div>
+    <h3>Dark tracks across passes</h3>
+    <p>Dark detections are linked across passes by Kalman filters that mix a transit and a loiter model, scored against the density of new vessels plus clutter, and assigned optimally. A detection with no wake must line up with two others before it counts. A pass that covered a track and saw nothing lowers it, by exactly \(\log(1-P_D)\), as a searched area does. It flags loitering, rendezvous and possible identities.</p>
+    <div class="nums"><div><b>0.80</b><small>correct links (low clutter)</small></div><div><b>24 / 24</b><small>rendezvous flagged, 0 false</small></div><div><b>0.69</b><small>correct links at real-detector clutter</small></div></div>
+  </div>
+  <figure><img src="../assets/abyssal/eng-dark-tracks.webp" alt="Seven SAR pass footprints with dark detections linked into tracks and flags" loading="lazy"><figcaption>Seven passes, 193 detections, 4 confirmed tracks, loiterers and a rendezvous flagged against the answer key.</figcaption></figure>
+</section>
+
+<section class="feature flip" id="eng-impact">
+  <div class="ft">
+    <div class="k">Sea surface · the splash clock</div>
+    <h3>Impact rings: where, and how long ago</h3>
+    <p>An impact excites every wavelength and deep water sorts them: long waves run ahead, short ones trail. At distance \(r\) and time \(t\) the surface oscillates as</p>
+    <div class="eq"><span class="tag">Cauchy–Poisson</span>\[ \eta \propto \cos\!\Bigl(\frac{g t^2}{4r}\Bigr),\qquad \lambda(r,t) = \frac{8\pi r^2}{g\,t^2} \]</div>
+    <p>so a single image carries a clock. A quadrature matched-filter bank over time since impact recovers the centre and the time together.</p>
+    <div class="nums"><div><b>2.3%</b><small>median time error</small></div><div><b>25 / 25</b><small>time intervals cover the truth</small></div><div><b>0</b><small>false rings in 79 km²</small></div></div>
+  </div>
+  <figure><img src="../assets/abyssal/eng-impact-rings.webp" alt="A sea-surface image with an impact ring detected and its chirp profile" loading="lazy"><figcaption>One ring contact: impact 29 s before the image, ±1.4 s; the chirp profile through it in the panel.</figcaption></figure>
+</section>
+
+<section class="feature" id="eng-sofar">
+  <div class="ft">
+    <div class="k">Underwater · across a basin</div>
+    <h3>Ocean-basin acoustics</h3>
+    <p>Sound in the deep ocean is trapped in the SOFAR channel and crosses basins. This head locates an implosion or explosion from hydrophones thousands of kilometres apart: geodesic paths through a latitude climatology of channel speed, the origin time integrated out analytically, a shared speed error as a rank-one covariance term, and bearings from three-sensor triads. Land blocks paths. A silent station behind a continent is explained; a silent station on open water counts against a location.</p>
+    <div class="nums"><div><b>4.9 km</b><small>median error</small></div><div><b>37 / 40</b><small>95% ellipses contain the truth</small></div><div><b>286 km²</b><small>median 95% area</small></div></div>
+  </div>
+  <figure><img src="../assets/abyssal/eng-sofar.webp" alt="Six hydrophones across the South Atlantic with paths to a located event, one silent on open water, one blocked by land" loading="lazy"><figcaption>Five stations heard it; one silent on open water (evidence) and one silent behind Africa (explained).</figcaption></figure>
+</section>
+
+<section class="feature flip" id="eng-bubble">
+  <div class="ft">
+    <div class="k">Underwater · forensics</div>
+    <h3>Implosion forensics: the bubble clock</h3>
+    <p>When a hull collapses, or a charge goes off, the gas left behind rings: a primary pulse, then bubble pulses at a nearly fixed interval. That interval is the Rayleigh–Willis period of the bubble:</p>
+    <div class="eq"><span class="tag">Rayleigh–Willis</span>\[ T = 1.135\,\frac{\sqrt{\rho}\;V_\text{max}^{1/3}}{\sqrt{P}},\qquad P = P_\text{atm} + \rho g z \]</div>
+    <p>The period fixes only \(V^{1/3}/\sqrt{P}\): a small hull shallow and a large hull deep ring alike. Give it the hull's internal volume and it returns the collapse depth, and so the least depth of water where the loss can have happened. The period is read envelope first and corroborated by the cepstrum or a second pulse.</p>
+    <div class="nums"><div><b>0.75%</b><small>median period error</small></div><div><b>27 / 30</b><small>intervals cover, strong corroboration</small></div><div><b>0 / 30</b><small>false periods on noise</small></div></div>
+    <p class="honest">Calibrated on SCENARIO recordings only. With a single corroboration the interval covers just 11 of 16, and the panel says which kind you have.</p>
+  </div>
+  <figure><img src="../assets/abyssal/eng-bubble-depth.webp" alt="A bubble pulse train, its cepstrum, and the volume-against-depth curve with the true answer marked" loading="lazy"><figcaption>The curve of hulls that ring at the measured period; with the volume known, the depth (blue) contains the truth (green).</figcaption></figure>
+</section>
+
+<div class="lab wide" data-lab="bubble" style="margin-left:auto;margin-right:auto">
+  <div class="lab-head"><span class="t">Lab · the bubble clock</span><span class="s">size, depth and the period you would hear</span></div>
+  <div class="lab-body">
+    <canvas aria-label="Pressure at a hydrophone: the collapse pulse, then bubble pulses at the period T"></canvas>
+    <canvas class="curve" aria-label="Internal volume against depth for hulls that ring at this period" style="margin-top:10px"></canvas>
+    <div class="controls">
+      <label class="ctl"><span>Hull internal volume <output data-for="v">1,000 m³</output></span><input type="range" name="v" min="0.7" max="4" step="0.01" value="3"></label>
+      <label class="ctl"><span>Collapse depth <output data-for="z">500 m</output></span><input type="range" name="z" min="20" max="1500" step="10" value="500"></label>
+      <label class="ctl"><span>Rebound fraction η <output data-for="eta">0.50</output></span><input type="range" name="eta" min="30" max="80" value="50"></label>
+    </div>
+    <div class="btns"><button type="button" data-act="play">Replay the pulse</button></div>
+    <div class="readout">
+      <div><small>Bubble period T</small><b data-read="T">—</b></div>
+      <div><small>Pressure at depth</small><b data-read="p">—</b></div>
+      <div><small>Largest bubble radius</small><b data-read="r">—</b></div>
+      <div><small>Depths this volume allows</small><b data-read="zz">—</b></div>
+    </div>
+    <p class="note">Deeper means more pressure, a smaller bubble and a shorter period. The orange band is every hull that rings at this period, across the unknown rebound fraction; the blue bar is the depth range the stated volume allows. That range is what a search can use: the hull went down where the sea is at least that deep.</p>
+  </div>
+</div>
+
+<section class="feature" id="eng-drill">
+  <div class="ft">
+    <div class="k">Composite · three heads in a row</div>
+    <h3>The lost-submarine drill</h3>
+    <p>How an acoustic search cell would work a lost submarine. <strong>Where:</strong> the ocean-basin head locates the implosion. <strong>How deep:</strong> the bubble pulse and the hull volume give the collapse depth. <strong>Where that is possible:</strong> a hull only implodes after sinking past its crush depth, so the loss was over water at least that deep, and shallower water is ruled out.</p>
+    <div class="nums"><div><b>0.88</b><small>median area ratio near a shelf break</small></div><div><b>25 / 26</b><small>truth kept in the 95% region</small></div><div><b>1.00</b><small>open ocean: nothing to rule out, correctly</small></div></div>
+    <p class="honest">SCENARIO only, with synthetic bathymetry. Depth helps only where the location region includes water shallower than the collapse.</p>
+  </div>
+  <figure><img src="../assets/abyssal/eng-drill.webp" alt="A location ellipse cut off where a continental shelf is too shallow for the collapse depth" loading="lazy"><figcaption>The location heat cut where the shelf (red) is too shallow for a 252 m+ collapse: 788 km² becomes 578 km², and the truth stays inside.</figcaption></figure>
+</section>
+
+<section class="feature flip" id="eng-magnetic">
+  <div class="ft">
+    <div class="k">Underwater · magnetics</div>
+    <h3>Magnetic dipoles: position, depth, moment</h3>
+    <p>A compact ferrous object (an engine, an anchor, a landing gear) is a magnetic dipole sitting in Earth's field. The head fits the total-field anomaly</p>
+    <div class="eq"><span class="tag">dipole</span>\[ \Delta T = \hat F \cdot \frac{\mu_0}{4\pi}\,\frac{3(\mathbf m\cdot\hat u)\hat u - \mathbf m}{r^3} \]</div>
+    <p>by Levenberg–Marquardt, with the IGRF-14 main field, a regional trend and per-line levelling offsets, and chooses induced or remanent magnetisation by BIC. Depth comes with an interval.</p>
+    <div class="nums"><div><b>0.95</b><small>detection rate, 0 false</small></div><div><b>3 cm</b><small>median depth error</small></div><div><b>34 / 38</b><small>depth intervals cover (induced)</small></div></div>
+  </div>
+  <figure><img src="../assets/abyssal/eng-magnetic.webp" alt="Survey lines with two dipole anomalies fitted" loading="lazy"><figcaption>Two dipoles fitted from a towed survey, with depth intervals and the fit along the nearest line.</figcaption></figure>
+</section>
+
+<section class="feature" id="eng-seabed">
+  <div class="ft">
+    <div class="k">Seabed · multibeam and side-scan</div>
+    <h3>Something proud of the seabed</h3>
+    <p>Multibeam: a median filter wider than any target follows the seabed, and whatever stands proud of it is measured for height, footprint and shape. Side-scan: a bright highlight followed by an acoustic shadow, whose length gives the height, \(H = hL/(x+L)\). Real US bathymetry comes from NOAA BlueTopo by windowed range reads, with the tile's published hash and the window's own.</p>
+    <div class="nums"><div><b>47 / 48</b><small>wrecks found (multibeam)</small></div><div><b>58 / 64</b><small>side-scan targets, 0 false</small></div><div><b>22 m</b><small>proud: the Andrea Doria, from BlueTopo</small></div></div>
+    <p class="honest"><span class="tag real">real</span> One contact 22 m high, 364 × 255 m, about 1.3 km from the charted position of the <em>Andrea Doria</em> (sank 1956).</p>
+  </div>
+  <figure><img src="../assets/abyssal/eng-seabed-andrea-doria.webp" alt="NOAA BlueTopo hillshade with one relief contact at the Andrea Doria" loading="lazy"><figcaption>NOAA BlueTopo, 16 m grid: the wreck of the <em>Andrea Doria</em> stands 22 m proud of the seabed.</figcaption></figure>
+</section>
+
+<section class="feature flip" id="eng-debris">
+  <div class="ft">
+    <div class="k">Sea surface · drift</div>
+    <h3>Debris back-tracking</h3>
+    <p>Recovered debris drifted with the current plus a wind-driven leeway that depends on what it is. Running each find backwards gives the places it could have started. The trap is treating finds as independent: they all drifted through the <em>same</em> uncertain wind and current, so the head shares each environment realisation across items, multiplying inside a realisation and averaging across them. It is the five-echoes problem again, in fluid form.</p>
+    <div class="nums"><div><b>30 / 30</b><small>90% regions cover, shared environment</small></div><div><b>21 / 30</b><small>if finds are treated as independent</small></div><div><b>Allen &amp; Plourde</b><small>leeway classes</small></div></div>
+  </div>
+  <figure><img src="../assets/abyssal/eng-debris.webp" alt="Six debris finds back-tracked to an impact region" loading="lazy"><figcaption>Six finds over days, run back through 160 shared environments to one impact region.</figcaption></figure>
+</section>
+
+<section class="feature" id="eng-earlier">
+  <div class="ft">
+    <div class="k">From the first round</div>
+    <h3 id="eng-rings">The ring finder, the TDOA localiser and the wake reader</h3>
+    <p id="eng-tdoa">Three heads came first and are written up in <a href="06-signals-from-the-deep.html">Part 6, Signals from the deep</a>: the dark-vessel detector with Kelvin-wake physics and the radar's azimuth shift; a hydrophone localiser for a few stations with a correlated error model and a χ² alarm for a mispick; and a matched-filter ring finder for debris rings, crater rims and slick rings.</p>
+    <p>They share the contract too, which is why the new heads could be added in days: the gate, the receipts and the calibration harness were already there.</p>
+  </div>
+  <figure><img src="../assets/abyssal/signal-dark-vessel-wake.webp" alt="A dark vessel with its wake, azimuth shift and heading" loading="lazy"><figcaption>A dark vessel's wake: heading, speed from the Kelvin wavelength, and the azimuth shift back to its true position.</figcaption></figure>
+</section>
+
+<div class="section-title" id="board"><h2>The calibration board</h2><span>what each head measured, and on what</span></div>
+<div class="board-wrap">
+<table class="board">
+  <thead><tr><th>Head</th><th>What it measures</th><th>Calibration</th><th>Real data so far</th></tr></thead>
+  <tbody>
+    <tr><td>SAR vessels &amp; wakes</td><td>ships, heading, speed, dark vs AIS</td><td class="n">POD ≥ 0.89 lower bound at 80 m+; 2.45 FA / 1000 km²</td><td>Sentinel-1 off San Francisco</td></tr>
+    <tr><td>Self-calibration</td><td>detection rate by length and wind, on your sensor</td><td class="n">brackets the answer key 5/5 classes</td><td>awaits a real AIS day</td></tr>
+    <tr><td>Wind from radar</td><td>10 m wind speed, streak direction</td><td class="n">0.56 m/s median; 0/20 invented directions</td><td>two windows off San Francisco</td></tr>
+    <tr><td>Persistence</td><td>fixed, recurring, transient</td><td class="n">140/142 structures; 0 false fixed</td><td>Santa Barbara Channel, 8 passes</td></tr>
+    <tr><td>Who went dark?</td><td>candidate identities for dark contacts</td><td class="n">42/77 paired; 51/77 top three</td><td>none yet</td></tr>
+    <tr><td>Dark tracks</td><td>links, loitering, rendezvous</td><td class="n">0.80 correct links; 24/24 rendezvous</td><td>none yet</td></tr>
+    <tr><td>Impact rings</td><td>centre and time since impact</td><td class="n">2.3% time error; 25/25 coverage</td><td>none yet</td></tr>
+    <tr><td>SOFAR basin</td><td>event location across an ocean</td><td class="n">4.9 km median; 37/40 coverage</td><td>none yet</td></tr>
+    <tr><td>Implosion forensics</td><td>bubble period, size against depth</td><td class="n">0.75% error; 27/30 strong coverage</td><td>none yet</td></tr>
+    <tr><td>Magnetic dipole</td><td>position, depth, moment</td><td class="n">0.95 POD; 3 cm depth</td><td>none yet</td></tr>
+    <tr><td>Seabed &amp; sonar</td><td>relief and shadow contacts</td><td class="n">47/48 wrecks; 58/64 side-scan</td><td>NOAA BlueTopo, Andrea Doria</td></tr>
+    <tr><td>Debris back-track</td><td>where finds entered the water</td><td class="n">30/30 coverage, shared environment</td><td>none yet</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout honest">
+  <div class="t">What it does not do, yet</div>
+  <p>Every calibration above is SCENARIO: measured against simulators with known answers, which proves the mathematics but not a real sensor. Nothing a head produces enters the belief map on its own: heads make contacts, and automatic fusion of calibrated heads into belief is deliberately parked until real calibrations exist. ABYSSAL does not build tools to detect or track operating submarines; finding a lost one is in scope, hunting a working one is not. The whole thing is a prototype on one machine, not yet validated against real operational outcomes.</p>
+</div>
+
+<div class="cards3">
+  <div class="card"><span class="k">Read next</span><h3><a href="06-signals-from-the-deep.html">Signals from the deep</a></h3><p>The first three heads, the scope line, and why a submerged wake is invisible to radar.</p></div>
+  <div class="card"><span class="k">Read next</span><h3><a href="09-building-it-honestly.html">Building it honestly</a></h3><p>The gate, the receipts and the calibration discipline that this page rests on.</p></div>
+  <div class="card"><span class="k">The series</span><h3><a href="index.html">All nine parts and the labs</a></h3><p>{{TOTAL_WORDS}} words and {{NLABS}} interactive labs, from the tour to the arithmetic of not finding.</p></div>
+</div>
