@@ -12,7 +12,9 @@
 
   /* ---------------- theme ---------------- */
   const root = document.documentElement;
-  try { const t = localStorage.getItem('theme'); if (t) root.dataset.theme = t; } catch (e) { /* storage blocked */ }
+  // The ABYSSAL showcase and the main site keep separate choices; ABYSSAL opens dark.
+  const themeKey = root.classList.contains('abyssal') ? 'theme-abyssal' : 'theme-main';
+  try { const t = localStorage.getItem(themeKey) || (themeKey === 'theme-abyssal' ? 'dark' : ''); if (t) root.dataset.theme = t; } catch (e) { if (themeKey === 'theme-abyssal') root.dataset.theme = 'dark'; }
   const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
   const sun = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>';
   const moon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>';
@@ -22,7 +24,7 @@
     b.addEventListener('click', () => {
       const next = isDark() ? 'light' : 'dark';
       root.dataset.theme = next;
-      try { localStorage.setItem('theme', next); } catch (e) { /* ignore */ }
+      try { localStorage.setItem(themeKey, next); } catch (e) { /* ignore */ }
       paint();
       window.dispatchEvent(new Event('themechange'));
     });
@@ -1197,22 +1199,25 @@
      Architecture chart: hover, focus or tap a node to inspect it and light its connections
      ================================================================ */
   $$('.arch').forEach((root) => {
-    const svg = $('svg', root), box = $('.arch-inspect', root);
-    if (!svg || !box) return;
-    const nodes = $$('[data-k]', svg), edges = $$('[data-e]', svg);
+    // The chart ships in two layouts (landscape and portrait); each node lights edges in its own drawing.
+    const box = $('.arch-inspect', root);
+    const svgs = $$('svg', root);
+    if (!svgs.length || !box) return;
+    const nodes = $$('[data-k]', root), edges = $$('[data-e]', root);
     const idle = box.innerHTML;
     let pinned = null;
     function show(n) {
-      const k = n.dataset.k;
+      const k = n.dataset.k, sv = n.closest('svg');
       root.classList.add('focus');
       nodes.forEach((m) => m.classList.toggle('lit', m === n));
       edges.forEach((e) => {
         const ks = e.dataset.e.split(' ');
-        const on = ks.includes(k);
+        const on = e.closest('svg') === sv && ks.includes(k);
         e.classList.toggle('lit', on);
-        if (on) ks.forEach((kk) => { const m = svg.querySelector(`[data-k="${kk}"]`); if (m) m.classList.add('lit'); });
+        if (on) ks.forEach((kk) => { const m = sv.querySelector(`[data-k="${kk}"]`); if (m) m.classList.add('lit'); });
       });
-      box.innerHTML = `<span class="k">${n.classList.contains('ui') ? 'Interface' : n.classList.contains('chip') ? 'Signal head' : 'Component'}</span><b>${n.dataset.title}</b><p>${n.dataset.desc}</p>`;
+      const kind = n.classList.contains('ui') ? 'Interface' : n.classList.contains('chip') ? 'Signal engine' : 'Component';
+      box.innerHTML = `<span class="k">${kind}</span><b>${n.dataset.title}</b><p>${n.dataset.desc}</p>`;
     }
     function clear() {
       if (pinned) return show(pinned);
@@ -1228,7 +1233,7 @@
       n.addEventListener('blur', clear);
       if (n.tagName.toLowerCase() !== 'a') n.addEventListener('click', (ev) => { ev.stopPropagation(); pinned = pinned === n ? null : n; pinned ? show(n) : clear(); });
     });
-    svg.addEventListener('click', () => { pinned = null; clear(); });
+    svgs.forEach((sv) => sv.addEventListener('click', () => { pinned = null; clear(); }));
   });
 
   /* ================================================================
@@ -1327,5 +1332,167 @@
     window.addEventListener('resize', () => draw(false));
     draw(false);
     onVisible(c, play, () => {});
+  });
+
+  /* ================================================================
+     Fig. 1 (main site): a belief map drawn as a technical figure.
+     A hidden target is drawn from the prior; a searcher sweeps the most
+     probable ground; every empty cell multiplies its probability by 1 - p.
+     The contours are the 50% and 90% credible regions plus density levels.
+     ================================================================ */
+  $$('canvas[data-fig="contour"]').forEach((c) => {
+    const fig = c.closest('figure');
+    const nx = 80, ny = 60, POD = 0.5, KM = 0.5;
+    const L = 30, B = 22, T = 8, R = 8;
+    let rng, p, swept, target, mass, path, pi, steps, found, hold, track;
+    let ctx, w, h, col = {};
+    const css = () => {
+      const st = getComputedStyle(document.documentElement);
+      const g = (k) => st.getPropertyValue(k).trim();
+      col = { bg: g('--bg-raised'), ink: g('--ink'), ink2: g('--ink-2'), muted: g('--muted'), line: g('--line'), acc: g('--accent'), soft: g('--accent-soft') };
+    };
+    function reset(seed) {
+      rng = mulberry(seed);
+      p = new Float64Array(nx * ny);
+      const k = 3;
+      const blobs = [];
+      for (let b = 0; b < k; b++) blobs.push([nx * (0.2 + 0.6 * rng()), ny * (0.22 + 0.56 * rng()), 6 + rng() * 9, 5 + rng() * 7, 0.5 + rng()]);
+      let s = 0;
+      for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+        let v = 0.004;
+        for (const [cx, cy, sx, sy, wt] of blobs) v += wt * gauss2(i, j, cx, cy, sx, sy);
+        p[j * nx + i] = v; s += v;
+      }
+      for (let i = 0; i < p.length; i++) p[i] /= s;
+      let u = rng(), acc = 0; target = p.length - 1;
+      for (let i = 0; i < p.length; i++) { acc += p[i]; if (acc >= u) { target = i; break; } }
+      swept = new Float32Array(nx * ny); mass = 1; path = []; pi = 0; steps = 0; found = -1; hold = 0; track = [];
+    }
+    function plan() {
+      let best = 0;
+      for (let i = 1; i < p.length; i++) if (p[i] > p[best]) best = i;
+      const bx = best % nx, by = Math.floor(best / nx), W = 15, H = 11;
+      path = [];
+      for (let r = 0; r < H; r += 2) {
+        const y = clamp(by - (H >> 1) + r, 0, ny - 1);
+        for (let q = 0; q < W; q++) path.push([clamp(bx - (W >> 1) + (((r >> 1) % 2) ? W - 1 - q : q), 0, nx - 1), y]);
+      }
+      pi = 0;
+    }
+    function step() {
+      if (found >= 0) { if (--hold <= 0) reset(Math.floor(rng() * 1e9)); return; }
+      if (pi >= path.length) plan();
+      const [x, y] = path[pi++];
+      track.push([x, y]); if (track.length > 260) track.shift();
+      steps++;
+      let gone = 0;
+      for (let dy = 0; dy <= 1; dy++) {
+        const yy = y + dy; if (yy >= ny) continue;
+        const i = yy * nx + x;
+        if (i === target && rng() < POD) { found = i; hold = 40; return; }
+        gone += p[i] * POD; p[i] *= 1 - POD; swept[i] = Math.min(1, swept[i] + 0.5);
+      }
+      mass *= 1 - gone;
+      let s = 0; for (let i = 0; i < p.length; i++) s += p[i];
+      for (let i = 0; i < p.length; i++) p[i] /= s;
+    }
+    const X = (i) => L + (i + 0.5) * (w - L - R) / nx;
+    const Y = (j) => T + (j + 0.5) * (h - T - B) / ny;
+    function contour(f, t) {
+      // marching squares on cell centres, linear interpolation along edges
+      const segs = [];
+      const lerp = (a, b, va, vb) => a + (b - a) * ((t - va) / (vb - va));
+      for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) {
+        const a = f[j * nx + i], b = f[j * nx + i + 1], cc = f[(j + 1) * nx + i + 1], d = f[(j + 1) * nx + i];
+        const idx = (a > t ? 8 : 0) | (b > t ? 4 : 0) | (cc > t ? 2 : 0) | (d > t ? 1 : 0);
+        if (idx === 0 || idx === 15) continue;
+        const top = [lerp(X(i), X(i + 1), a, b), Y(j)], right = [X(i + 1), lerp(Y(j), Y(j + 1), b, cc)];
+        const bot = [lerp(X(i), X(i + 1), d, cc), Y(j + 1)], left = [X(i), lerp(Y(j), Y(j + 1), a, d)];
+        const add = (u, v) => segs.push(u, v);
+        switch (idx) {
+          case 1: case 14: add(left, bot); break;
+          case 2: case 13: add(bot, right); break;
+          case 3: case 12: add(left, right); break;
+          case 4: case 11: add(top, right); break;
+          case 5: add(left, top); add(bot, right); break;
+          case 6: case 9: add(top, bot); break;
+          case 7: case 8: add(left, top); break;
+          case 10: add(left, bot); add(top, right); break;
+          default: break;
+        }
+      }
+      ctx.beginPath();
+      for (let k = 0; k < segs.length; k += 2) { ctx.moveTo(segs[k][0], segs[k][1]); ctx.lineTo(segs[k + 1][0], segs[k + 1][1]); }
+      ctx.stroke();
+    }
+    function hpd(mass) {
+      const s = Float64Array.from(p).sort().reverse();
+      let acc = 0;
+      for (let k = 0; k < s.length; k++) { acc += s[k]; if (acc >= mass) return s[k]; }
+      return 0;
+    }
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = col.bg; ctx.fillRect(0, 0, w, h);
+      const cw = (w - L - R) / nx, ch = (h - T - B) / ny;
+      // swept ground
+      ctx.fillStyle = col.soft;
+      for (let i = 0; i < swept.length; i++) if (swept[i] > 0) ctx.fillRect(L + (i % nx) * cw, T + Math.floor(i / nx) * ch, cw + 0.5, ch + 0.5);
+      // frame, grid and ticks
+      ctx.strokeStyle = col.line; ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let i = 0; i <= nx; i += 10) { const x = Math.round(L + i * cw) + 0.5; ctx.moveTo(x, T); ctx.lineTo(x, h - B); }
+      for (let j = 0; j <= ny; j += 10) { const y = Math.round(T + j * ch) + 0.5; ctx.moveTo(L, y); ctx.lineTo(w - R, y); }
+      ctx.stroke();
+      ctx.strokeStyle = col.ink2; ctx.globalAlpha = 0.7; ctx.strokeRect(L + 0.5, T + 0.5, w - L - R - 1, h - T - B - 1); ctx.globalAlpha = 1;
+      ctx.fillStyle = col.muted; ctx.font = '10px "JetBrains Mono", ui-monospace, monospace';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      for (let i = 0; i <= nx; i += 20) ctx.fillText(String(i * KM), L + i * cw, h - B + 6);
+      ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      for (let j = 0; j <= ny; j += 20) ctx.fillText(String((ny - j) * KM), L - 6, T + j * ch);
+      ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+      ctx.fillText('km', w - R - 4, h - B - 4);
+      // density contours
+      let mx = 0; for (let i = 0; i < p.length; i++) if (p[i] > mx) mx = p[i];
+      ctx.strokeStyle = col.ink2; ctx.lineWidth = 0.9; ctx.setLineDash([]);
+      for (const f of [0.12, 0.26, 0.42, 0.6, 0.8]) { ctx.globalAlpha = 0.22 + 0.4 * f; contour(p, f * mx); }
+      ctx.globalAlpha = 1;
+      // credible regions
+      ctx.strokeStyle = col.acc;
+      ctx.lineWidth = 1.4; ctx.setLineDash([5, 4]); contour(p, hpd(0.9));
+      ctx.lineWidth = 2.2; ctx.setLineDash([]); contour(p, hpd(0.5));
+      // track
+      if (track.length > 1) {
+        ctx.strokeStyle = col.ink; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.1; ctx.beginPath();
+        track.forEach(([x, y], k) => { const px = X(x), py = Y(y) + ch / 2; k ? ctx.lineTo(px, py) : ctx.moveTo(px, py); });
+        ctx.stroke(); ctx.globalAlpha = 1;
+        const [x, y] = track[track.length - 1];
+        ctx.fillStyle = col.ink; ctx.beginPath(); ctx.arc(X(x), Y(y) + ch / 2, 3, 0, 7); ctx.fill();
+      }
+      if (found >= 0) {
+        const fx = X(found % nx), fy = Y(Math.floor(found / nx));
+        ctx.strokeStyle = col.acc; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(fx, fy, 9, 0, 7); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(fx - 4, fy - 4); ctx.lineTo(fx + 4, fy + 4); ctx.moveTo(fx + 4, fy - 4); ctx.lineTo(fx - 4, fy + 4); ctx.stroke();
+        ctx.fillStyle = col.ink; ctx.font = '600 11px Inter, system-ui, sans-serif'; ctx.textAlign = fx > w * 0.7 ? 'right' : 'left'; ctx.textBaseline = 'middle';
+        ctx.fillText(`found after ${steps} cells`, fx + (fx > w * 0.7 ? -16 : 16), fy);
+      }
+      if (fig) {
+        const set = (k, v) => { const o = fig.querySelector(`[data-r="${k}"]`); if (o) o.textContent = v; };
+        set('n', String(steps));
+        set('h', entropyBits(p).toFixed(2));
+        set('pf', fmtPct(found >= 0 ? 1 : 1 - mass, 1));
+      }
+    }
+    function size() { ({ ctx, w, h } = fitCanvas(c, 4 / 3)); css(); draw(); }
+    reset(20261122);
+    if (reduced) { for (let k = 0; k < 160; k++) step(); }
+    size();
+    let timer = 0;
+    const play = () => { if (reduced || timer) return; timer = setInterval(() => { step(); draw(); }, 70); };
+    const stop = () => { clearInterval(timer); timer = 0; };
+    window.addEventListener('resize', size);
+    window.addEventListener('themechange', () => { css(); draw(); });
+    onVisible(c, play, stop);
   });
 })();

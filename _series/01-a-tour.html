@@ -25,7 +25,7 @@
 <p>Here is what you are looking at, from the outside in.</p>
 
 <ul>
-  <li><strong>The colour is belief, not fact.</strong> Brighter means more of the probability sits there. The colour ramp is called <em>Ember</em>: it runs from near-black through violet and magenta to orange and pale amber, its brightness rises strictly, and it contains no blue or green. That last property is deliberate. Blue and green are the colours of sea and land; a probability ramp that uses them makes low-probability water look identical to the ocean underneath it. (<a href="09-building-it-honestly.html">Part 9</a> tells the slightly embarrassing story of how long the app shipped with a navy dark theme before anyone noticed.)</li>
+  <li><strong>The colour is belief, not fact.</strong> Brighter means more of the probability sits there. The colour ramp is called <em>Ember</em>: it runs from near-black through violet and magenta to orange and pale amber, its brightness rises strictly, and it contains no blue or green. That last property is deliberate. Blue and green are the colours of sea and land; a probability ramp that uses them makes low-probability water look identical to the ocean underneath it.</li>
   <li><strong>The contours are credible regions.</strong> The solid line is the smallest area holding 50% of the belief; the dashed line holds 90%. On this case the 90% region is 13 km². That number, not the colour, is what a search coordinator plans against.</li>
   <li><strong>The rectangles are searches that found nothing.</strong> A foot team swept the west valley corridor; a scent dog worked the valley floor. Neither found the hiker. Notice the map is darker inside them, but not black. A search that finds nothing is evidence, but weak evidence, because searches miss.</li>
   <li><strong>The bar across the top is the Search Ledger.</strong> It splits the remaining belief into three honest parts: <span style="color:#3fae84">unsearched</span> (78.3%), <span style="color:#e8962e">searched and missed</span> (10.9%), and <span style="color:#a678d8">outside the mapped area</span> (10.8%). That third segment is the one almost every search tool leaves out.</li>
@@ -138,9 +138,8 @@
 
 <h2><span class="num">09</span>What it is not</h2>
 
-<p>I want to be as clear about this as about the features. ABYSSAL runs on one laptop. It has been built in about a month by one person directing AI coding agents under a written set of invariants. It is covered by roughly 2,500 Python tests, 330 frontend unit tests and 118 browser journeys. It has <strong>not</strong> been validated against real search outcomes beyond one backtest, it has no external users yet, and every detection probability in it is labelled as an analyst assumption unless it has been measured. It provides decision support. It never says "the target is here", and it never issues a clearance certificate.</p>
+<p>I want to be as clear about this as about the features. ABYSSAL is a research prototype. Its mathematics is covered by roughly 2,500 Python tests, including oracle tests against known answers and frozen posterior hashes, plus 330 frontend unit tests and 118 browser journeys that assert exact numbers on screen. It has <strong>not</strong> yet been validated against real search outcomes beyond one historical backtest, and every detection probability in it is labelled as an analyst assumption unless it has been measured. It provides decision support. It never says "the target is here", and it never issues a clearance certificate.</p>
 
-<p>A stop rule is written into the roadmap: if fewer than five outside practitioners across at least two fields have used it on a real or replayed case by late January 2027, feature work stops and the engine is released with a written method. I would rather find out early.</p>
 
 <div class="callout try">
   <div class="t">Read on</div>

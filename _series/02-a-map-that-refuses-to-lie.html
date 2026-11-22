@@ -45,17 +45,17 @@
   <div class="lab-body">
     <canvas aria-label="A probability field drawn over a sea and coastline background with the selected colour ramp"></canvas>
     <canvas class="lum" aria-label="The perceived lightness of the selected ramp from low to high probability" style="margin-top:10px"></canvas>
-    <div class="btns"><button type="button" data-ramp="jet">Rainbow</button><button type="button" data-ramp="ember">Ember</button><button type="button" data-ramp="viridis">Viridis</button><span style="width:14px"></span><button type="button" data-bg="navy">Navy UI</button><button type="button" data-bg="graphite">Graphite UI</button></div>
+    <div class="btns"><button type="button" data-ramp="jet">Rainbow</button><button type="button" data-ramp="ember">Ember</button><button type="button" data-ramp="viridis">Viridis</button><span style="width:14px"></span><button type="button" data-bg="navy">Sea-blue UI</button><button type="button" data-bg="graphite">Graphite UI</button></div>
     <div class="readout">
       <div><small>Lightness always rises?</small><b data-read="mono">—</b></div>
       <div><small>Blue or green in the ramp?</small><b data-read="bg">—</b></div>
       <div><small>The low end over sea</small><b data-read="low">—</b></div>
     </div>
-    <p class="note">The curve under the map is CIE L*, perceived lightness, along each ramp. The rainbow's rises, peaks at yellow and falls: the "ridge" you see around the larger mode is an artefact of the colour map, not of the probability. Switch to Navy UI with the rainbow to see the app's old default.</p>
+    <p class="note">The curve under the map is CIE L*, perceived lightness, along each ramp. The rainbow's rises, peaks at yellow and falls: the "ridge" you see around the larger mode is an artefact of the colour map, not of the probability. Switch to the sea-blue interface with the rainbow and watch the low end of the map vanish into the water.</p>
   </div>
 </div>
 
-<p>The background matters as much as the ramp. For weeks ABYSSAL's dark theme was navy, which, on a tool mostly about the sea, put a sea-coloured interface around a sea-coloured map with a sea-coloured low end. The fix was neutral graphite surfaces, so that sea, land and probability colours carry all of the meaning and the chrome carries none. <a href="09-building-it-honestly.html">Part 9</a> tells that story properly.</p>
+<p>The background matters as much as the ramp. A tool that is mostly about the sea should not wrap a sea-coloured map in a sea-coloured interface: the low end of the probability disappears into the water around it. ABYSSAL's surfaces are neutral graphite, so that sea, land and probability colours carry all of the meaning and the chrome carries none.</p>
 
 <h2><span class="num">03</span>Lines that mean something</h2>
 

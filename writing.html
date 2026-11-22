@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="site">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -10,14 +10,16 @@
   <meta property="og:type" content="article">
   <meta property="og:image" content="https://millardr.github.io/assets/abyssal/demo-live.webp">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#0d0d0d">
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+  <meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="assets/rm.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem('theme-main');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Instrument+Serif:ital@0;1&display=swap">
   
   <link rel="stylesheet" href="assets/series.css">
+  <link rel="stylesheet" href="assets/site.css">
   <script defer src="assets/series.js"></script>
 </head>
 <body>
@@ -25,26 +27,24 @@
   <div class="progress" aria-hidden="true"><span></span></div>
   <header class="topbar">
     <div class="in">
-      <a class="brand" href="index.html"><span class="mark" aria-hidden="true"></span>Rory Millard</a>
+      <a class="brand" href="index.html">Rory Millard</a>
       <span class="crumb"></span>
-      <nav aria-label="Main navigation" id="site-nav"><a href="writing.html" aria-current="page">Writing</a><a href="projects.html">Projects</a><a href="abyssal/index.html">ABYSSAL</a><a href="about.html">About</a><a href="contact.html">Contact</a></nav>
+      <nav aria-label="Main navigation" id="site-nav"><a href="projects.html">Work</a><a href="writing.html" aria-current="page">Writing</a><a href="about.html">About</a><a href="contact.html">Contact</a></nav>
       <button class="theme-btn" type="button" aria-label="Toggle theme"></button>
       <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
     </div>
   </header>
-  <section class="hero short">
-    <canvas class="field" aria-hidden="true"></canvas>
+  <section class="mast">
     <div class="in">
-      <div class="kicker"><span class="dot"></span><span>Index</span></div>
+      <div class="label">Writing</div>
       <h1>Writing</h1>
-      <p class="dek">Essays, mathematical derivations, interactive models and walkthroughs. Some are finished; some are working notes that will grow.</p>
-      
-      
+      <p class="dek">Essays, derivations and interactive models. The maths is written out in full and every lab runs in the page.</p>
+      <div class="meta"><span><b>22,155</b> words in the ABYSSAL series</span><span><b>13</b> interactive labs</span></div>
       
     </div>
   </section>
   <main class="page" id="main">
-<div class="section-title"><h2>The ABYSSAL series</h2><a href="abyssal/index.html">Series page and all labs →</a></div>
+<header class="sh"><span class="no">§1</span><h2>The ABYSSAL series</h2><a href="abyssal/index.html">Series overview →</a></header>
 <div class="parts">
         <a class="part reveal" href="abyssal/01-a-tour.html">
           <div class="thumb"><img src="assets/abyssal/demo-live.webp" alt="" loading="lazy"></div>
@@ -123,29 +123,34 @@
           <div class="body">
             <div class="no"><span>Part 09</span><span class="lvl">Essay · engineering &amp; strategy</span></div>
             <h3>Building it honestly</h3>
-            <p>One person, a team of AI coding agents, ten invariants and a file called KNOWN_INCOMPLETE.md. What it takes to keep a probabilistic system honest when most of the code is written by machines, and where honest probability is worth money.</p>
-            <div class="rt">10 min read</div>
+            <p>Ten invariants, an engine audit, a calibration gate and a file that lists what is unfinished. What it takes to keep a probabilistic system honest, and where honest probability is worth money.</p>
+            <div class="rt">8 min read</div>
           </div>
         </a>
 </div>
-<div class="section-title"><h2>Notes</h2><span>Shorter pieces and working notes</span></div>
+<header class="sh"><span class="no">§2</span><h2>Features and notes</h2><span class="r">Shorter pieces</span></header>
+<nav class="wl" aria-label="Notes">
+  <a href="abyssal/engines.html"><span class="k">Feature</span><span class="t">Inside the machine<small>The whole of ABYSSAL on one sheet, and fourteen signal engines with the physics behind each and what it measured.</small></span><span class="m">14 engines</span></a>
+  <a href="notes/the-fifth-miss.html"><span class="k">Working note · 001</span><span class="t">The Fifth Miss<small>How shared failures change what repeated misses tell you, with a small interactive model. The seed of ABYSSAL's repeat-credit accounting.</small></span><span class="m">Interactive</span></a>
+</nav>
+<header class="sh"><span class="no">§3</span><h2>In preparation</h2><span class="r">Drafts</span></header>
 <div class="entries">
-  <article class="entry2"><div class="d">Working note · 001</div><div><h3><a href="notes/the-fifth-miss.html">The Fifth Miss</a></h3><p>How shared failures change what we can infer from repeated observations, with a small interactive model. The seed of ABYSSAL's repeat-credit accounting.</p></div></article>
-  <article class="entry2"><div class="d">Planned</div><div><h3>Learning to Learn from a Bad Sensor <span class="soon">soon</span></h3><p>A technical note on calibration, latent-variable models and adaptive experimental design.</p></div></article>
-  <article class="entry2"><div class="d">Planned</div><div><h3>The Dispersive Clock <span class="soon">soon</span></h3><p>Impact ring waves as both detector and timer: the Cauchy–Poisson problem, matched filtering of a chirp, and what a single image of the sea can say about when something hit it.</p></div></article>
+  <article class="entry2"><div class="d">Technical note</div><div><h3>Learning from a bad sensor</h3><p>Calibration, latent-variable models and adaptive experiments: how much data distinguishes an absent target from an unreliable instrument, and which observation resolves it fastest.</p></div></article>
+  <article class="entry2"><div class="d">Technical note</div><div><h3>The dispersive clock</h3><p>Impact ring waves as both detector and timer: the Cauchy–Poisson problem, matched filtering of a chirp, and what one image of the sea can say about when something hit it.</p></div></article>
 </div>
+<div style="height:50px"></div>
 
   </main>
   <footer class="foot">
     <div class="in">
       <div>
         <b>Rory Millard</b>
-        <span>Bayesian inference, search under uncertainty, and the places where mathematics meets messy physical systems.</span>
+        <span>Engineer working where probability meets the physical world.</span>
       </div>
       <nav aria-label="Footer">
-        <a href="abyssal/index.html">ABYSSAL series</a>
+        <a href="projects.html">Work</a>
+        <a href="abyssal/index.html">ABYSSAL</a>
         <a href="writing.html">Writing</a>
-        <a href="projects.html">Projects</a>
         <a href="about.html">About</a>
         <a href="mailto:j7yma3egrrm9nxaa.16ls4@aleeas.com">Email</a>
         <a href="https://www.linkedin.com/in/rorymillard1/" rel="noopener noreferrer">LinkedIn</a>
