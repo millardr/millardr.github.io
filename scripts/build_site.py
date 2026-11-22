@@ -42,8 +42,8 @@ REDIRECTS = {
 }
 
 def fonts(theme: str) -> str:
-    """The main site adds Instrument Serif for display type; ABYSSAL keeps its own set."""
-    extra = "&family=Instrument+Serif:ital@0;1" if theme == "site" else ""
+    """The main site adds Inter Tight for display type; ABYSSAL keeps its own set."""
+    extra = "&family=Inter+Tight:wght@500;600;700" if theme == "site" else ""
     return (
         '<link rel="preconnect" href="https://fonts.googleapis.com">\n'
         '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
@@ -56,8 +56,8 @@ KATEX = (
     '  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>\n'
     '  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>'
 )
-# Two identities. The main site ("site") is Oxford ink: paper, ink and Oxford blue, following the reader's
-# system theme. The ABYSSAL showcase ("abyssal") is graphite and ember like the instrument itself, and
+# Two identities. The main site ("site") is deep Oxford-blue bands with a live probability field behind
+# them and electric-blue accents, following the reader's system theme. The ABYSSAL showcase ("abyssal") is graphite and ember like the instrument itself, and
 # opens dark. Each remembers its own choice, so toggling one never changes the other.
 THEME_KEY = {"site": "theme-main", "abyssal": "theme-abyssal"}
 THEME_DEFAULT = {"site": "", "abyssal": "dark"}
@@ -197,9 +197,10 @@ def hero_block(kicker: str, h1: str, dek: str, meta: str = "", peek: str = "", c
 
 
 def masthead(kicker: str, h1: str, dek: str, meta: str = "", cta: str = "") -> str:
-    """Main-site page header: paper, a mono label, a display headline and a hairline."""
+    """Main-site page header: a dark band with the live probability field behind the headline."""
     return f"""
-  <section class="mast">
+  <section class="mast band">
+    <canvas class="flow" data-flow="band" aria-hidden="true"></canvas>
     <div class="in">
       <div class="label">{kicker}</div>
       <h1>{h1}</h1>
@@ -351,6 +352,7 @@ def fill(text: str, parts: list[dict], depth: str) -> str:
     nlabs = sum(len(set(p["labs"])) for p in parts)
     return (text.replace("{{PARTS}}", part_cards(parts, depth))
                 .replace("{{PARTS_COMPACT}}", parts_compact(parts, depth))
+                .replace("{{TOTAL_WORDS_N}}", str(total))
                 .replace("{{TOTAL_WORDS}}", f"{total:,}")
                 .replace("{{NPARTS}}", str(len(parts)))
                 .replace("{{NLABS}}", str(nlabs))

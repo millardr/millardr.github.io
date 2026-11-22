@@ -16,7 +16,7 @@
   <script>try{var t=localStorage.getItem('theme-main');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Instrument+Serif:ital@0;1&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter+Tight:wght@500;600;700&display=swap">
   
   <link rel="stylesheet" href="assets/series.css">
   <link rel="stylesheet" href="assets/site.css">
@@ -34,7 +34,8 @@
       <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
     </div>
   </header>
-  <section class="mast">
+  <section class="mast band">
+    <canvas class="flow" data-flow="band" aria-hidden="true"></canvas>
     <div class="in">
       <div class="label">Work</div>
       <h1>Work</h1>
@@ -44,7 +45,7 @@
     </div>
   </section>
   <main class="page" id="main">
-<header class="sh"><span class="no">§1</span><h2>ABYSSAL</h2><a href="abyssal/index.html">Project overview →</a></header>
+<header class="sh"><span class="no">01</span><h2>ABYSSAL</h2><a href="abyssal/index.html">Project overview →</a></header>
 <article class="xcard reveal">
   <div class="tx">
     <div class="tag"><span>ABYSSAL</span><span>Research prototype · ongoing</span></div>
@@ -60,7 +61,7 @@
   <div class="im"><img src="assets/abyssal/evidence-map-live.webp" alt="ABYSSAL's Evidence Map over terrain" loading="lazy"></div>
 </article>
 
-<header class="sh"><span class="no">§2</span><h2>Directions</h2><span class="r">Directions, not claims</span></header>
+<header class="sh"><span class="no">02</span><h2>Directions</h2><span class="r">Directions, not claims</span></header>
 <div class="dirs">
   <article><div class="k">AI · evaluation</div><h3>When can a model's confidence be trusted?</h3><p>Calibration and evaluation of learning systems: how they behave, how they fail, and how to measure the difference between a confident model and a correct one.</p><p class="q">Is a model's 90% really 90%?</p></article>
   <article><div class="k">Autonomy · multi-agent</div><h3>Many sensors, many targets, little time</h3><p>Tasking by expected information gain, and coordination that stays sound when agents' observations are correlated rather than independent.</p><p class="q">Which sensor should look where, next?</p></article>
