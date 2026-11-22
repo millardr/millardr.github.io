@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="abyssal">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -12,7 +12,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#0d0d0d">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+  <script>try{var t=localStorage.getItem('theme-abyssal')||'dark';if(t)document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme='dark';}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
@@ -27,9 +27,9 @@
   <div class="progress" aria-hidden="true"><span></span></div>
   <header class="topbar">
     <div class="in">
-      <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>Rory Millard</a>
-      <span class="crumb"><a href="index.html">ABYSSAL series</a> / Part 2</span>
-      <nav aria-label="Main navigation" id="site-nav"><a href="../writing.html">Writing</a><a href="../projects.html">Projects</a><a href="../abyssal/index.html" aria-current="page">ABYSSAL</a><a href="../about.html">About</a><a href="../contact.html">Contact</a></nav>
+      <a class="brand" href="../index.html">Rory Millard</a><a class="product" href="../abyssal/index.html">ABYSSAL</a>
+      <span class="crumb"><a href="index.html">Series</a> / Part 2 of 9</span>
+      <nav aria-label="Main navigation" id="site-nav"><a href="../abyssal/index.html">Overview</a><a href="../abyssal/engines.html">The machine</a><a href="../abyssal/01-a-tour.html" aria-current="page">Series</a><a href="../abyssal/index.html#labs">Labs</a><a href="../contact.html">Contact</a></nav>
       <button class="theme-btn" type="button" aria-label="Toggle theme"></button>
       <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
     </div>
@@ -40,7 +40,7 @@
       <div class="kicker"><span class="dot"></span><span>ABYSSAL · Part 2 of 9</span><span class="lv">Design · cartography &amp; interface</span></div>
       <h1>A map that refuses to lie</h1>
       <p class="dek">A probability heatmap is an argument, and most of them cheat: rainbow ramps that invent ridges, sea-coloured low ends, resolution they do not have, and context smuggled in as evidence. How ABYSSAL's interface is designed so that what you see is exactly what the model believes.</p>
-      <div class="meta"><span><b>9 min</b> read · 1,982 words · <b>1</b> interactive lab</span><span>Rory Millard · November 2026</span></div>
+      <div class="meta"><span><b>9 min</b> read · 1,984 words · <b>1</b> interactive lab</span><span>Rory Millard · November 2026</span></div>
       
       <figure class="figure-peek reveal"><img src="../assets/abyssal/sketch-live.webp" alt="The ABYSSAL map over real terrain with the Ember probability ramp and Search Ledger" fetchpriority="high"></figure>
     </div>
@@ -93,17 +93,17 @@
   <div class="lab-body">
     <canvas aria-label="A probability field drawn over a sea and coastline background with the selected colour ramp"></canvas>
     <canvas class="lum" aria-label="The perceived lightness of the selected ramp from low to high probability" style="margin-top:10px"></canvas>
-    <div class="btns"><button type="button" data-ramp="jet">Rainbow</button><button type="button" data-ramp="ember">Ember</button><button type="button" data-ramp="viridis">Viridis</button><span style="width:14px"></span><button type="button" data-bg="navy">Navy UI</button><button type="button" data-bg="graphite">Graphite UI</button></div>
+    <div class="btns"><button type="button" data-ramp="jet">Rainbow</button><button type="button" data-ramp="ember">Ember</button><button type="button" data-ramp="viridis">Viridis</button><span style="width:14px"></span><button type="button" data-bg="navy">Sea-blue UI</button><button type="button" data-bg="graphite">Graphite UI</button></div>
     <div class="readout">
       <div><small>Lightness always rises?</small><b data-read="mono">—</b></div>
       <div><small>Blue or green in the ramp?</small><b data-read="bg">—</b></div>
       <div><small>The low end over sea</small><b data-read="low">—</b></div>
     </div>
-    <p class="note">The curve under the map is CIE L*, perceived lightness, along each ramp. The rainbow's rises, peaks at yellow and falls: the "ridge" you see around the larger mode is an artefact of the colour map, not of the probability. Switch to Navy UI with the rainbow to see the app's old default.</p>
+    <p class="note">The curve under the map is CIE L*, perceived lightness, along each ramp. The rainbow's rises, peaks at yellow and falls: the "ridge" you see around the larger mode is an artefact of the colour map, not of the probability. Switch to the sea-blue interface with the rainbow and watch the low end of the map vanish into the water.</p>
   </div>
 </div>
 
-<p>The background matters as much as the ramp. For weeks ABYSSAL's dark theme was navy, which, on a tool mostly about the sea, put a sea-coloured interface around a sea-coloured map with a sea-coloured low end. The fix was neutral graphite surfaces, so that sea, land and probability colours carry all of the meaning and the chrome carries none. <a href="09-building-it-honestly.html">Part 9</a> tells that story properly.</p>
+<p>The background matters as much as the ramp. A tool that is mostly about the sea should not wrap a sea-coloured map in a sea-coloured interface: the low end of the probability disappears into the water around it. ABYSSAL's surfaces are neutral graphite, so that sea, land and probability colours carry all of the meaning and the chrome carries none.</p>
 
 <h2><span class="num">03</span>Lines that mean something</h2>
 
@@ -170,12 +170,12 @@
     <div class="in">
       <div>
         <b>Rory Millard</b>
-        <span>Bayesian inference, search under uncertainty, and the places where mathematics meets messy physical systems.</span>
+        <span>ABYSSAL is a research prototype by Rory Millard: a Bayesian workbench for finding lost aircraft, ships and people.</span>
       </div>
       <nav aria-label="Footer">
-        <a href="../abyssal/index.html">ABYSSAL series</a>
+        <a href="../projects.html">Work</a>
+        <a href="../abyssal/index.html">ABYSSAL</a>
         <a href="../writing.html">Writing</a>
-        <a href="../projects.html">Projects</a>
         <a href="../about.html">About</a>
         <a href="mailto:j7yma3egrrm9nxaa.16ls4@aleeas.com">Email</a>
         <a href="https://www.linkedin.com/in/rorymillard1/" rel="noopener noreferrer">LinkedIn</a>

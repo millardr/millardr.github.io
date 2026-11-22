@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="abyssal">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -12,7 +12,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#0d0d0d">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+  <script>try{var t=localStorage.getItem('theme-abyssal')||'dark';if(t)document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme='dark';}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
@@ -27,9 +27,9 @@
   <div class="progress" aria-hidden="true"><span></span></div>
   <header class="topbar">
     <div class="in">
-      <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"></span>Rory Millard</a>
-      <span class="crumb"><a href="index.html">ABYSSAL series</a> / Part 1</span>
-      <nav aria-label="Main navigation" id="site-nav"><a href="../writing.html">Writing</a><a href="../projects.html">Projects</a><a href="../abyssal/index.html" aria-current="page">ABYSSAL</a><a href="../about.html">About</a><a href="../contact.html">Contact</a></nav>
+      <a class="brand" href="../index.html">Rory Millard</a><a class="product" href="../abyssal/index.html">ABYSSAL</a>
+      <span class="crumb"><a href="index.html">Series</a> / Part 1 of 9</span>
+      <nav aria-label="Main navigation" id="site-nav"><a href="../abyssal/index.html">Overview</a><a href="../abyssal/engines.html">The machine</a><a href="../abyssal/01-a-tour.html" aria-current="page">Series</a><a href="../abyssal/index.html#labs">Labs</a><a href="../contact.html">Contact</a></nav>
       <button class="theme-btn" type="button" aria-label="Toggle theme"></button>
       <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
     </div>
@@ -40,7 +40,7 @@
       <div class="kicker"><span class="dot"></span><span>ABYSSAL · Part 1 of 9</span><span class="lv">Showcase · walkthrough</span></div>
       <h1>Finding what is lost: a tour of ABYSSAL</h1>
       <p class="dek">A guided walk through a Bayesian search workbench: what you see in the first ten seconds, what each panel is for, and why the map never moves unless a person says so.</p>
-      <div class="meta"><span><b>14 min</b> read · 3,209 words</span><span>Rory Millard · November 2026</span></div>
+      <div class="meta"><span><b>14 min</b> read · 3,131 words</span><span>Rory Millard · November 2026</span></div>
       
       <figure class="figure-peek reveal"><img src="../assets/abyssal/demo-live.webp" alt="The ABYSSAL workspace showing a probability map over a mountain valley, with searched areas and contours" fetchpriority="high"></figure>
     </div>
@@ -73,7 +73,7 @@
 <p>Here is what you are looking at, from the outside in.</p>
 
 <ul>
-  <li><strong>The colour is belief, not fact.</strong> Brighter means more of the probability sits there. The colour ramp is called <em>Ember</em>: it runs from near-black through violet and magenta to orange and pale amber, its brightness rises strictly, and it contains no blue or green. That last property is deliberate. Blue and green are the colours of sea and land; a probability ramp that uses them makes low-probability water look identical to the ocean underneath it. (<a href="09-building-it-honestly.html">Part 9</a> tells the slightly embarrassing story of how long the app shipped with a navy dark theme before anyone noticed.)</li>
+  <li><strong>The colour is belief, not fact.</strong> Brighter means more of the probability sits there. The colour ramp is called <em>Ember</em>: it runs from near-black through violet and magenta to orange and pale amber, its brightness rises strictly, and it contains no blue or green. That last property is deliberate. Blue and green are the colours of sea and land; a probability ramp that uses them makes low-probability water look identical to the ocean underneath it.</li>
   <li><strong>The contours are credible regions.</strong> The solid line is the smallest area holding 50% of the belief; the dashed line holds 90%. On this case the 90% region is 13 km². That number, not the colour, is what a search coordinator plans against.</li>
   <li><strong>The rectangles are searches that found nothing.</strong> A foot team swept the west valley corridor; a scent dog worked the valley floor. Neither found the hiker. Notice the map is darker inside them, but not black. A search that finds nothing is evidence, but weak evidence, because searches miss.</li>
   <li><strong>The bar across the top is the Search Ledger.</strong> It splits the remaining belief into three honest parts: <span style="color:#3fae84">unsearched</span> (78.3%), <span style="color:#e8962e">searched and missed</span> (10.9%), and <span style="color:#a678d8">outside the mapped area</span> (10.8%). That third segment is the one almost every search tool leaves out.</li>
@@ -186,9 +186,8 @@
 
 <h2><span class="num">09</span>What it is not</h2>
 
-<p>I want to be as clear about this as about the features. ABYSSAL runs on one laptop. It has been built in about a month by one person directing AI coding agents under a written set of invariants. It is covered by roughly 2,500 Python tests, 330 frontend unit tests and 118 browser journeys. It has <strong>not</strong> been validated against real search outcomes beyond one backtest, it has no external users yet, and every detection probability in it is labelled as an analyst assumption unless it has been measured. It provides decision support. It never says "the target is here", and it never issues a clearance certificate.</p>
+<p>I want to be as clear about this as about the features. ABYSSAL is a research prototype. Its mathematics is covered by roughly 2,500 Python tests, including oracle tests against known answers and frozen posterior hashes, plus 330 frontend unit tests and 118 browser journeys that assert exact numbers on screen. It has <strong>not</strong> yet been validated against real search outcomes beyond one historical backtest, and every detection probability in it is labelled as an analyst assumption unless it has been measured. It provides decision support. It never says "the target is here", and it never issues a clearance certificate.</p>
 
-<p>A stop rule is written into the roadmap: if fewer than five outside practitioners across at least two fields have used it on a real or replayed case by late January 2027, feature work stops and the engine is released with a written method. I would rather find out early.</p>
 
 <div class="callout try">
   <div class="t">Read on</div>
@@ -204,12 +203,12 @@
     <div class="in">
       <div>
         <b>Rory Millard</b>
-        <span>Bayesian inference, search under uncertainty, and the places where mathematics meets messy physical systems.</span>
+        <span>ABYSSAL is a research prototype by Rory Millard: a Bayesian workbench for finding lost aircraft, ships and people.</span>
       </div>
       <nav aria-label="Footer">
-        <a href="../abyssal/index.html">ABYSSAL series</a>
+        <a href="../projects.html">Work</a>
+        <a href="../abyssal/index.html">ABYSSAL</a>
         <a href="../writing.html">Writing</a>
-        <a href="../projects.html">Projects</a>
         <a href="../about.html">About</a>
         <a href="mailto:j7yma3egrrm9nxaa.16ls4@aleeas.com">Email</a>
         <a href="https://www.linkedin.com/in/rorymillard1/" rel="noopener noreferrer">LinkedIn</a>

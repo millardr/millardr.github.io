@@ -38,21 +38,41 @@ REDIRECTS = {
     "notes/abyssal-ops-console.html": "abyssal/07-the-operating-picture.html",
     "notes/abyssal-epistemic-humility.html": "abyssal/08-three-cases-two-refusals.html",
     "experiments/fifth-miss.html": "notes/the-fifth-miss.html",
+    "projects/abyssal.html": "abyssal/index.html",
 }
 
-FONTS = (
-    '<link rel="preconnect" href="https://fonts.googleapis.com">\n'
-    '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
-    '  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700'
-    "&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;"
-    '1,6..72,400&display=swap">'
-)
+def fonts(theme: str) -> str:
+    """The main site adds Instrument Serif for display type; ABYSSAL keeps its own set."""
+    extra = "&family=Instrument+Serif:ital@0;1" if theme == "site" else ""
+    return (
+        '<link rel="preconnect" href="https://fonts.googleapis.com">\n'
+        '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
+        '  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700'
+        "&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;"
+        f'1,6..72,400{extra}&display=swap">'
+    )
 KATEX = (
     '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">\n'
     '  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>\n'
     '  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>'
 )
-THEME_BOOT = "<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>"
+# Two identities. The main site ("site") is Oxford ink: paper, ink and Oxford blue, following the reader's
+# system theme. The ABYSSAL showcase ("abyssal") is graphite and ember like the instrument itself, and
+# opens dark. Each remembers its own choice, so toggling one never changes the other.
+THEME_KEY = {"site": "theme-main", "abyssal": "theme-abyssal"}
+THEME_DEFAULT = {"site": "", "abyssal": "dark"}
+
+
+def theme_boot(theme: str) -> str:
+    d = THEME_DEFAULT[theme]
+    fallback = f"||'{d}'" if d else ""
+    return (f"<script>try{{var t=localStorage.getItem('{THEME_KEY[theme]}'){fallback};"
+            "if(t)document.documentElement.dataset.theme=t;}catch(e){"
+            + (f"document.documentElement.dataset.theme='{d}';" if d else "") + "}</script>")
+
+
+def theme_of(out: str) -> str:
+    return "abyssal" if out.startswith("abyssal/") else "site"
 
 
 # ---------------------------------------------------------------- helpers
@@ -72,9 +92,16 @@ def count_words(text: str) -> int:
     return len(re.findall(r"[A-Za-z0-9’'-]+", text))
 
 
-def head(title: str, desc: str, image: str, depth: str, maths: bool = True) -> str:
+def head(title: str, desc: str, image: str, depth: str, maths: bool = True, theme: str = "abyssal") -> str:
+    color = ('<meta name="theme-color" content="#0d0d0d">' if theme == "abyssal" else
+             '<meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)">\n'
+             '  <meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)">')
+    icon = "favicon.svg" if theme == "abyssal" else "rm.svg"
+    css = f'<link rel="stylesheet" href="{depth}assets/series.css">'
+    if theme == "site":
+        css += f'\n  <link rel="stylesheet" href="{depth}assets/site.css">'
     return f"""<!doctype html>
-<html lang="en">
+<html lang="en" class="{theme}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -85,32 +112,42 @@ def head(title: str, desc: str, image: str, depth: str, maths: bool = True) -> s
   <meta property="og:type" content="article">
   <meta property="og:image" content="{SITE}/assets/abyssal/{image}">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#0d0d0d">
-  <link rel="icon" href="{depth}assets/favicon.svg" type="image/svg+xml">
-  {THEME_BOOT}
-  {FONTS}
+  {color}
+  <link rel="icon" href="{depth}assets/{icon}" type="image/svg+xml">
+  {theme_boot(theme)}
+  {fonts(theme)}
   {KATEX if maths else ''}
-  <link rel="stylesheet" href="{depth}assets/series.css">
+  {css}
   <script defer src="{depth}assets/series.js"></script>
 </head>"""
 
 
-NAV = [("writing", "writing.html", "Writing"), ("projects", "projects.html", "Projects"),
-       ("abyssal", "abyssal/index.html", "ABYSSAL"), ("about", "about.html", "About"), ("contact", "contact.html", "Contact")]
+NAV = {
+    "site": [("work", "projects.html", "Work"), ("writing", "writing.html", "Writing"),
+             ("about", "about.html", "About"), ("contact", "contact.html", "Contact")],
+    "abyssal": [("overview", "abyssal/index.html", "Overview"), ("machine", "abyssal/engines.html", "The machine"),
+                ("series", "abyssal/01-a-tour.html", "Series"), ("labs", "abyssal/index.html#labs", "Labs"),
+                ("contact", "contact.html", "Contact")],
+}
 
 
-def topbar(depth: str, crumb: str, active: str) -> str:
+def topbar(depth: str, crumb: str, active: str, theme: str = "abyssal") -> str:
     links = "".join(
         f'<a href="{depth}{href}"{" aria-current=\"page\"" if key == active else ""}>{label}</a>'
-        for key, href, label in NAV
+        for key, href, label in NAV[theme]
     )
+    if theme == "abyssal":
+        brand = (f'<a class="brand" href="{depth}index.html">Rory Millard</a>'
+                 f'<a class="product" href="{depth}abyssal/index.html">ABYSSAL</a>')
+    else:
+        brand = f'<a class="brand" href="{depth}index.html">Rory Millard</a>'
     return f"""
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <div class="progress" aria-hidden="true"><span></span></div>
   <header class="topbar">
     <div class="in">
-      <a class="brand" href="{depth}index.html"><span class="mark" aria-hidden="true"></span>Rory Millard</a>
+      {brand}
       <span class="crumb">{crumb}</span>
       <nav aria-label="Main navigation" id="site-nav">{links}</nav>
       <button class="theme-btn" type="button" aria-label="Toggle theme"></button>
@@ -119,18 +156,20 @@ def topbar(depth: str, crumb: str, active: str) -> str:
   </header>"""
 
 
-def foot(depth: str) -> str:
+def foot(depth: str, theme: str = "abyssal") -> str:
+    tag = ("ABYSSAL is a research prototype by Rory Millard: a Bayesian workbench for finding lost aircraft, ships and people."
+           if theme == "abyssal" else "Engineer working where probability meets the physical world.")
     return f"""
   <footer class="foot">
     <div class="in">
       <div>
         <b>Rory Millard</b>
-        <span>Bayesian inference, search under uncertainty, and the places where mathematics meets messy physical systems.</span>
+        <span>{tag}</span>
       </div>
       <nav aria-label="Footer">
-        <a href="{depth}abyssal/index.html">ABYSSAL series</a>
+        <a href="{depth}projects.html">Work</a>
+        <a href="{depth}abyssal/index.html">ABYSSAL</a>
         <a href="{depth}writing.html">Writing</a>
-        <a href="{depth}projects.html">Projects</a>
         <a href="{depth}about.html">About</a>
         <a href="mailto:{EMAIL}">Email</a>
         <a href="{LINKEDIN}" rel="noopener noreferrer">LinkedIn</a>
@@ -153,6 +192,20 @@ def hero_block(kicker: str, h1: str, dek: str, meta: str = "", peek: str = "", c
       {('<div class="meta">' + meta + '</div>') if meta else ''}
       {cta}
       {peek}
+    </div>
+  </section>"""
+
+
+def masthead(kicker: str, h1: str, dek: str, meta: str = "", cta: str = "") -> str:
+    """Main-site page header: paper, a mono label, a display headline and a hairline."""
+    return f"""
+  <section class="mast">
+    <div class="in">
+      <div class="label">{kicker}</div>
+      <h1>{h1}</h1>
+      {('<p class="dek">' + dek + '</p>') if dek else ''}
+      {('<div class="meta">' + meta + '</div>') if meta else ''}
+      {cta}
     </div>
   </section>"""
 
@@ -281,8 +334,8 @@ def render_part(parts: list[dict], p: dict) -> str:
       <div></div>
     </div>
   </main>"""
-    crumb = f'<a href="index.html">ABYSSAL series</a> / Part {p["n"]}'
-    return head(title, p["desc"], p["hero"], "../") + topbar("../", crumb, "abyssal") + hero + body + foot("../")
+    crumb = f'<a href="index.html">Series</a> / Part {p["n"]} of {len(parts)}'
+    return head(title, p["desc"], p["hero"], "../") + topbar("../", crumb, "series") + hero + body + foot("../")
 
 
 # ---------------------------------------------------------------- pages
@@ -309,6 +362,7 @@ def render_page(meta: dict, body: str, parts: list[dict]) -> str:
     depth = "../" * out.count("/")
     layout = meta.get("layout", "page")
     crumb = meta.get("crumb", "")
+    theme = theme_of(out)
     if layout == "home":
         main = f'\n  <main id="main">{fill(body, parts, depth)}\n  </main>'
         hero = ""
@@ -318,9 +372,15 @@ def render_page(meta: dict, body: str, parts: list[dict]) -> str:
             peek = (f'<figure class="figure-peek reveal"><img src="{depth}assets/abyssal/{meta["peek"]}" '
                     f'alt="{html.escape(meta.get("peek_alt", ""))}" fetchpriority="high"></figure>')
         cta = meta.get("cta", "").replace("{{DEPTH}}", depth)
-        hero = hero_block(fill(meta.get("kicker", ""), parts, depth), meta.get("h1", meta["title"]), fill(meta.get("dek", ""), parts, depth),
-                          meta=fill(meta.get("meta", ""), parts, depth), peek=peek,
-                          cta=f'<div class="cta">{cta}</div>' if cta else "", cls=meta.get("hero_cls", "short"))
+        if theme == "site":
+            hero = masthead(fill(meta.get("kicker", ""), parts, depth), meta.get("h1", meta["title"]),
+                            fill(meta.get("dek", ""), parts, depth), meta=fill(meta.get("meta", ""), parts, depth),
+                            cta=f'<div class="cta">{cta}</div>' if cta else "")
+        else:
+            hero = hero_block(fill(meta.get("kicker", ""), parts, depth), meta.get("h1", meta["title"]),
+                              fill(meta.get("dek", ""), parts, depth), meta=fill(meta.get("meta", ""), parts, depth),
+                              peek=peek, cta=f'<div class="cta">{cta}</div>' if cta else "",
+                              cls=meta.get("hero_cls", "short"))
         if layout == "note":
             main = f"""
   <main class="page" id="main">
@@ -334,8 +394,9 @@ def render_page(meta: dict, body: str, parts: list[dict]) -> str:
   </main>"""
         else:
             main = f'\n  <main class="page" id="main">\n{fill(body, parts, depth)}\n  </main>'
-    return (head(meta["title"], meta["desc"], meta.get("image", "demo-live.webp"), depth, maths=meta.get("maths", layout == "note"))
-            + topbar(depth, crumb, meta.get("active", "")) + hero + main + foot(depth))
+    return (head(meta["title"], meta["desc"], meta.get("image", "demo-live.webp"), depth,
+                 maths=meta.get("maths", layout == "note"), theme=theme)
+            + topbar(depth, crumb, meta.get("active", ""), theme) + hero + main + foot(depth, theme))
 
 
 def redirect_page(src: str, dst: str) -> str:
@@ -345,7 +406,7 @@ def redirect_page(src: str, dst: str) -> str:
 <html lang="en"><head><meta charset="utf-8"><title>Moved — Rory Millard</title>
 <meta http-equiv="refresh" content="0; url={target}"><link rel="canonical" href="{SITE}/{dst}">
 <meta name="robots" content="noindex"></head>
-<body><p>This essay is now part of the ABYSSAL series: <a href="{target}">continue reading</a>.</p></body></html>
+<body><p>This page has moved: <a href="{target}">continue reading</a>.</p></body></html>
 """
 
 
