@@ -6,7 +6,9 @@ Inputs
   _series/NN-slug.html   ABYSSAL series parts. Each starts with <!--meta {json} -->.
   _series/index.html     The series hub. Placeholders: {{PARTS}} {{TOTAL_WORDS}} {{LABS}}.
   _pages/**/*.html       Other pages. Meta keys: out, title, desc, active, layout (home|page|note),
-                         image, kicker, h1, dek. Placeholders: {{PARTS}} {{TOTAL_WORDS}} {{PARTS_COMPACT}}.
+                         image, kicker, h1, dek. Placeholders: {{PARTS}} {{TOTAL_WORDS}} {{PARTS_COMPACT}},
+                         {{INCLUDE:path}} (inline a file, e.g. _svg/abyssal-architecture.svg made by
+                         scripts/arch_svg.py).
 
 Outputs are committed (GitHub Pages serves them as static files), so publishing needs no build.
 Maths is written as \\( \\) and \\[ \\] and rendered in the browser by KaTeX.
@@ -285,7 +287,13 @@ def render_part(parts: list[dict], p: dict) -> str:
 
 # ---------------------------------------------------------------- pages
 
+def include(text: str) -> str:
+    """{{INCLUDE:path}} inlines a file from the repository (e.g. a generated SVG)."""
+    return re.sub(r"\{\{INCLUDE:([^}]+)\}\}", lambda m: (ROOT / m.group(1).strip()).read_text(encoding="utf-8"), text)
+
+
 def fill(text: str, parts: list[dict], depth: str) -> str:
+    text = include(text)
     total = sum(p["words"] for p in parts)
     nlabs = sum(len(set(p["labs"])) for p in parts)
     return (text.replace("{{PARTS}}", part_cards(parts, depth))
