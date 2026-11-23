@@ -1171,6 +1171,128 @@
   });
 
   /* ================================================================
+     Lab: from evidence to a decision (the hub's one-minute story)
+     ================================================================ */
+  // Bayes on a grid with "outside the map" as one more state. Pure: tested on its own.
+  function bayesStep(m, out, L, Lout) {
+    let Z = out * Lout;
+    for (let i = 0; i < m.length; i++) Z += m[i] * L[i];
+    if (!(Z > 0)) throw new Error('evidence rules out everything');
+    const post = new Float64Array(m.length);
+    for (let i = 0; i < m.length; i++) post[i] = (m[i] * L[i]) / Z;
+    const postOut = (out * Lout) / Z;
+    let kl = postOut > 0 ? postOut * Math.log2(postOut / out) : 0;
+    for (let i = 0; i < m.length; i++) if (post[i] > 0) kl += post[i] * Math.log2(post[i] / m[i]);
+    return { m: post, out: postOut, Z, kl: Math.max(0, kl) };
+  }
+  window.AbyssalLabs = Object.assign(window.AbyssalLabs || {}, { bayesStep });
+
+  $$('[data-lab="story"]').forEach((root) => {
+    const nx = 24, ny = 14, N = nx * ny;
+    const cv = { prior: $('[data-panel=prior]', root), lik: $('[data-panel=lik]', root), post: $('[data-panel=post]', root) };
+    const POD = 0.7;
+    const gauss = (cx, cy, s) => { const g = new Float64Array(N); let t = 0; for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) { const v = Math.exp(-0.5 * (((i - cx) ** 2 + (j - cy) ** 2) / (s * s))); g[j * nx + i] = v; t += v; } return g.map((v) => v / t); };
+    // a witness who is right with probability r points at the place; otherwise the report says nothing about where
+    const sightingL = (cx, cy, s, r) => { const g = gauss(cx, cy, s); return { L: g.map((v) => r * v + (1 - r) / N), Lout: (1 - r) / N }; };
+    const block = (x0, y0, x1, y1) => { const b = new Uint8Array(N); for (let j = y0; j <= y1; j++) for (let i = x0; i <= x1; i++) b[j * nx + i] = 1; return b; };
+    const EVIDENCE = {
+      sighting: { label: 'A sighting near the ridge', note: 'One witness, 70% reliable, points at the ridge (±2 cells). Cells near it are multiplied up; because the witness may be wrong, nothing is multiplied by zero.', make: () => sightingL(15, 4, 2.2, 0.7) },
+      nofind: { label: 'A search there finds nothing', note: 'A team sweeps the 6 × 4 block under the ridge with a 70% chance of seeing the target if it is there. Those cells keep 30% of their probability; nothing else changes until the map is normalised, when everywhere else, outside included, rises.', make: () => { const b = block(12, 2, 17, 5); return { L: Float64Array.from(b, (v) => (v ? 1 - POD : 1)), Lout: 1, searched: b }; } },
+      retell: { label: 'The same witness, retold', note: 'A neighbour repeats the first witness’s story. It shares the same provenance root, so it is pooled with the original: the likelihood is 1 everywhere and the map does not move.', make: () => ({ L: new Float64Array(N).fill(1), Lout: 1, pooled: true }) },
+      second: { label: 'A second, independent sighting', note: 'A different person, who never spoke to the first, reports a light by the lake (±2.5 cells, 60% reliable). Independent evidence multiplies.', make: () => sightingL(17, 9, 2.5, 0.6) },
+    };
+    let m, out, searched, steps, shown, anim = 0, lastL = null, lastLout = 1, lastNote = '';
+    const doubleCount = $('[name=double]', root);
+    function reset() {
+      const a = gauss(7, 5, 3.2), b = gauss(17, 9.5, 2.6);
+      m = new Float64Array(N); for (let i = 0; i < N; i++) m[i] = 0.9 * (0.62 * a[i] + 0.34 * b[i] + 0.04 / N);
+      out = 0.1; searched = new Uint8Array(N); steps = []; lastL = null; shown = m.slice();
+      renderAll(m, m, null, 'The prior: before any evidence, the analyst’s reasoning about where the hiker could be, with 10% kept for “not on this map”.', null);
+    }
+    function apply(kind) {
+      let ev = EVIDENCE[kind].make();
+      let note = EVIDENCE[kind].note;
+      if (kind === 'retell' && doubleCount && doubleCount.checked) { ev = EVIDENCE.sighting.make(); note = 'Counted as if it were independent: the mistake provenance pooling prevents. The ridge is now trusted far more than one witness justifies.'; }
+      const before = m.slice(), outBefore = out;
+      const R = bayesStep(m, out, ev.L, ev.Lout);
+      if (ev.searched) for (let i = 0; i < N; i++) if (ev.searched[i]) searched[i] = 1;
+      m = R.m; out = R.out; lastL = ev.L; lastLout = ev.Lout;
+      steps.push({ kind, kl: R.kl, Z: R.Z, wrong: kind === 'retell' && doubleCount && doubleCount.checked });
+      animate(before, outBefore, R, note);
+    }
+    function ledger() {
+      let un = 0, miss = 0;
+      for (let i = 0; i < N; i++) (searched[i] ? (miss += m[i]) : (un += m[i]));
+      return { un, miss };
+    }
+    function bestBlock() {
+      let best = null;
+      for (let y0 = 0; y0 <= ny - 4; y0++) for (let x0 = 0; x0 <= nx - 6; x0++) {
+        let p = 0; for (let j = y0; j < y0 + 4; j++) for (let i = x0; i < x0 + 6; i++) p += m[j * nx + i] * (searched[j * nx + i] ? 0.6 : 1);
+        if (!best || p > best.p) best = { x0, y0, p };
+      }
+      return best;
+    }
+    function drawGrid(c, field, mode) {
+      const { ctx, w, h } = fitCanvas(c, nx / ny);
+      let mx = 0; for (const v of field) mx = Math.max(mx, v);
+      const f = Array.from(field, (v) => (mx > 0 ? (mode === 'lik' ? v / mx : Math.pow(v / mx, 0.6)) : 0));
+      if (mode === 'lik') {
+        const cw = w / nx, ch = h / ny;
+        ctx.fillStyle = '#0c1014'; ctx.fillRect(0, 0, w, h);
+        for (let i = 0; i < N; i++) { ctx.fillStyle = `rgba(127,211,255,${0.08 + 0.85 * f[i]})`; ctx.fillRect((i % nx) * cw, Math.floor(i / nx) * ch, cw - 0.5, ch - 0.5); }
+      } else heat(ctx, f, nx, ny, 0, 0, w, h, null, false);
+      return { ctx, w, h };
+    }
+    const sci = (z) => { const e = Math.floor(Math.log10(z)); const mnt = z / 10 ** e; return e === 0 ? z.toFixed(2) : `${mnt.toFixed(2)} × 10${String(e).replace('-', '⁻').replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d])}`; };
+    function renderAll(prior, post, L, note, best) {
+      lastNote = note;
+      drawGrid(cv.prior, prior, 'p');
+      if (L) drawGrid(cv.lik, L, 'lik');
+      else { const { ctx, w, h } = fitCanvas(cv.lik, nx / ny); ctx.fillStyle = '#0c1014'; ctx.fillRect(0, 0, w, h); ctx.fillStyle = 'rgba(241,237,230,0.6)'; ctx.font = '12px Inter, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('add evidence below', w / 2, h / 2); }
+      const { ctx, w, h } = drawGrid(cv.post, post, 'p');
+      const cw = w / nx, ch = h / ny;
+      ctx.strokeStyle = 'rgba(160,230,255,0.8)'; ctx.lineWidth = 1.2;
+      for (let i = 0; i < N; i++) if (searched[i]) ctx.strokeRect((i % nx) * cw + 1, Math.floor(i / nx) * ch + 1, cw - 2, ch - 2);
+      const B = best || bestBlock();
+      ctx.setLineDash([5, 4]); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2;
+      ctx.strokeRect(B.x0 * cw + 1, B.y0 * ch + 1, 6 * cw - 2, 4 * ch - 2); ctx.setLineDash([]);
+      const { un, miss } = ledger();
+      const last = steps[steps.length - 1];
+      setRead(root, 'un', fmtPct(un)); setRead(root, 'miss', fmtPct(miss)); setRead(root, 'out', fmtPct(out));
+      setRead(root, 'bits', last ? last.kl.toFixed(2) + ' bits' : '—');
+      setRead(root, 'Z', last ? sci(last.Z) : '—');
+      setRead(root, 'next', fmtPct(B.p * POD));
+      const bar = $('.ledger', root);
+      if (bar) bar.innerHTML = `<span style="width:${100 * un}%;background:#3fae84"></span><span style="width:${100 * miss}%;background:#e8962e"></span><span style="width:${100 * out}%;background:#a678d8"></span>`;
+      const trail = $('.story-steps', root);
+      if (trail) trail.innerHTML = ['<span>Prior</span>', ...steps.map((s) => `<span class="${s.wrong ? 'wrong' : ''}">${EVIDENCE[s.kind].label}${s.kind === 'retell' ? (s.wrong ? ' (counted twice!)' : ' (pooled: ×1)') : ''} · ${s.kl.toFixed(2)} bits</span>`)].join('<i aria-hidden="true">→</i>');
+      const st = $('[data-read=story]', root);
+      if (st) st.textContent = note + (last ? ` The map moved ${last.kl.toFixed(2)} bits. Unsearched ${fmtPct(un)}, searched and missed ${fmtPct(miss)}, outside ${fmtPct(out)}. Best next search: the dashed block, which would find the target with probability ${fmtPct(B.p * POD)}.` : '');
+    }
+    function animate(before, outBefore, R, note) {
+      cancelAnimationFrame(anim);
+      const prior = before;
+      priorShown = before;
+      if (reduced) { renderAll(prior, m, lastL, note); return; }
+      const t0 = performance.now();
+      const frame = (t) => {
+        const u = Math.min(1, (t - t0) / 650), e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+        shown = prior.map((v, i) => v + (m[i] - v) * e);
+        renderAll(prior, shown, lastL, note);
+        if (u < 1) anim = requestAnimationFrame(frame);
+      };
+      anim = requestAnimationFrame(frame);
+      void outBefore; void R;
+    }
+    $$('[data-ev]', root).forEach((b) => b.addEventListener('click', () => apply(b.dataset.ev)));
+    $('[data-act=reset]', root).addEventListener('click', reset);
+    let priorShown = null;
+    window.addEventListener('resize', () => renderAll(priorShown || m, m, lastL, lastNote));
+    reset();
+  });
+
+  /* ================================================================
      Lab: absence assurance — how many clean visits?
      ================================================================ */
   $$('[data-lab="absence"]').forEach((root) => {

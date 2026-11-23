@@ -223,12 +223,49 @@ async function touchAndChrome(browser) {
   await d.close();
 }
 
+
+async function storyMaths(browser) {
+  console.log('Evidence-to-decision lab: Bayes step invariants and the provenance rule');
+  const p = await browser.newPage({ viewport: { width: 1366, height: 900 } });
+  const errs = []; p.on('pageerror', (e) => errs.push(e.message));
+  await p.goto(`${BASE}/abyssal/index.html#story`);
+  const r = await p.evaluate(() => {
+    const { bayesStep } = window.AbyssalLabs;
+    const m = Float64Array.from([0.3, 0.2, 0.2, 0.2]), out = 0.1;
+    // hand-worked: search cells 0 and 1 with POD 0.7 -> L = [0.3, 0.3, 1, 1], Lout = 1
+    const A = bayesStep(m, out, Float64Array.from([0.3, 0.3, 1, 1]), 1);
+    const Z = 0.3 * 0.3 + 0.2 * 0.3 + 0.2 + 0.2 + 0.1; // 0.65
+    const ref = [0.09 / Z, 0.06 / Z, 0.2 / Z, 0.2 / Z];
+    const err = Math.max(...ref.map((v, i) => Math.abs(v - A.m[i])), Math.abs(0.1 / Z - A.out), Math.abs(A.Z - Z));
+    const sum = A.m.reduce((a, b) => a + b, 0) + A.out;
+    const flat = bayesStep(m, out, Float64Array.from([1, 1, 1, 1]), 1); // a pooled retelling
+    let thrown = false; try { bayesStep(m, out, new Float64Array(4), 0); } catch (e) { thrown = true; }
+    return { err, sum, kl: A.kl, flatKl: flat.kl, flatSame: Math.max(...flat.m.map((v, i) => Math.abs(v - m[i]))), thrown };
+  });
+  ok(r.err < 1e-15 && Math.abs(r.sum - 1) < 1e-15, `no-find step matches the hand calculation (Z = 0.65; max error ${r.err.toExponential(1)})`);
+  ok(r.kl > 0 && r.flatKl === 0 && r.flatSame < 1e-16, `a pooled retelling moves the map 0 bits (the search moved ${r.kl.toFixed(3)})`);
+  ok(r.thrown, 'evidence that rules out everywhere is refused, never silently renormalised');
+  const read = () => p.evaluate(() => Object.fromEntries([...document.querySelectorAll('#story [data-read]')].map((e) => [e.dataset.read, e.textContent])));
+  for (const ev of ['sighting', 'nofind', 'retell']) { await p.click(`#story [data-ev=${ev}]`); await p.waitForTimeout(750); }
+  let u = await read();
+  const total = ['un', 'miss', 'out'].reduce((a, k) => a + parseFloat(u[k]), 0);
+  ok(Math.abs(total - 100) < 0.15 && u.bits === '0.00 bits', `after sighting, no-find, retelling: ledger ${total.toFixed(1)}%, retelling moved ${u.bits}`);
+  await p.check('#story [name=double]');
+  await p.click('#story [data-ev=retell]'); await p.waitForTimeout(750);
+  u = await read();
+  ok(parseFloat(u.bits) > 0.3 && /counted twice/.test(await p.textContent('#story .story-steps')), `counted twice by mistake, the same retelling moves ${u.bits} and is flagged`);
+  ok(!(await p.textContent('#story [data-read=story]')).match(/(The map moved[^.]*\.).*\1/), 'status sentence is not repeated');
+  ok(!errs.length, 'no script errors' + (errs.length ? ': ' + errs.join(' | ') : ''));
+  await p.close();
+}
+
 (async () => {
   const server = spawn('python3', ['-m', 'http.server', String(PORT), '--bind', '127.0.0.1'], { cwd: ROOT, stdio: 'ignore' });
   await new Promise((r) => setTimeout(r, 800));
   const browser = await chromium.launch();
   try {
     await regionMaths(browser);
+    await storyMaths(browser);
     await gridMaths(browser);
     await touchAndChrome(browser);
     await slidersAndExtremes(browser);
