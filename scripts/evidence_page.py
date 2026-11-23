@@ -125,7 +125,9 @@ def platforms_chart(d: dict) -> str:
         b.append(f'<path class="stem" d="M{X(0)} {y} H{X(r["error_m"]):.1f}"/>')
         b.append(f'<circle class="pt big" cx="{X(r["error_m"]):.1f}" cy="{y}" r="5"/>')
         b.append(t(L - 10, y + 4, r["name"], "tick", "end"))
-        b.append(t(X(r["error_m"]) + 10, y + 4, f"{r['error_m']:.0f} m · seen {r['seen']}", "tick dim"))
+        label = f"{r['error_m']:.0f} m · seen {r['seen']}"
+        right = X(r["error_m"]) + 10 + 7 * len(label) > W  # label would run past the edge: put it inside
+        b.append(t(X(r["error_m"]) - 10 if right else X(r["error_m"]) + 10, y + 4, label, "tick dim", "end" if right else "start"))
     return svg(W, H, "Distance between each detected platform and its charted position", "".join(b))
 
 

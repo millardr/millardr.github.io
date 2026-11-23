@@ -213,7 +213,12 @@ figure figcaption b { color: var(--ink); font-weight: 650; }
 .lab-head .t { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
 .lab-head .s { font-size: 13px; color: var(--muted); }
 .lab-body { padding: 18px; }
-.lab canvas { display: block; width: 100%; border-radius: 8px; background: #101010; touch-action: none; }
+.lab canvas { display: block; width: 100%; border-radius: 8px; background: #101010; }
+/* Read-only plots let the page scroll as normal. Interactive ones keep vertical swipes for scrolling
+   (pan-y): taps and sideways drags reach the lab, a vertical swipe scrolls the essay. */
+.lab canvas[data-interactive] { touch-action: pan-y pinch-zoom; cursor: crosshair; }
+.lab canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.lab-status { font-family: var(--sans); font-size: 13.5px; line-height: 1.5; color: var(--ink-2); margin: 10px 0 0; min-height: 2.6em; }
 .lab .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px 20px; margin-top: 16px; }
 .lab label.ctl { display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; color: var(--ink-2); }
 .lab label.ctl span { display: flex; justify-content: space-between; gap: 8px; }
@@ -235,7 +240,7 @@ figure figcaption b { color: var(--ink); font-weight: 650; }
 .ramp { height: 8px; border-radius: 4px; background: linear-gradient(90deg, #000004, #3b0f70, #8c2981, #de4968, #fe9f6d, #fcfdbf); }
 
 /* ---------- series hub ---------- */
-.parts { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 22px; margin: 34px 0 70px; }
+.parts { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(330px, 100%), 1fr)); gap: 22px; margin: 34px 0 70px; }
 .part { position: relative; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--bg-raised); text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; }
 .part:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--line-strong); color: inherit; }
 .part .thumb { aspect-ratio: 16 / 9; overflow: hidden; background: #111; }
@@ -699,3 +704,15 @@ html.abyssal .topbar.productbar .product { border-left: 0; padding: 0; font-size
   .evchart .note { font-size: 15px; }
 }
 .ev-more { margin: 16px 0 0; font-family: var(--sans); }
+
+/* lightbox as a dialog */
+.lightbox[hidden] { display: none; }
+.lightbox .lb-in { position: relative; max-width: min(1400px, 100%); }
+.lb-close { position: absolute; top: -14px; right: -6px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.35); background: rgba(20,20,20,0.9); color: #f1ede6; font-size: 24px; line-height: 1; cursor: pointer; display: grid; place-items: center; }
+.lb-close:hover, .lb-close:focus-visible { border-color: var(--accent); color: var(--accent); outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent); }
+button.zoom { display: block; width: 100%; padding: 0; margin: 0; border: 0; background: none; cursor: zoom-in; border-radius: 10px; }
+button.zoom:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+a[data-lightbox]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* long identifiers and paths wrap rather than push the page sideways on narrow phones */
+p code, li code, td code, dd code, .callout code { overflow-wrap: anywhere; }

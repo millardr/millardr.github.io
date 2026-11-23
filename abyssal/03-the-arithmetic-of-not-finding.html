@@ -46,7 +46,7 @@
       <div class="kicker"><span class="dot"></span><span>ABYSSAL · Part 3 of 9</span><span class="lv">Technical · Bayesian search</span></div>
       <h1>The arithmetic of not finding</h1>
       <p class="dek">Negative evidence, the outside share, positive clues that cannot double-count, correlated misses and information in bits: the mathematics under every pixel of the map, with a grid you can search yourself.</p>
-      <div class="meta"><span><b>12 min</b> read · 2,873 words · <b>3</b> interactive labs</span><span>Rory Millard · November 2026</span></div>
+      <div class="meta"><span><b>13 min</b> read · 2,941 words · <b>3</b> interactive labs</span><span>Rory Millard · November 2026</span></div>
       
       <figure class="figure-peek reveal"><img src="../assets/abyssal/live-search-loop.webp" alt="The live search loop: searched cells marked on the probability map with an update toast" fetchpriority="high"></figure>
     </div>
@@ -129,10 +129,11 @@
       <div><small>Searched &amp; missed</small><b data-read="missed">—</b></div>
       <div><small>Outside</small><b data-read="outside">—</b></div>
       <div><small>Would have found by now</small><b data-read="found">—</b></div>
-      <div><small>Entropy of the map</small><b data-read="H">—</b></div>
+      <div><small>Entropy, given inside the map</small><b data-read="H">—</b></div>
+      <div><small>Entropy, with outside as a state</small><b data-read="Hfull">—</b></div>
       <div><small>Last search moved the map</small><b data-read="last">—</b></div>
     </div>
-    <p class="note">Click a cell twice to search it twice; the number shows the passes. With repeat credit 0 a second identical pass earns nothing; with 1 it counts as fully independent (Section 05). The last readout is the KL divergence between the map after and before your last search.</p>
+    <p class="note">Click a cell twice to search it twice; the number shows the passes. With repeat credit 0 a second identical pass earns nothing; with 1 it counts as fully independent (Section 05). The last readout is the KL divergence between the map after and before your last search. The first entropy describes the map assuming the target is inside it; the second counts "outside the map" as one more place it could be. The grid is drawn cell by cell, with no smoothing, because 30 &times; 16 cells is all the detail there is. Keyboard: focus the grid, move with the arrow keys, search with Enter.</p>
   </div>
 </div>
 
@@ -208,13 +209,14 @@
     <div class="controls">
       <label class="ctl"><span>Stated mass in the region, \(q\) <output data-for="q">5%</output></span><input type="range" name="q" min="1" max="95" value="5"></label>
     </div>
-    <div class="btns"><button type="button" data-act="clear">Clear region</button></div>
+    <div class="btns"><button type="button" data-act="clear">Clear region</button><button type="button" data-act="all">Select every cell</button></div>
     <div class="readout">
       <div><small>Current mass in the region, \(p\)</small><b data-read="p">—</b></div>
       <div><small>Cost of the statement</small><b data-read="D">—</b></div>
       <div><small>Inside</small><b data-read="in">—</b></div>
       <div><small>Outside</small><b data-read="out">—</b></div>
     </div>
+    <p class="lab-status" data-read="status" aria-live="polite"></p>
     <p class="note">Every cell inside is scaled by the same factor and every cell outside by another: the smallest change, in KL divergence, that makes the region hold exactly \(q\). Shape the region over the bright blob and state 5%: the cost jumps, which is the map asking whether you really know that.</p>
   </div>
 </div>
