@@ -736,3 +736,7 @@ p code, li code, td code, dd code, .callout code { overflow-wrap: anywhere; }
   .story-panels .op { display: none; }
   .story-panels figure:last-of-type { grid-column: 1 / -1; }
 }
+/* architecture chart: a visible keyboard focus on every node, not only chips */
+.arch .node { outline: none; }
+.arch .node:focus-visible rect { stroke: var(--accent); stroke-width: 3; }
+.arch .node:focus-visible { filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 60%, transparent)); }
