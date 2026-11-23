@@ -1,15 +1,15 @@
 <!--meta
-{"out": "abyssal/engines.html", "title": "Inside ABYSSAL: one contract, fourteen engines — Rory Millard", "desc": "The whole of ABYSSAL in one chart: inputs with receipts, fourteen physics-based signal engines that share one contract, an admission gate, a log-space belief engine and the decisions on top. Plus every engine, with screenshots, maths and calibration.", "active": "machine", "layout": "page", "maths": true, "image": "eng-persistence.webp", "crumb": "Inside the machine", "kicker": "<span>ABYSSAL · Features</span><span class=\"lv\">The machine, in full</span>", "h1": "One contract, fourteen engines", "dek": "How ABYSSAL turns radar images, hydrophone recordings, magnetometer surveys, witness statements and searched-and-missed ground into one honest map: the architecture in one chart, and every new engine, with what it measured.", "meta": "<span><b>14</b> signal engines · <b>1</b> belief engine · <b>1</b> gate</span><span>Rory Millard · November 2026</span>", "hero_cls": "", "peek": "eng-persistence.webp", "peek_alt": "Eight Sentinel-1 passes over the Santa Barbara Channel stacked into one median image, with two fixed structures seen in every pass", "cta": "<a class=\"btn primary\" href=\"#machine\">See the architecture ↓</a><a class=\"btn ghost\" href=\"#heads\">Jump to the engines</a>"}
+{"out": "abyssal/engines.html", "title": "Inside ABYSSAL: one contract, sixteen engines — Rory Millard", "desc": "The whole of ABYSSAL in one chart: inputs with receipts, sixteen physics-based signal engines that share one contract, an admission gate, a log-space belief engine and the decisions on top. Plus every engine, with screenshots, maths and calibration.", "active": "machine", "layout": "page", "maths": true, "image": "eng-persistence.webp", "crumb": "Inside the machine", "kicker": "<span>ABYSSAL · Features</span><span class=\"lv\">The machine, in full</span>", "h1": "One contract, sixteen engines", "dek": "How ABYSSAL turns radar images, hydrophone recordings, magnetometer surveys, witness statements and searched-and-missed ground into one honest map: the architecture in one chart, and every new engine, with what it measured.", "meta": "<span><b>16</b> signal engines · <b>1</b> belief engine · <b>1</b> gate</span><span>Rory Millard · November 2026</span>", "hero_cls": "", "peek": "eng-persistence.webp", "peek_alt": "Eight Sentinel-1 passes over the Santa Barbara Channel stacked into one median image, with two fixed structures seen in every pass", "cta": "<a class=\"btn primary\" href=\"#machine\">See the architecture ↓</a><a class=\"btn ghost\" href=\"#heads\">Jump to the engines</a>"}
 -->
 <div class="lede-block">
-  <p>ABYSSAL has two halves. One turns explicit evidence into a probability map. The other turns raw measurements (a radar image, an hour of hydrophone audio, a magnetometer survey) into <em>contacts</em> that a person can review. Fourteen signal engines feed that second half, and every one of them obeys the same contract and comes in through the same gate.</p>
+  <p>ABYSSAL has two halves. One turns explicit evidence into a probability map. The other turns raw measurements (a radar image, an hour of hydrophone audio, a magnetometer survey) into <em>contacts</em> that a person can review. Sixteen signal engines feed that second half, and every one of them obeys the same contract and comes in through the same gate.</p>
   <p>This page is the whole machine on one sheet, then a tour of the engines with real screenshots, the physics each one rests on, and what each one measured when it was tested against an answer key.</p>
 </div>
 
 <div class="stats">
-  <div><b>14</b><small>signal engines, each a physics model, an inference step and a calibration</small></div>
+  <div><b>16</b><small>signal engines, each a physics model, an inference step and a calibration</small></div>
   <div><b>6</b><small>versioned models of the log-space belief engine, each documented in an audit</small></div>
-  <div><b>3</b><small>public archives read on request: Sentinel-1 radar, NOAA BlueTopo bathymetry, ETOPO relief</small></div>
+  <div><b>4</b><small>public archives read on request: Sentinel-1 radar, Sentinel-2 imagery, NOAA BlueTopo bathymetry, ETOPO relief</small></div>
   <div><b>1</b><small>gate: a detector must be calibrated, then a person must admit what it found</small></div>
 </div>
 
@@ -20,7 +20,7 @@
   <div class="arch-inspect" aria-live="polite"><span class="k">How to read it</span><b>Bottom to top: data in, decisions out</b><p>Every input arrives with a receipt and an origin tag, REAL or SCENARIO. Measurements rise through the signal engines on the left; claims (a witness, a searched area) rise into the belief engine on the right. The only bridge between the two is the admission gate. Decisions and outputs come out of the top, and the panels down either side are where people lay data on and steer.</p></div>
 </div>
 
-<div class="section-title"><h2>One contract, fourteen engines</h2><span>why very different physics can share one gate</span></div>
+<div class="section-title"><h2>One contract, sixteen engines</h2><span>why very different physics can share one gate</span></div>
 <p class="lede-block" style="margin-top:24px">A radar wake detector and a bubble-pulse analyser have nothing in common physically. They are still the same kind of thing, because each one answers the same three questions in the same order, returns the same kind of object, and has to pass the same gate. No engine is trusted more than another by default: each is exactly as trustworthy as its calibration says, and no more.</p>
 <div class="pillars">
   <div class="pillar"><b>1 · What would I see?</b><p>A <strong>forward model</strong> of the physics: if the target were at \(x\), the data would look like \(d = f(x,\theta) + \varepsilon\). Kelvin wakes, dispersive ring waves, sound in the SOFAR channel, a dipole in Earth's field, leeway drift, an oscillating bubble.</p></div>
@@ -42,7 +42,7 @@
   <a href="../assets/abyssal/sketch-live.webp" data-lightbox><img src="../assets/abyssal/sketch-live.webp" alt="Sketch evidence on the map" loading="lazy"><span><b>Sketch evidence</b><em>points, bearings, range rings, corridors, area statements</em></span></a>
   <a href="../assets/abyssal/layers.webp" data-lightbox><img src="../assets/abyssal/layers.webp" alt="The Layers panel" loading="lazy"><span><b>Layers</b><em>opt-in public data with receipts, context by default</em></span></a>
   <a href="../assets/abyssal/evidence-map-live.webp" data-lightbox><img src="../assets/abyssal/evidence-map-live.webp" alt="The Evidence Map" loading="lazy"><span><b>Evidence Map</b><em>each source's influence in bits, provenance graph, exact undo</em></span></a>
-  <a href="../assets/abyssal/eng-identity.webp" data-lightbox><img src="../assets/abyssal/eng-identity.webp" alt="The Signal Lab" loading="lazy"><span><b>Signal Lab</b><em>fourteen engines, SCENARIO answer keys or your own data</em></span></a>
+  <a href="../assets/abyssal/eng-identity.webp" data-lightbox><img src="../assets/abyssal/eng-identity.webp" alt="The Signal Lab" loading="lazy"><span><b>Signal Lab</b><em>sixteen engines, SCENARIO answer keys or your own data</em></span></a>
   <a href="../assets/abyssal/where-next.webp" data-lightbox><img src="../assets/abyssal/where-next.webp" alt="Where next" loading="lazy"><span><b>Where next?</b><em>searches ranked by expected information gain</em></span></a>
   <a href="../assets/abyssal/plan-studio-ev.webp" data-lightbox><img src="../assets/abyssal/plan-studio-ev.webp" alt="Plan Studio" loading="lazy"><span><b>Plan Studio</b><em>allocation, value and the stop rule</em></span></a>
   <a href="../assets/abyssal/movement.webp" data-lightbox><img src="../assets/abyssal/movement.webp" alt="Movement and time" loading="lazy"><span><b>Movement &amp; time</b><em>drift, walking and leeway on a shared clock</em></span></a>
@@ -212,6 +212,30 @@
   <figure><img src="../assets/abyssal/eng-debris.webp" alt="Six debris finds back-tracked to an impact region" loading="lazy"><figcaption>Six finds over days, run back through 160 shared environments to one impact region.</figcaption></figure>
 </section>
 
+<section class="feature" id="eng-spectral">
+  <div class="ft">
+    <div class="k">Land · Sentinel-2 imagery</div>
+    <h3>The wrong colour for the place</h3>
+    <p>A tent, a tarp, a car or a crashed aircraft is rarely the colour of the ground around it. The engine reads the least cloudy Sentinel-2 scene over the map (10 m pixels, six bands, cloud and shadow masked) and scores every pixel by how far its spectrum sits from the background, the Reed–Xiaoli detector: \(d^2 = (x-\mu)^\top \Sigma^{-1} (x-\mu)\), which is \(\chi^2_6\) on ordinary ground. The threshold is \(p = 10^{-9}\), and anything bigger than twelve pixels (a field, a roof, a snowfield) is dropped as not small. The same idea flew in the ARCHER hyperspectral system.</p>
+    <p>Most of what stands out is permanent: rock, roofs, the cars that live there. A lost person's tent is <em>new</em>. Give the date they went missing and the engine finds the earlier pass of the same Sentinel-2 tile that saw most of the same ground clear (the two share the exact 10 m grid), and marks each contact new, already there, or not seen before. Choosing that pass by tile-wide cloud cover failed: it picked spring scenes whose ground was under snow.</p>
+    <div class="nums"><div><b>123 / 125</b><small>20 m² orange tents found</small></div><div><b>59 / 125</b><small>at 10 m², a tenth of a pixel</small></div><div><b>6.0 → 0.8</b><small>other anomalies per km², new since an earlier pass</small></div></div>
+    <p class="honest"><span class="tag real">real</span> Calibrated by planting 2,500 targets with typical published spectra into real scenes in five landscapes. The background is real; the truth is made, because no public list of real tents in satellite scenes exists. One scene alone raises about eight other anomalies per km²; "new since" cuts that to 0.8 where the earlier pass saw all the ground, still finding 122 of 125 tents. Across all five sites it is 3.2, because snow, a year of real change (heather burning) and sun on cliffs leave more. Either way the output is a list of places to look at more closely, never an answer. On a land case, ABYSSAL shows this engine and hides the sea ones.</p>
+  </div>
+  <figure><img src="../assets/abyssal/eng-spectral.webp" alt="A real Sentinel-2 scene over Yosemite with anomaly contacts: orange rings for new ones, grey for ones already there in an earlier pass, and the Signal Lab panel counting them" loading="lazy"><figcaption>Real Sentinel-2 over Yosemite, 5 July 2023, against the 20 June pass: 17 of 89 small anomalies are new (orange); the grey ones were already there.</figcaption></figure>
+</section>
+
+<section class="feature flip" id="eng-viewshed">
+  <div class="ft">
+    <div class="k">Land · line of sight</div>
+    <h3>Who could have seen it?</h3>
+    <p>A fire lookout, a public webcam or a witness on a ridge only saw the ground in their line of sight. From an observer's position and height the engine traces a sight line to every cell of the case's real terrain; a cell is hidden when any ground between rises above the line. Over long lines the Earth curves away, \(d^2/2R\), and the air bends the light back a little, a factor \(1-k\) with \(k \approx 0.13\): a 2 m eye on smooth ground sees 5.4 km.</p>
+    <p>Then the question a search manager actually has: how much of the <em>probability</em> could they see, and what is their "saw nothing" worth? If they would notice smoke with probability \(\mathrm{POD}(d)\), a no-sighting multiplies each visible cell by \(1-\mathrm{POD}(d)\); the engine reports the share it would remove and its information in bits.</p>
+    <div class="nums"><div><b>31%</b><small>of the hiker's probability in view from Glacier Point</small></div><div><b>19%</b><small>removed if they saw no smoke</small></div><div><b>5.41 km</b><small>horizon for a 2 m eye, as theory</small></div></div>
+    <p class="honest"><span class="tag real">real</span> Real Yosemite terrain: from Glacier Point it sees Half Dome, Upper Yosemite Fall and the valley floor, and not the ground behind the rim. The terrain is bare earth, so trees and buildings make real views smaller; the chance of noticing is an analyst's assumption; and nothing changes the map until a person records the no-sighting.</p>
+  </div>
+  <figure><img src="../assets/abyssal/eng-viewshed.webp" alt="Yosemite Valley over satellite imagery with the ground visible from Glacier Point shaded cyan, and the Signal Lab panel reporting 31% of the probability in view" loading="lazy"><figcaption>From Glacier Point, a person standing sees the cyan ground: 36% of the case and 31% of where the hiker probably is.</figcaption></figure>
+</section>
+
 <section class="feature" id="eng-earlier">
   <div class="ft">
     <div class="k">From the first round</div>
@@ -222,30 +246,47 @@
   <figure><img src="../assets/abyssal/signal-dark-vessel-wake.webp" alt="A dark vessel with its wake, azimuth shift and heading" loading="lazy"><figcaption>A dark vessel's wake: heading, speed from the Kelvin wavelength, and the azimuth shift back to its true position.</figcaption></figure>
 </section>
 
+<div class="section-title" id="real"><h2>On real data</h2><span>independent truth, real archives, receipts for every input</span></div>
+<div class="board-wrap"><table class="board">
+  <thead><tr><th>Engine</th><th>Real data</th><th>Truth</th><th>Result</th></tr></thead>
+  <tbody>
+    <tr><td>Wind from radar</td><td>152 Sentinel-1 passes, California, 2017-2021</td><td>11 NOAA buoys, adjusted to 10 m</td><td class="n">RMSE 1.71 m/s, r 0.91; 1.49 m/s with the buoy's direction; under-reads above 10 m/s</td></tr>
+    <tr><td>Dark vessels</td><td>9 windows, 4 days, three US approaches</td><td>NOAA MarineCadastre AIS at image time</td><td class="n">≥100 m: 47/51; &lt;35 m: 37/54; 958 unexplained echoes in 5,464 km²</td></tr>
+    <tr><td>Persistence</td><td>8 passes over 3 platform fields</td><td>NOAA charted platforms</td><td class="n">15/16, median 33 m; Eva (near shore) missed</td></tr>
+    <tr><td>Seabed</td><td>85 NOAA BlueTopo windows, 12 regions</td><td>Survey-located chart wrecks</td><td class="n">41/85, median 9 m</td></tr>
+    <tr><td>Spectral anomalies (land)</td><td>Sentinel-2 L2A, 5 landscapes (Sierra, Cairngorms, Cascades, Nevada)</td><td>2,500 targets planted at known places</td><td class="n">20 m² orange tent: 123/125; 10 m²: 59/125; ~8 other anomalies per km²</td></tr>
+    <tr><td>New since (land)</td><td>5 real pairs of Sentinel-2 passes, same tile</td><td>2,500 targets planted in the later pass</td><td class="n">other anomalies 6.0 → 0.8 per km² where the earlier pass saw the ground (8.0 → 3.2 over all five); tent 122/125</td></tr>
+    <tr><td>Lost-submarine drill</td><td>ARA San Juan, public facts + ETOPO 2022</td><td>The wreck, found at 907 m</td><td class="n">95% area −34% (0.5° bearing error), wreck inside the 50% region</td></tr>
+  </tbody>
+</table></div>
+<p class="lede-block" style="margin-top:0">The full results, plots and receipts are in the app at <code>/?evidence=1</code> and in <code>docs/validation/REAL_DATA.md</code>. The scenario calibrations below still matter: they test the mathematics with a known answer. The real-data results test the sensor, the archive and the world.</p>
+
 <div class="section-title" id="board"><h2>The calibration board</h2><span>what each engine measured, and on what</span></div>
 <div class="board-wrap">
 <table class="board">
   <thead><tr><th>Engine</th><th>What it measures</th><th>Calibration</th><th>Real data so far</th></tr></thead>
   <tbody>
-    <tr><td>SAR vessels &amp; wakes</td><td>ships, heading, speed, dark vs AIS</td><td class="n">POD ≥ 0.89 lower bound at 80 m+; 2.45 FA / 1000 km²</td><td>Sentinel-1 off San Francisco</td></tr>
-    <tr><td>Self-calibration</td><td>detection rate by length and wind, on your sensor</td><td class="n">brackets the answer key 5/5 classes</td><td>awaits a real AIS day</td></tr>
-    <tr><td>Wind from radar</td><td>10 m wind speed, streak direction</td><td class="n">0.56 m/s median; 0/20 invented directions</td><td>two windows off San Francisco</td></tr>
-    <tr><td>Persistence</td><td>fixed, recurring, transient</td><td class="n">140/142 structures; 0 false fixed</td><td>Santa Barbara Channel, 8 passes</td></tr>
+    <tr><td>SAR vessels &amp; wakes</td><td>ships, heading, speed, dark vs AIS</td><td class="n">POD ≥ 0.89 lower bound at 80 m+; 2.45 FA / 1000 km²</td><td>47/51 AIS ships over 100 m, 9 real windows</td></tr>
+    <tr><td>Self-calibration</td><td>detection rate by length and wind, on your sensor</td><td class="n">brackets the answer key 5/5 classes</td><td>4 real AIS days, 114 ships</td></tr>
+    <tr><td>Wind from radar</td><td>10 m wind speed, streak direction</td><td class="n">0.56 m/s median; 0/20 invented directions</td><td>1.71 m/s RMSE vs 11 NOAA buoys, 152 passes</td></tr>
+    <tr><td>Persistence</td><td>fixed, recurring, transient</td><td class="n">140/142 structures; 0 false fixed</td><td>15/16 charted platforms, 8 passes each</td></tr>
     <tr><td>Who went dark?</td><td>candidate identities for dark contacts</td><td class="n">42/77 paired; 51/77 top three</td><td>none yet</td></tr>
     <tr><td>Dark tracks</td><td>links, loitering, rendezvous</td><td class="n">0.80 correct links; 24/24 rendezvous</td><td>none yet</td></tr>
     <tr><td>Impact rings</td><td>centre and time since impact</td><td class="n">2.3% time error; 25/25 coverage</td><td>none yet</td></tr>
     <tr><td>SOFAR basin</td><td>event location across an ocean</td><td class="n">4.9 km median; 37/40 coverage</td><td>none yet</td></tr>
-    <tr><td>Implosion forensics</td><td>bubble period, size against depth</td><td class="n">0.75% error; 27/30 strong coverage</td><td>none yet</td></tr>
+    <tr><td>Implosion forensics</td><td>bubble period, size against depth</td><td class="n">0.75% error; 27/30 strong coverage</td><td>ARA San Juan drill, public facts only</td></tr>
     <tr><td>Magnetic dipole</td><td>position, depth, moment</td><td class="n">0.95 POD; 3 cm depth</td><td>none yet</td></tr>
-    <tr><td>Seabed &amp; sonar</td><td>relief and shadow contacts</td><td class="n">47/48 wrecks; 58/64 side-scan</td><td>NOAA BlueTopo, Andrea Doria</td></tr>
+    <tr><td>Seabed &amp; sonar</td><td>relief and shadow contacts</td><td class="n">47/48 wrecks; 58/64 side-scan</td><td>41/85 charted wrecks, NOAA BlueTopo</td></tr>
     <tr><td>Debris back-track</td><td>where finds entered the water</td><td class="n">30/30 coverage, shared environment</td><td>none yet</td></tr>
+    <tr><td>Line of sight (land)</td><td>what a lookout, webcam or witness could see; what their no-sighting is worth</td><td class="n">horizon to 0.02 km of theory; ridge hides all behind it</td><td>real Yosemite terrain: Glacier Point sees Half Dome, the falls and the valley floor</td></tr>
+    <tr><td>Spectral anomalies (land)</td><td>small objects that are the wrong colour</td><td class="n">implants in real scenes: 98% at 20 m², 47% at 10 m²</td><td>5 real Sentinel-2 landscapes; 0.8 other anomalies per km² new since an earlier clear pass</td></tr>
   </tbody>
 </table>
 </div>
 
 <div class="callout honest">
   <div class="t">What it does not do, yet</div>
-  <p>Every calibration above is SCENARIO: measured against simulators with known answers, which proves the mathematics but not a real sensor. Nothing an engine produces enters the belief map on its own: engines make contacts, and automatic fusion of calibrated engines into belief is deliberately parked until real calibrations exist. ABYSSAL does not build tools to detect or track operating submarines; finding a lost one is in scope, hunting a working one is not. The whole thing is a prototype on one machine, not yet validated against real operational outcomes.</p>
+  <p>Most calibrations above are SCENARIO: measured against simulators with known answers, which proves the mathematics but not a real sensor. The last column, and the <a href="#real">real-data table</a>, are the start of the real thing; the land engine is calibrated by planting targets in real scenes, which is real background but made truth. Nothing an engine produces enters the belief map on its own: engines make contacts, and automatic fusion of calibrated engines into belief is deliberately parked until real calibrations exist. ABYSSAL does not build tools to detect or track operating submarines; finding a lost one is in scope, hunting a working one is not. The whole thing is a prototype on one machine, not yet validated against real operational outcomes.</p>
 </div>
 
 <div class="cards3">
