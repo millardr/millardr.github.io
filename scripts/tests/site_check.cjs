@@ -259,11 +259,79 @@ async function storyMaths(browser) {
   await p.close();
 }
 
+
+async function seo(browser) {
+  console.log('Search: canonical URLs, share cards, structured data, sitemap, robots, feed');
+  const SITEURL = 'https://millardr.github.io';
+  const local = (u) => path.join(ROOT, u.replace(SITEURL + '/', '').replace(/\/$/, '/index.html') || 'index.html');
+  const p = await browser.newPage();
+  const iso = /^\d{4}-\d{2}-\d{2}$/;
+  for (const pg of pages()) {
+    const htmlText = fs.readFileSync(path.join(ROOT, pg), 'utf8');
+    const bad = [];
+    const canon = [...htmlText.matchAll(/<link rel="canonical" href="([^"]+)"/g)].map((m) => m[1]);
+    if (canon.length !== 1 || !canon[0].startsWith(SITEURL + '/')) bad.push('canonical ' + JSON.stringify(canon));
+    const og = (htmlText.match(/<meta property="og:image" content="([^"]+)"/) || [])[1];
+    if (!og || !fs.existsSync(local(og))) bad.push('og:image missing ' + og);
+    for (const k of ['og:url', 'og:title', 'og:description', 'og:site_name', 'twitter:card'])
+      if (!htmlText.includes(`"${k}"`)) bad.push('no ' + k);
+    const blocks = [...htmlText.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => m[1]);
+    let graph = [];
+    try { graph = blocks.flatMap((b) => JSON.parse(b)['@graph']); } catch (e) { bad.push('JSON-LD does not parse: ' + e.message); }
+    const of = (t) => graph.filter((n) => n['@type'] === t);
+    const art = of('TechArticle')[0];
+    if (art) {
+      if (!art.headline || art.headline.length > 110) bad.push('headline');
+      if (!iso.test(art.datePublished) || !iso.test(art.dateModified) || art.dateModified < art.datePublished) bad.push('dates');
+      if (!art.author || !art.author[0].name || !art.author[0].url) bad.push('author');
+      if (!art.image || !fs.existsSync(local(art.image[0]))) bad.push('article image');
+    }
+    const bc = of('BreadcrumbList')[0];
+    if (pg !== 'index.html') {
+      if (!bc) bad.push('no BreadcrumbList');
+      else bc.itemListElement.forEach((it, i) => {
+        if (it.position !== i + 1 || !it.name) bad.push('breadcrumb ' + i);
+        if (i < bc.itemListElement.length - 1 && !it.item) bad.push('breadcrumb item url ' + i);
+      });
+    }
+    if (pg === 'index.html') {
+      const ws = of('WebSite')[0], person = of('Person')[0];
+      if (!ws || ws.name !== 'Rory Millard' || ws.url !== SITEURL + '/') bad.push('WebSite');
+      if (!person || person.name !== 'Rory Millard' || !person.sameAs) bad.push('Person');
+      if (!htmlText.includes('google-site-verification')) bad.push('verification tag');
+    }
+    if (pg === 'about.html') {
+      const pp = of('ProfilePage')[0];
+      if (!pp || pp.mainEntity.name !== 'Rory Millard' || !of('ScholarlyArticle')[0]) bad.push('ProfilePage / paper');
+    }
+    if (pg === 'abyssal/evidence.html') {
+      const ds = of('Dataset')[0];
+      if (!ds || ds.description.length < 50 || !fs.existsSync(local(ds.distribution[0].contentUrl))) bad.push('Dataset');
+    }
+    ok(!bad.length, `${pg}${bad.length ? ': ' + bad.join('; ') : ' (' + graph.map((n) => n['@type']).join(', ') + ')'}`);
+  }
+  await p.goto(`${BASE}/sitemap.xml`);
+  const sm = await p.evaluate(() => [...new DOMParser().parseFromString(document.documentElement.outerHTML.includes('urlset') ? new XMLSerializer().serializeToString(document) : '', 'application/xml').querySelectorAll('loc')].map((l) => l.textContent));
+  const smText = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
+  const locs = [...smText.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  const missing = pages().filter((pg) => !locs.includes(pg === 'index.html' ? SITEURL + '/' : pg.endsWith('/index.html') ? `${SITEURL}/${pg.replace('index.html', '')}` : `${SITEURL}/${pg}`));
+  const dead = locs.filter((u) => !fs.existsSync(local(u)) || fs.readFileSync(local(u), 'utf8').includes('http-equiv="refresh"'));
+  ok(locs.length && !missing.length && !dead.length && sm !== null, `sitemap: ${locs.length} URLs, every page listed, no redirects or dead URLs${missing.length ? ' missing ' + missing : ''}${dead.length ? ' dead ' + dead : ''}`);
+  ok(/Sitemap: https:\/\/millardr\.github\.io\/sitemap\.xml/.test(fs.readFileSync(path.join(ROOT, 'robots.txt'), 'utf8')), 'robots.txt points to the sitemap');
+  const feed = fs.readFileSync(path.join(ROOT, 'feed.xml'), 'utf8');
+  const feedOk = await p.evaluate((x) => { const d = new DOMParser().parseFromString(x, 'application/xml'); return !d.querySelector('parsererror') && d.querySelectorAll('item').length; }, feed);
+  const feedLinks = [...feed.matchAll(/<link>([^<]+)<\/link>/g)].map((m) => m[1]).slice(1);
+  ok(feedOk >= 10 && feedLinks.every((u) => fs.existsSync(local(u))), `feed.xml parses, ${feedOk} items, every link exists`);
+  ok(/noindex/.test(fs.readFileSync(path.join(ROOT, '404.html'), 'utf8')), '404 page exists and is noindex');
+  await p.close();
+}
+
 (async () => {
   const server = spawn('python3', ['-m', 'http.server', String(PORT), '--bind', '127.0.0.1'], { cwd: ROOT, stdio: 'ignore' });
   await new Promise((r) => setTimeout(r, 800));
   const browser = await chromium.launch();
   try {
+    await seo(browser);
     await regionMaths(browser);
     await storyMaths(browser);
     await gridMaths(browser);

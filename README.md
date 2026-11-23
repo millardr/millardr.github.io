@@ -17,13 +17,23 @@ Writing and research portfolio, including the nine-part ABYSSAL series. Static H
 - `scripts/arch_svg.py`: draws the ABYSSAL architecture chart in two layouts, `_svg/abyssal-architecture.svg` (landscape) and `_svg/abyssal-architecture-mobile.svg` (portrait, shown below 760 px); pages inline them with `{{INCLUDE:...}}`. Re-run it after editing the chart, then rebuild.
 - `scripts/capture/`: Playwright scripts that recapture the ABYSSAL screenshots from a running workbench over real basemaps, and `SHOTLIST.md` for the images still to redo.
 
+- `scripts/evidence_page.py`: renders the "Proven on real data" page from `_data/realdata.json` (refresh it from the ABYSSAL results with a path argument).
+- `scripts/social_cards.cjs`: renders a 1200 x 630 share card per page into `assets/cards/` from `_data/cards.json`, which the build writes.
+- `scripts/tests/site_check.cjs`: layout, links, lab maths, touch and keyboard, and the search checks below. Run it before publishing.
+
 Underscore-prefixed source folders are not published by GitHub Pages' default Jekyll step, which is intended.
+
+## Search and sharing
+
+The build gives every page a canonical URL, Open Graph and Twitter tags pointing at its share card, and schema.org JSON-LD: `WebSite` + `Person` on the home page (the site name Google shows), `ProfilePage` with the GPPS paper as a `ScholarlyArticle` on About, `TechArticle` on every essay and note (dates from git), `CreativeWorkSeries` on the ABYSSAL hub, a `Dataset` on the real-data page, and a `BreadcrumbList` on every subpage. It also writes `sitemap.xml`, `robots.txt`, `feed.xml` (RSS) and `404.html`. The Google Search Console verification tag is in the home page's head (`GOOGLE_SITE_VERIFICATION`).
 
 ## Editing
 
 1. Edit a fragment in `_series/` or `_pages/`.
 2. Run `python3 scripts/build_site.py` from the repository root.
-3. Commit the fragment and the regenerated HTML together.
+3. If a title or description changed, or a page was added: `node scripts/social_cards.cjs && python3 scripts/build_site.py`.
+4. Run `node scripts/tests/site_check.cjs`.
+5. Commit the fragment and the regenerated files together.
 
 Maths is written as `\( ... \)` (inline) and `\[ ... \]` (display) and rendered in the browser by KaTeX from jsDelivr. Fonts come from Google Fonts. The site has no analytics.
 

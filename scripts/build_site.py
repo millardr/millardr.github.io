@@ -19,7 +19,10 @@ from __future__ import annotations
 import html
 import json
 import re
+import subprocess
+from datetime import date
 from pathlib import Path
+from xml.sax.saxutils import escape as xml_escape
 
 ROOT = Path(__file__).resolve().parent.parent
 SERIES = ROOT / "_series"
@@ -92,11 +95,207 @@ def count_words(text: str) -> int:
     return len(re.findall(r"[A-Za-z0-9’'-]+", text))
 
 
+# ---------------------------------------------------------------- search and sharing
+# Every page gets a canonical URL, Open Graph and Twitter tags, a share card and schema.org JSON-LD
+# (WebSite + Person on the home page, ProfilePage on About, TechArticle on essays, BreadcrumbList on
+# every subpage, a Dataset on the real-data page). sitemap.xml, robots.txt and feed.xml are written
+# from the same records. Dates come from git: first and last commit of the page's source file.
+SITE_NAME = "Rory Millard"
+PERSON_ID = f"{SITE}/#person"
+WEBSITE_ID = f"{SITE}/#website"
+SERIES_NAME = "ABYSSAL, from every side"
+PERSON = {
+    "@type": "Person",
+    "@id": PERSON_ID,
+    "name": "Rory Millard",
+    "url": f"{SITE}/about.html",
+    "jobTitle": "Engineer",
+    "description": "Engineer working where probability meets the physical world: Bayesian search, physics-based sensing and decisions under uncertainty.",
+    "alumniOf": {"@type": "CollegeOrUniversity", "name": "University of Oxford", "sameAs": "https://www.ox.ac.uk/"},
+    "knowsAbout": ["Bayesian inference", "Search theory", "Bayesian search", "Search and rescue", "Remote sensing",
+                   "Synthetic aperture radar", "Ocean acoustics", "Information theory", "Optimisation",
+                   "Signal processing", "Estimation and tracking", "Decision making under uncertainty"],
+    "sameAs": [LINKEDIN, "https://github.com/millardr"],
+}
+AUTHOR = {"@type": "Person", "@id": PERSON_ID, "name": "Rory Millard", "url": f"{SITE}/about.html"}
+PAPER = {
+    "@type": "ScholarlyArticle",
+    "name": "Efficient Hybrid Methods for Supersonic Nozzle Optimisation",
+    "headline": "Efficient Hybrid Methods for Supersonic Nozzle Optimisation",
+    "author": [AUTHOR, {"@type": "Person", "name": "H. Ogawa"}, {"@type": "Person", "name": "T. Povey"}],
+    "datePublished": "2026-09",
+    "about": ["Supersonic nozzle design", "Aerodynamic shape optimisation", "Hybrid optimisation methods"],
+    "publication": {"@type": "PublicationEvent", "name": "Global Power and Propulsion Society (GPPS) conference",
+                    "startDate": "2026-09-09", "endDate": "2026-09-11",
+                    "location": {"@type": "Place", "name": "Montreal, Canada"}},
+}
+CARDS: list[dict] = []   # filled during the build; scripts/social_cards.cjs renders them
+RECORDS: list[dict] = []  # one per indexable page: sitemap and feed
+
+
+def canonical(out: str) -> str:
+    if out == "index.html":
+        return f"{SITE}/"
+    if out.endswith("/index.html"):
+        return f"{SITE}/{out[: -len('index.html')]}"
+    return f"{SITE}/{out}"
+
+
+def git_dates(path: Path) -> tuple[str, str]:
+    """(first commit, last commit) dates of a source file; today for new or edited files."""
+    rel = str(path.relative_to(ROOT))
+    today = date.today().isoformat()
+    try:
+        log = subprocess.run(["git", "log", "--follow", "--format=%as", "--", rel], cwd=ROOT,
+                             capture_output=True, text=True, check=True).stdout.split()
+        dirty = subprocess.run(["git", "status", "--porcelain", "--", rel], cwd=ROOT,
+                               capture_output=True, text=True, check=True).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        return today, today
+    first = log[-1] if log else today
+    last = today if (dirty or not log) else log[0]
+    return first, last
+
+
+def card_slug(out: str) -> str:
+    return "home" if out == "index.html" else out[:-5].replace("/", "-")
+
+
+def card_image(out: str, fallback: str) -> tuple[str, str]:
+    """(absolute image URL, MIME type): the rendered share card if present, else the page's screenshot."""
+    slug = card_slug(out)
+    if (ROOT / "assets" / "cards" / f"{slug}.jpg").exists():
+        return f"{SITE}/assets/cards/{slug}.jpg", "image/jpeg"
+    return f"{SITE}/assets/abyssal/{fallback}", "image/webp"
+
+
+def plain(text: str) -> str:
+    return html.unescape(re.sub(r"<[^>]+>", "", text or "")).strip()
+
+
+def short_title(title: str) -> str:
+    return re.sub(r"\s+—\s+(ABYSSAL, part \d+\s+—\s+)?Rory Millard$", "", title).strip()
+
+
+def breadcrumbs(trail: list[tuple[str, str]]) -> dict:
+    return {"@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": i + 1, "name": name, **({"item": url} if url else {})}
+        for i, (name, url) in enumerate(trail)]}
+
+
+def seo_block(seo: dict) -> str:
+    """Meta, Open Graph, Twitter and JSON-LD for one page."""
+    t, d, url, img, mime = (html.escape(seo["title"]), html.escape(seo["desc"]), seo["url"], seo["image"], seo["mime"])
+    alt = html.escape(seo.get("image_alt", seo["title"]))
+    lines = [
+        *([] if seo.get("noindex") else [f'<link rel="canonical" href="{url}">']),
+        '<meta name="author" content="Rory Millard">',
+        ('<meta name="robots" content="noindex, follow">' if seo.get("noindex") else
+         '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">'),
+        f'<meta property="og:site_name" content="{SITE_NAME}">',
+        '<meta property="og:locale" content="en_GB">',
+        f'<meta property="og:type" content="{seo["og_type"]}">',
+        f'<meta property="og:url" content="{url}">',
+        f'<meta property="og:title" content="{t}">',
+        f'<meta property="og:description" content="{d}">',
+        f'<meta property="og:image" content="{img}">',
+        f'<meta property="og:image:type" content="{mime}">',
+    ]
+    if mime == "image/jpeg":
+        lines += ['<meta property="og:image:width" content="1200">', '<meta property="og:image:height" content="630">']
+    lines += [f'<meta property="og:image:alt" content="{alt}">']
+    if seo["og_type"] == "article":
+        lines += [f'<meta property="article:published_time" content="{seo["published"]}">',
+                  f'<meta property="article:modified_time" content="{seo["modified"]}">',
+                  f'<meta property="article:author" content="{SITE}/about.html">']
+        lines += [f'<meta property="article:tag" content="{html.escape(k)}">' for k in seo.get("keywords", [])[:6]]
+    lines += ['<meta name="twitter:card" content="summary_large_image">',
+              f'<meta name="twitter:title" content="{t}">',
+              f'<meta name="twitter:description" content="{d}">',
+              f'<meta name="twitter:image" content="{img}">',
+              f'<meta name="twitter:image:alt" content="{alt}">',
+              f'<link rel="alternate" type="application/rss+xml" title="Rory Millard — writing" href="{SITE}/feed.xml">',
+              '<script type="application/ld+json">' + json.dumps({"@context": "https://schema.org", "@graph": seo["graph"]},
+                                                                   ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + "</script>"]
+    return "\n  ".join(lines)
+
+
+def build_seo(out: str, source: Path, title: str, desc: str, fallback_image: str, kind: str,
+              trail: list[tuple[str, str]], extra: dict | None = None) -> dict:
+    """kind: home | profile | article | collection | page | none (no indexing records)."""
+    extra = extra or {}
+    url = canonical(out)
+    published, modified = git_dates(source)
+    img, mime = card_image(out, fallback_image)
+    name = short_title(title)
+    desc = plain(desc)
+    page_id = url + "#webpage"
+    graph: list[dict] = []
+    if kind == "home":
+        graph += [
+            {"@type": "WebSite", "@id": WEBSITE_ID, "url": f"{SITE}/", "name": SITE_NAME,
+             "alternateName": ["Rory Millard — Engineer", "millardr.github.io"], "description": desc,
+             "inLanguage": "en-GB", "publisher": {"@id": PERSON_ID}, "author": {"@id": PERSON_ID}},
+            PERSON,
+            {"@type": "WebPage", "@id": page_id, "url": url, "name": title, "description": desc,
+             "isPartOf": {"@id": WEBSITE_ID}, "about": {"@id": PERSON_ID}, "primaryImageOfPage": img,
+             "datePublished": published, "dateModified": modified, "inLanguage": "en-GB"},
+        ]
+    elif kind == "profile":
+        graph += [
+            {"@type": "ProfilePage", "@id": page_id, "url": url, "name": title, "description": desc,
+             "isPartOf": {"@id": WEBSITE_ID}, "dateCreated": published, "dateModified": modified,
+             "mainEntity": {**PERSON, "subjectOf": PAPER}, "inLanguage": "en-GB"},
+            {**PAPER, "@id": f"{SITE}/about.html#gpps-2026"},
+        ]
+    elif kind == "article":
+        art = {"@type": "TechArticle", "@id": url + "#article", "headline": name[:110], "name": name,
+               "description": desc, "url": url, "mainEntityOfPage": {"@id": page_id}, "image": [img],
+               "datePublished": published, "dateModified": modified, "author": [AUTHOR],
+               "publisher": {"@id": PERSON_ID}, "inLanguage": "en-GB", "isAccessibleForFree": True}
+        if extra.get("words"):
+            art["wordCount"] = extra["words"]
+        if extra.get("keywords"):
+            art["keywords"] = extra["keywords"]
+        if extra.get("series"):
+            art["isPartOf"] = {"@type": "CreativeWorkSeries", "@id": f"{SITE}/abyssal/#series", "name": SERIES_NAME,
+                               "url": f"{SITE}/abyssal/"}
+            art["position"] = extra["series"]
+        if extra.get("proficiency"):
+            art["proficiencyLevel"] = extra["proficiency"]
+        graph += [{"@type": "WebPage", "@id": page_id, "url": url, "name": title, "isPartOf": {"@id": WEBSITE_ID},
+                   "breadcrumb": {"@id": url + "#breadcrumb"}, "inLanguage": "en-GB"}, art]
+        if extra.get("dataset"):
+            graph.append(extra["dataset"])
+    elif kind in ("collection", "page"):
+        node = {"@type": "CollectionPage" if kind == "collection" else "WebPage", "@id": page_id, "url": url,
+                "name": title, "description": desc, "isPartOf": {"@id": WEBSITE_ID}, "author": {"@id": PERSON_ID},
+                "datePublished": published, "dateModified": modified, "primaryImageOfPage": img,
+                "breadcrumb": {"@id": url + "#breadcrumb"}, "inLanguage": "en-GB"}
+        if extra.get("hasPart"):
+            node["hasPart"] = extra["hasPart"]
+        graph.append(node)
+        if extra.get("series_node"):
+            graph.append(extra["series_node"])
+    if trail:
+        graph.append({**breadcrumbs(trail), "@id": url + "#breadcrumb"})
+    og_type = {"home": "website", "profile": "profile", "article": "article"}.get(kind, "website")
+    CARDS.append({"slug": card_slug(out), "title": extra.get("card_title") or name, "desc": desc, "kicker": extra.get("card_kicker", ""),
+                  "theme": theme_of(out)})
+    if kind != "none":
+        RECORDS.append({"url": url, "title": name, "desc": desc, "modified": modified, "published": published,
+                        "kind": kind, "image": img, "priority": extra.get("priority", 0.6)})
+    return {"title": title, "desc": desc, "url": url, "image": img, "mime": mime, "og_type": og_type,
+            "published": published, "modified": modified, "graph": graph, "keywords": extra.get("keywords", []),
+            "image_alt": f"{extra.get('card_title') or name}: Rory Millard", "noindex": kind == "none"}
+
+
 # Google Search Console ownership check: must stay in the home page's <head>.
 GOOGLE_SITE_VERIFICATION = "7NNPhmzGLSE9p59gi33QpHl1xITFNg2mBdUlEXIG2ew"
 
 
-def head(title: str, desc: str, image: str, depth: str, maths: bool = True, theme: str = "abyssal", home: bool = False) -> str:
+def head(title: str, desc: str, image: str, depth: str, maths: bool = True, theme: str = "abyssal", home: bool = False,
+         seo: dict | None = None) -> str:
     color = ('<meta name="theme-color" content="#0d0d0d">' if theme == "abyssal" else
              '<meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)">\n'
              '  <meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)">')
@@ -112,11 +311,7 @@ def head(title: str, desc: str, image: str, depth: str, maths: bool = True, them
   <meta name="viewport" content="width=device-width,initial-scale=1">{verify}
   <title>{html.escape(title)}</title>
   <meta name="description" content="{html.escape(desc)}">
-  <meta property="og:title" content="{html.escape(title)}">
-  <meta property="og:description" content="{html.escape(desc)}">
-  <meta property="og:type" content="article">
-  <meta property="og:image" content="{SITE}/assets/abyssal/{image}">
-  <meta name="twitter:card" content="summary_large_image">
+  {seo_block(seo) if seo else f'<meta property="og:image" content="{SITE}/assets/abyssal/{image}">'}
   {color}
   <link rel="icon" href="{depth}assets/{icon}" type="image/svg+xml">
   {theme_boot(theme)}
@@ -359,7 +554,12 @@ def render_part(parts: list[dict], p: dict) -> str:
     </div>
   </main>"""
     crumb = f'<a href="index.html">Series</a> / Part {p["n"]} of {len(parts)}'
-    return head(title, p["desc"], p["hero"], "../") + topbar("../", crumb, "series") + hero + body + foot("../")
+    seo = build_seo(f'abyssal/{p["slug"]}.html', SERIES / f'{p["slug"]}.html', title, p["desc"], p["hero"], "article",
+                    [("Rory Millard", f"{SITE}/"), ("ABYSSAL", f"{SITE}/abyssal/"), (f'Part {p["n"]}: {p["title"]}', None)],
+                    {"series": p["n"], "words": p["words"], "card_kicker": f'ABYSSAL · Part {p["n"]} of {len(parts)}',
+                     "keywords": ["ABYSSAL", "Bayesian search", "search theory", "search and rescue", "probability"],
+                     "priority": 0.8})
+    return head(title, p["desc"], p["hero"], "../", seo=seo) + topbar("../", crumb, "series") + hero + body + foot("../")
 
 
 # ---------------------------------------------------------------- pages
@@ -382,9 +582,65 @@ def fill(text: str, parts: list[dict], depth: str) -> str:
                 .replace("{{LABS}}", labs_index(parts)))
 
 
+TOP = {"about.html": ("About", "profile"), "projects.html": ("Work", "collection"),
+       "writing.html": ("Writing", "collection"), "contact.html": ("Contact", "page")}
+
+
+def page_seo(meta: dict, parts: list[dict]) -> dict:
+    out, title, desc = meta["out"], meta["title"], meta["desc"]
+    src = meta.get("_src", ROOT / "_pages" / out)
+    home = ("Rory Millard", f"{SITE}/")
+    image = meta.get("image", "demo-live.webp")
+    name = short_title(title)
+    if out == "index.html":
+        return build_seo(out, src, title, desc, image, "home", [],
+                         {"card_kicker": "Rory Millard · Engineer", "priority": 1.0,
+                          "card_title": "Engineer working where probability meets the physical world."})
+    if out in TOP:
+        label, kind = TOP[out]
+        return build_seo(out, src, title, desc, image, kind, [home, (label, None)],
+                         {"card_kicker": f"Rory Millard · {label}", "priority": 0.7, "card_title": plain(meta.get("h1", ""))})
+    if out == "abyssal/index.html":
+        series = {"@type": "CreativeWorkSeries", "@id": f"{SITE}/abyssal/#series", "name": SERIES_NAME,
+                  "url": f"{SITE}/abyssal/", "author": {"@id": PERSON_ID}, "inLanguage": "en-GB",
+                  "hasPart": [{"@type": "TechArticle", "position": q["n"], "name": q["title"],
+                               "url": f'{SITE}/abyssal/{q["slug"]}.html'} for q in parts]}
+        return build_seo(out, src, title, desc, image, "collection", [home, ("ABYSSAL", None)],
+                         {"card_kicker": "ABYSSAL", "series_node": series, "priority": 0.9,
+                          "hasPart": [{"@id": f"{SITE}/abyssal/#series"}]})
+    if out.startswith("abyssal/"):
+        extra = {"card_kicker": "ABYSSAL", "priority": 0.8,
+                 "keywords": ["ABYSSAL", "Bayesian search", "remote sensing", "signal processing", "validation"]}
+        if out == "abyssal/evidence.html":
+            extra["dataset"] = {
+                "@type": "Dataset", "@id": f"{SITE}/abyssal/evidence.html#dataset",
+                "name": "ABYSSAL real-data validation results",
+                "description": ("Summary results of seven studies that run ABYSSAL's signal engines on real public data "
+                                "(Sentinel-1 radar, Sentinel-2 imagery, NOAA BlueTopo and ETOPO bathymetry, NOAA buoys, "
+                                "NOAA MarineCadastre AIS) and score them against independent truth: buoy wind, ship "
+                                "transponders, charted platforms and wrecks, and the ARA San Juan wreck."),
+                "url": f"{SITE}/abyssal/evidence.html", "creator": AUTHOR, "isAccessibleForFree": True,
+                "keywords": ["search and rescue", "synthetic aperture radar", "Sentinel-1", "Sentinel-2", "AIS",
+                             "bathymetry", "detection probability", "validation"],
+                "variableMeasured": ["wind speed error", "probability of detection", "false alarms per square kilometre",
+                                     "position error", "credible search area"],
+                "temporalCoverage": "2017/2023",
+                "distribution": [{"@type": "DataDownload", "encodingFormat": "application/json",
+                                  "contentUrl": f"{SITE}/abyssal/data/realdata.json"}],
+            }
+        return build_seo(out, src, title, desc, image, "article",
+                         [home, ("ABYSSAL", f"{SITE}/abyssal/"), (meta.get("crumb") or name, None)], extra)
+    if out.startswith("notes/"):
+        return build_seo(out, src, title, desc, image, "article",
+                         [home, ("Writing", f"{SITE}/writing.html"), (name, None)],
+                         {"card_kicker": "Working note", "priority": 0.7,
+                          "keywords": ["Bayesian search", "probability of detection", "search theory"]})
+    return build_seo(out, src, title, desc, image, "none", [], {"card_kicker": ""})
+
+
 def render_page(meta: dict, body: str, parts: list[dict]) -> str:
     out = meta["out"]
-    depth = "../" * out.count("/")
+    depth = "/" if meta.get("absolute") else "../" * out.count("/")
     layout = meta.get("layout", "page")
     crumb = meta.get("crumb", "")
     theme = theme_of(out)
@@ -420,7 +676,8 @@ def render_page(meta: dict, body: str, parts: list[dict]) -> str:
         else:
             main = f'\n  <main class="page" id="main">\n{fill(body, parts, depth)}\n  </main>'
     return (head(meta["title"], meta["desc"], meta.get("image", "demo-live.webp"), depth,
-                 maths=meta.get("maths", layout == "note"), theme=theme, home=meta["out"] == "index.html")
+                 maths=meta.get("maths", layout == "note"), theme=theme, home=meta["out"] == "index.html",
+                 seo=page_seo(meta, parts))
             + topbar(depth, crumb, meta.get("active", ""), theme) + hero + main + foot(depth, theme))
 
 
@@ -435,6 +692,40 @@ def redirect_page(src: str, dst: str) -> str:
 """
 
 
+def write_discovery_files() -> None:
+    """sitemap.xml, robots.txt, feed.xml, the share-card manifest and the public data copy."""
+    recs = sorted(RECORDS, key=lambda r: (-r["priority"], r["url"]))
+    urls = "".join(f"  <url><loc>{xml_escape(r['url'])}</loc><lastmod>{r['modified']}</lastmod></url>\n" for r in recs)
+    (ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n'
+                                      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+                                      f"{urls}</urlset>\n", encoding="utf-8")
+    (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n", encoding="utf-8")
+    arts = sorted([r for r in RECORDS if r["kind"] == "article"], key=lambda r: (r["published"], r["url"]), reverse=True)
+
+    def rfc822(d: str) -> str:
+        y, m, dd = (int(v) for v in d.split("-"))
+        return date(y, m, dd).strftime("%a, %d %b %Y 12:00:00 +0000")
+
+    items = "".join(
+        f"    <item><title>{xml_escape(r['title'])}</title><link>{xml_escape(r['url'])}</link>"
+        f"<guid isPermaLink=\"true\">{xml_escape(r['url'])}</guid><pubDate>{rfc822(r['published'])}</pubDate>"
+        f"<description>{xml_escape(r['desc'])}</description></item>\n" for r in arts)
+    newest = max((r["modified"] for r in RECORDS), default=date.today().isoformat())
+    (ROOT / "feed.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n<channel>\n'
+        f"  <title>Rory Millard — writing</title>\n  <link>{SITE}/</link>\n"
+        f'  <atom:link href="{SITE}/feed.xml" rel="self" type="application/rss+xml"/>\n'
+        "  <description>Essays and working notes on Bayesian search, sensing and decisions under uncertainty, "
+        "including the ABYSSAL series.</description>\n  <language>en-gb</language>\n"
+        f"  <lastBuildDate>{rfc822(newest)}</lastBuildDate>\n{items}</channel>\n</rss>\n", encoding="utf-8")
+    (ROOT / "_data").mkdir(exist_ok=True)
+    (ROOT / "_data" / "cards.json").write_text(json.dumps(CARDS, indent=1, ensure_ascii=False), encoding="utf-8")
+    data = ROOT / "_data" / "realdata.json"
+    if data.exists():
+        (ROOT / "abyssal" / "data").mkdir(parents=True, exist_ok=True)
+        (ROOT / "abyssal" / "data" / "realdata.json").write_text(data.read_text(encoding="utf-8"), encoding="utf-8")
+
+
 def main() -> None:
     parts = load_parts()
     (ROOT / "abyssal").mkdir(exist_ok=True)
@@ -442,16 +733,19 @@ def main() -> None:
         (ROOT / "abyssal" / f'{p["slug"]}.html').write_text(render_part(parts, p), encoding="utf-8")
         print(f'abyssal/{p["slug"]}.html  {p["words"]:>6,} words  {p["minutes"]:>3} min  labs={p["labs"]}')
     hub_meta, hub_body = read_fragment(SERIES / "index.html")
+    hub_meta["_src"] = SERIES / "index.html"
     (ROOT / "abyssal" / "index.html").write_text(render_page(hub_meta, hub_body, parts), encoding="utf-8")
     print("abyssal/index.html")
     for path in sorted(PAGES.rglob("*.html")):
         meta, body = read_fragment(path)
+        meta["_src"] = path
         out = ROOT / meta["out"]
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(render_page(meta, body, parts), encoding="utf-8")
         print(meta["out"])
     for src, dst in REDIRECTS.items():
         (ROOT / src).write_text(redirect_page(src, dst), encoding="utf-8")
+    write_discovery_files()
     print(f"series: {len(parts)} parts, {sum(p['words'] for p in parts):,} words, "
           f"{sum(len(set(p['labs'])) for p in parts)} labs; {len(REDIRECTS)} redirects")
 
