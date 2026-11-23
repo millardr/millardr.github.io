@@ -90,6 +90,7 @@ ENGINES = [
     ("magnetic", "Magnetic dipole", "Fits a magnetic dipole to a survey in Earth's field: position, depth and moment, induced or remanent."),
     ("seabed", "Seabed & sonar", "Finds compact relief in multibeam (including NOAA BlueTopo) and highlight–shadow pairs in side-scan."),
     ("debris", "Debris back-track", "Runs recovered debris backwards through wind and current to where it entered the water, sharing the uncertain environment."),
+    ("spectral", "Spectral anomalies", "On land: finds small objects whose colour does not belong (a tent, a tarp, a vehicle) in Sentinel-2 imagery, with the RX detector."),
 ]
 DRILL = ("Composite: lost-submarine drill",
          "Engines chain: a hydrophone fix (SOFAR), a collapse depth from the bubble pulse with the hull volume, and the seabed together rule out water too shallow for the implosion.")
@@ -123,7 +124,7 @@ UI = {
     "ui-task": ("Tasking export", "Plan Studio exports tasking for each asset: areas, tracks and timings, ready for a crew."),
     "ui-plan": ("Where next · Plan Studio", "Where next? ranks searches by expected information; Plan Studio allocates assets and prices the search."),
     "ui-review": ("Review · admit · undo", "Admit, reject or undo observations; every change is in the history with exact undo."),
-    "ui-lab": ("Signal Lab", "Fourteen signal engines in one panel: run them on SCENARIO scenes with answer keys, or on your own data and public archives."),
+    "ui-lab": ("Signal Lab", "Fifteen signal engines in one panel (only the ones that fit a land or sea case are shown): run them on SCENARIO scenes with answer keys, or on your own data and public archives."),
     "ui-add": ("Add · Archive", "Add sources: documents, files, tracks, recordings. Originals are kept with their hashes."),
     "ui-layers": ("Layers", "Opt-in public layers: bathymetry, magnetics, gravity, imagery, fetched with receipts."),
     "ui-export": ("Export dossier", "Exports the dossier and audit pack: sources, receipts, model versions, input hashes."),
@@ -180,7 +181,7 @@ class Canvas:
 
 
 DESC = ("Read from the bottom up. Inputs (documents, tracks, recordings, public layers, sketches) get receipts and an "
-        "origin tag. Measurements go through fourteen signal engines that share one contract: physics forward model, "
+        "origin tag. Measurements go through fifteen signal engines that share one contract: physics forward model, "
         "inference, calibration, contact. Contacts pass an admission gate (calibrated, then admitted by a person) into "
         "the evidence-to-belief engine: observations, likelihood, provenance pooling, negative evidence, add and "
         "normalise. Claims enter that engine directly. The posterior feeds where next and Plan Studio, the Search "
@@ -236,13 +237,13 @@ def desktop() -> str:
     c.text("tiny", 250, 501, "self-cal", ' transform="rotate(-90 250 501)"')
     # contact -> gate, in the lane between the sheets and the tower wall
     c.edge([(520, 459), (576, 459), (576, 324)], "h-contact gate", "edge flow")
-    # fourteen engines share the contract
-    c.text("band", 256, 806, "FOURTEEN ENGINES · ONE CONTRACT")
+    # fifteen engines share the contract
+    c.text("band", 256, 806, "FIFTEEN ENGINES · ONE CONTRACT")
     for i, (k, t, d) in enumerate(ENGINES):
         x = 256 + (i % 2) * 166
         y = 820 + (i // 2) * 42
         c.node(f"head-{k}", x, y, 154, 32, t, "", "chip", d, href=f"#eng-{k}", rx=16, tsize=12.5)
-    c.node("drill", 256, 1114, 320, 32, DRILL[0], "", "chip", DRILL[1], href="#eng-drill", rx=16, tsize=12.5)
+    c.node("drill", 422, 1114, 154, 32, "Lost-submarine drill", "", "chip", DRILL[1], href="#eng-drill", rx=16, tsize=12.5)
 
     # ---------------- Engine I (right tower)
     c.raw('<rect class="tower belt" x="636" y="350" width="340" height="470" rx="16"/>')
@@ -344,7 +345,7 @@ def mobile() -> str:
     t, s, d = GATE
     c.node("gate", 24, 312, 172, 46, t, "calibrated, then admitted", "gate", d, tsize=12.5, ssize=10, wrap=5.4, max_lines=1)
 
-    # Engine II, left column, with its fourteen engines
+    # Engine II, left column, with its fifteen engines
     c.raw('<rect class="tower sigt" x="10" y="372" width="184" height="760" rx="12"/>')
     c.text("tower-t left", 20, 392, "ENGINE II · SIGNALS", ' style="font-size:10px"')
     ys = [404, 462, 520, 578]
@@ -353,10 +354,10 @@ def mobile() -> str:
     for (lo, *_), (up, *_), y in zip(STACK[1:], STACK[:-1], ys[1:]):
         c.edge([(103, y), (103, y - 12)], f"{lo} {up}")
     c.edge([(176, 404), (176, 360)], "h-contact gate", "edge flow")
-    c.text("band", 22, 652, "14 ENGINES · ONE CONTRACT", ' style="font-size:9px"')
+    c.text("band", 22, 652, "15 ENGINES · ONE CONTRACT", ' style="font-size:9px"')
     for i, (k, t, d) in enumerate(ENGINES):
-        c.node(f"head-{k}", 22, 660 + i * 31, 162, 26, t, "", "chip", d, href=f"#eng-{k}", rx=13, tsize=11.5)
-    c.node("drill", 22, 1096, 162, 26, "Lost-submarine drill", "", "chip", DRILL[1], href="#eng-drill", rx=13, tsize=11.5)
+        c.node(f"head-{k}", 22, 660 + i * 29, 162, 25, t, "", "chip", d, href=f"#eng-{k}", rx=12.5, tsize=11.5)
+    c.node("drill", 22, 1095, 162, 25, "Lost-submarine drill", "", "chip", DRILL[1], href="#eng-drill", rx=13, tsize=11.5)
 
     # Engine I, right column
     c.raw('<rect class="tower belt" x="206" y="372" width="178" height="330" rx="12"/>')
