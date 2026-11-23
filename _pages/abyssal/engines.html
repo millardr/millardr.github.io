@@ -1,13 +1,13 @@
 <!--meta
-{"out": "abyssal/engines.html", "title": "Inside ABYSSAL: one contract, fifteen engines — Rory Millard", "desc": "The whole of ABYSSAL in one chart: inputs with receipts, fifteen physics-based signal engines that share one contract, an admission gate, a log-space belief engine and the decisions on top. Plus every engine, with screenshots, maths and calibration.", "active": "machine", "layout": "page", "maths": true, "image": "eng-persistence.webp", "crumb": "Inside the machine", "kicker": "<span>ABYSSAL · Features</span><span class=\"lv\">The machine, in full</span>", "h1": "One contract, fifteen engines", "dek": "How ABYSSAL turns radar images, hydrophone recordings, magnetometer surveys, witness statements and searched-and-missed ground into one honest map: the architecture in one chart, and every new engine, with what it measured.", "meta": "<span><b>15</b> signal engines · <b>1</b> belief engine · <b>1</b> gate</span><span>Rory Millard · November 2026</span>", "hero_cls": "", "peek": "eng-persistence.webp", "peek_alt": "Eight Sentinel-1 passes over the Santa Barbara Channel stacked into one median image, with two fixed structures seen in every pass", "cta": "<a class=\"btn primary\" href=\"#machine\">See the architecture ↓</a><a class=\"btn ghost\" href=\"#heads\">Jump to the engines</a>"}
+{"out": "abyssal/engines.html", "title": "Inside ABYSSAL: one contract, sixteen engines — Rory Millard", "desc": "The whole of ABYSSAL in one chart: inputs with receipts, sixteen physics-based signal engines that share one contract, an admission gate, a log-space belief engine and the decisions on top. Plus every engine, with screenshots, maths and calibration.", "active": "machine", "layout": "page", "maths": true, "image": "eng-persistence.webp", "crumb": "Inside the machine", "kicker": "<span>ABYSSAL · Features</span><span class=\"lv\">The machine, in full</span>", "h1": "One contract, sixteen engines", "dek": "How ABYSSAL turns radar images, hydrophone recordings, magnetometer surveys, witness statements and searched-and-missed ground into one honest map: the architecture in one chart, and every new engine, with what it measured.", "meta": "<span><b>16</b> signal engines · <b>1</b> belief engine · <b>1</b> gate</span><span>Rory Millard · November 2026</span>", "hero_cls": "", "peek": "eng-persistence.webp", "peek_alt": "Eight Sentinel-1 passes over the Santa Barbara Channel stacked into one median image, with two fixed structures seen in every pass", "cta": "<a class=\"btn primary\" href=\"#machine\">See the architecture ↓</a><a class=\"btn ghost\" href=\"#heads\">Jump to the engines</a>"}
 -->
 <div class="lede-block">
-  <p>ABYSSAL has two halves. One turns explicit evidence into a probability map. The other turns raw measurements (a radar image, an hour of hydrophone audio, a magnetometer survey) into <em>contacts</em> that a person can review. Fifteen signal engines feed that second half, and every one of them obeys the same contract and comes in through the same gate.</p>
+  <p>ABYSSAL has two halves. One turns explicit evidence into a probability map. The other turns raw measurements (a radar image, an hour of hydrophone audio, a magnetometer survey) into <em>contacts</em> that a person can review. Sixteen signal engines feed that second half, and every one of them obeys the same contract and comes in through the same gate.</p>
   <p>This page is the whole machine on one sheet, then a tour of the engines with real screenshots, the physics each one rests on, and what each one measured when it was tested against an answer key.</p>
 </div>
 
 <div class="stats">
-  <div><b>15</b><small>signal engines, each a physics model, an inference step and a calibration</small></div>
+  <div><b>16</b><small>signal engines, each a physics model, an inference step and a calibration</small></div>
   <div><b>6</b><small>versioned models of the log-space belief engine, each documented in an audit</small></div>
   <div><b>4</b><small>public archives read on request: Sentinel-1 radar, Sentinel-2 imagery, NOAA BlueTopo bathymetry, ETOPO relief</small></div>
   <div><b>1</b><small>gate: a detector must be calibrated, then a person must admit what it found</small></div>
@@ -20,7 +20,7 @@
   <div class="arch-inspect" aria-live="polite"><span class="k">How to read it</span><b>Bottom to top: data in, decisions out</b><p>Every input arrives with a receipt and an origin tag, REAL or SCENARIO. Measurements rise through the signal engines on the left; claims (a witness, a searched area) rise into the belief engine on the right. The only bridge between the two is the admission gate. Decisions and outputs come out of the top, and the panels down either side are where people lay data on and steer.</p></div>
 </div>
 
-<div class="section-title"><h2>One contract, fifteen engines</h2><span>why very different physics can share one gate</span></div>
+<div class="section-title"><h2>One contract, sixteen engines</h2><span>why very different physics can share one gate</span></div>
 <p class="lede-block" style="margin-top:24px">A radar wake detector and a bubble-pulse analyser have nothing in common physically. They are still the same kind of thing, because each one answers the same three questions in the same order, returns the same kind of object, and has to pass the same gate. No engine is trusted more than another by default: each is exactly as trustworthy as its calibration says, and no more.</p>
 <div class="pillars">
   <div class="pillar"><b>1 · What would I see?</b><p>A <strong>forward model</strong> of the physics: if the target were at \(x\), the data would look like \(d = f(x,\theta) + \varepsilon\). Kelvin wakes, dispersive ring waves, sound in the SOFAR channel, a dipole in Earth's field, leeway drift, an oscillating bubble.</p></div>
@@ -42,7 +42,7 @@
   <a href="../assets/abyssal/sketch-live.webp" data-lightbox><img src="../assets/abyssal/sketch-live.webp" alt="Sketch evidence on the map" loading="lazy"><span><b>Sketch evidence</b><em>points, bearings, range rings, corridors, area statements</em></span></a>
   <a href="../assets/abyssal/layers.webp" data-lightbox><img src="../assets/abyssal/layers.webp" alt="The Layers panel" loading="lazy"><span><b>Layers</b><em>opt-in public data with receipts, context by default</em></span></a>
   <a href="../assets/abyssal/evidence-map-live.webp" data-lightbox><img src="../assets/abyssal/evidence-map-live.webp" alt="The Evidence Map" loading="lazy"><span><b>Evidence Map</b><em>each source's influence in bits, provenance graph, exact undo</em></span></a>
-  <a href="../assets/abyssal/eng-identity.webp" data-lightbox><img src="../assets/abyssal/eng-identity.webp" alt="The Signal Lab" loading="lazy"><span><b>Signal Lab</b><em>fifteen engines, SCENARIO answer keys or your own data</em></span></a>
+  <a href="../assets/abyssal/eng-identity.webp" data-lightbox><img src="../assets/abyssal/eng-identity.webp" alt="The Signal Lab" loading="lazy"><span><b>Signal Lab</b><em>sixteen engines, SCENARIO answer keys or your own data</em></span></a>
   <a href="../assets/abyssal/where-next.webp" data-lightbox><img src="../assets/abyssal/where-next.webp" alt="Where next" loading="lazy"><span><b>Where next?</b><em>searches ranked by expected information gain</em></span></a>
   <a href="../assets/abyssal/plan-studio-ev.webp" data-lightbox><img src="../assets/abyssal/plan-studio-ev.webp" alt="Plan Studio" loading="lazy"><span><b>Plan Studio</b><em>allocation, value and the stop rule</em></span></a>
   <a href="../assets/abyssal/movement.webp" data-lightbox><img src="../assets/abyssal/movement.webp" alt="Movement and time" loading="lazy"><span><b>Movement &amp; time</b><em>drift, walking and leeway on a shared clock</em></span></a>
@@ -224,7 +224,19 @@
   <figure><img src="../assets/abyssal/eng-spectral.webp" alt="A real Sentinel-2 scene over Yosemite with anomaly contacts: orange rings for new ones, grey for ones already there in an earlier pass, and the Signal Lab panel counting them" loading="lazy"><figcaption>Real Sentinel-2 over Yosemite, 5 July 2023, against the 20 June pass: 17 of 89 small anomalies are new (orange); the grey ones were already there.</figcaption></figure>
 </section>
 
-<section class="feature flip" id="eng-earlier">
+<section class="feature flip" id="eng-viewshed">
+  <div class="ft">
+    <div class="k">Land · line of sight</div>
+    <h3>Who could have seen it?</h3>
+    <p>A fire lookout, a public webcam or a witness on a ridge only saw the ground in their line of sight. From an observer's position and height the engine traces a sight line to every cell of the case's real terrain; a cell is hidden when any ground between rises above the line. Over long lines the Earth curves away, \(d^2/2R\), and the air bends the light back a little, a factor \(1-k\) with \(k \approx 0.13\): a 2 m eye on smooth ground sees 5.4 km.</p>
+    <p>Then the question a search manager actually has: how much of the <em>probability</em> could they see, and what is their "saw nothing" worth? If they would notice smoke with probability \(\mathrm{POD}(d)\), a no-sighting multiplies each visible cell by \(1-\mathrm{POD}(d)\); the engine reports the share it would remove and its information in bits.</p>
+    <div class="nums"><div><b>31%</b><small>of the hiker's probability in view from Glacier Point</small></div><div><b>19%</b><small>removed if they saw no smoke</small></div><div><b>5.41 km</b><small>horizon for a 2 m eye, as theory</small></div></div>
+    <p class="honest"><span class="tag real">real</span> Real Yosemite terrain: from Glacier Point it sees Half Dome, Upper Yosemite Fall and the valley floor, and not the ground behind the rim. The terrain is bare earth, so trees and buildings make real views smaller; the chance of noticing is an analyst's assumption; and nothing changes the map until a person records the no-sighting.</p>
+  </div>
+  <figure><img src="../assets/abyssal/eng-viewshed.webp" alt="Yosemite Valley over satellite imagery with the ground visible from Glacier Point shaded cyan, and the Signal Lab panel reporting 31% of the probability in view" loading="lazy"><figcaption>From Glacier Point, a person standing sees the cyan ground: 36% of the case and 31% of where the hiker probably is.</figcaption></figure>
+</section>
+
+<section class="feature" id="eng-earlier">
   <div class="ft">
     <div class="k">From the first round</div>
     <h3 id="eng-rings">The ring finder, the TDOA localiser and the wake reader</h3>
@@ -266,6 +278,7 @@
     <tr><td>Magnetic dipole</td><td>position, depth, moment</td><td class="n">0.95 POD; 3 cm depth</td><td>none yet</td></tr>
     <tr><td>Seabed &amp; sonar</td><td>relief and shadow contacts</td><td class="n">47/48 wrecks; 58/64 side-scan</td><td>41/85 charted wrecks, NOAA BlueTopo</td></tr>
     <tr><td>Debris back-track</td><td>where finds entered the water</td><td class="n">30/30 coverage, shared environment</td><td>none yet</td></tr>
+    <tr><td>Line of sight (land)</td><td>what a lookout, webcam or witness could see; what their no-sighting is worth</td><td class="n">horizon to 0.02 km of theory; ridge hides all behind it</td><td>real Yosemite terrain: Glacier Point sees Half Dome, the falls and the valley floor</td></tr>
     <tr><td>Spectral anomalies (land)</td><td>small objects that are the wrong colour</td><td class="n">implants in real scenes: 98% at 20 m², 47% at 10 m²</td><td>5 real Sentinel-2 landscapes; 0.8 other anomalies per km² new since an earlier clear pass</td></tr>
   </tbody>
 </table>
