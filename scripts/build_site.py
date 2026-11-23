@@ -92,7 +92,11 @@ def count_words(text: str) -> int:
     return len(re.findall(r"[A-Za-z0-9’'-]+", text))
 
 
-def head(title: str, desc: str, image: str, depth: str, maths: bool = True, theme: str = "abyssal") -> str:
+# Google Search Console ownership check: must stay in the home page's <head>.
+GOOGLE_SITE_VERIFICATION = "7NNPhmzGLSE9p59gi33QpHl1xITFNg2mBdUlEXIG2ew"
+
+
+def head(title: str, desc: str, image: str, depth: str, maths: bool = True, theme: str = "abyssal", home: bool = False) -> str:
     color = ('<meta name="theme-color" content="#0d0d0d">' if theme == "abyssal" else
              '<meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)">\n'
              '  <meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)">')
@@ -100,11 +104,12 @@ def head(title: str, desc: str, image: str, depth: str, maths: bool = True, them
     css = f'<link rel="stylesheet" href="{depth}assets/series.css">'
     if theme == "site":
         css += f'\n  <link rel="stylesheet" href="{depth}assets/site.css">'
+    verify = f'\n  <meta name="google-site-verification" content="{GOOGLE_SITE_VERIFICATION}" />' if home else ""
     return f"""<!doctype html>
 <html lang="en" class="{theme}">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">{verify}
   <title>{html.escape(title)}</title>
   <meta name="description" content="{html.escape(desc)}">
   <meta property="og:title" content="{html.escape(title)}">
@@ -415,7 +420,7 @@ def render_page(meta: dict, body: str, parts: list[dict]) -> str:
         else:
             main = f'\n  <main class="page" id="main">\n{fill(body, parts, depth)}\n  </main>'
     return (head(meta["title"], meta["desc"], meta.get("image", "demo-live.webp"), depth,
-                 maths=meta.get("maths", layout == "note"), theme=theme)
+                 maths=meta.get("maths", layout == "note"), theme=theme, home=meta["out"] == "index.html")
             + topbar(depth, crumb, meta.get("active", ""), theme) + hero + main + foot(depth, theme))
 
 
