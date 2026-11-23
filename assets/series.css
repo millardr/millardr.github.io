@@ -621,3 +621,81 @@ html.abyssal .section-title h2::before { content: ""; display: inline-block; wid
 .proofs b { display: block; font-family: var(--serif); font-weight: 500; font-size: 30px; line-height: 1; color: var(--accent); letter-spacing: -0.02em; }
 .proofs span { display: block; font-size: 12.5px; line-height: 1.45; color: var(--ink-2); margin-top: 8px; }
 .proofs strong { color: var(--ink); }
+
+/* ---------- ABYSSAL: two-tier header (the person's site above, the product below) ---------- */
+.sitebar { font-family: var(--sans); font-size: 12.5px; background: var(--bg); border-bottom: 1px solid var(--line); }
+.sitebar .in { max-width: 1240px; margin: 0 auto; padding: 6px 24px; display: flex; align-items: center; gap: 16px; }
+.sitebar a { text-decoration: none; color: var(--muted); }
+.sitebar a:hover, .sitebar a:focus-visible { color: var(--ink); }
+.sitebar .home { font-weight: 600; color: var(--ink-2); }
+.sitebar nav { margin-left: auto; display: flex; gap: 16px; }
+.productbar .product {
+  display: inline-flex; align-items: center; gap: 10px; text-decoration: none; white-space: nowrap;
+  font-family: var(--mono); font-size: 14px; font-weight: 600; letter-spacing: 0.26em; color: var(--accent);
+}
+html.abyssal .topbar.productbar .product { border-left: 0; padding: 0; font-size: 14px; }
+.productbar .pmark { width: 16px; height: 16px; border-radius: 50%; flex: none;
+  background: radial-gradient(circle at 35% 35%, #fcd25c, #f0702e 38%, #b3367a 62%, #3b0f70 82%, transparent 84%);
+  box-shadow: 0 0 12px rgba(240,112,46,0.45); }
+.productbar .crumb { padding-left: 14px; border-left: 1px solid var(--line-strong); }
+.productbar nav .nav-k, .productbar nav .nav-site { display: none; }
+.productbar nav a[aria-current="page"] { color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+@media (max-width: 860px) {
+  .sitebar nav { display: none; }
+  .productbar nav .nav-k { display: block; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.18em; color: var(--accent); padding: 10px 10px 4px; }
+  .productbar nav .nav-k.site { color: var(--muted); margin-top: 8px; border-top: 1px solid var(--line); padding-top: 14px; }
+  .productbar nav .nav-site { display: flex; flex-direction: column; }
+  .productbar nav .nav-site a { color: var(--muted); font-size: 14px; padding: 9px 10px; }
+}
+
+/* ---------- Proven on real data (abyssal/evidence.html) ---------- */
+.scoreboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 0 0 30px; font-family: var(--sans); }
+.scoreboard .sb { display: flex; flex-direction: column; gap: 8px; padding: 16px 16px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--bg-raised); text-decoration: none; transition: border-color 0.15s ease, transform 0.15s ease; }
+.scoreboard .sb:hover, .scoreboard .sb:focus-visible { border-color: var(--accent); transform: translateY(-1px); }
+.scoreboard .sb b { font-family: var(--serif); font-weight: 500; font-size: 32px; line-height: 1; color: var(--accent); letter-spacing: -0.02em; }
+.scoreboard .sb span { font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+.evstudy { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 40px; align-items: start; padding: 44px 0; border-top: 1px solid var(--line); scroll-margin-top: 110px; }
+.evstudy .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-2); margin-bottom: 8px; }
+.evstudy h3 { font-family: var(--serif); font-weight: 500; font-size: 30px; line-height: 1.15; letter-spacing: -0.01em; margin: 0 0 12px; }
+.evstudy p { font-size: 16.5px; line-height: 1.62; color: var(--ink-2); margin: 0 0 12px; }
+.evstudy .nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 14px 0; font-family: var(--sans); }
+.evstudy .nums div { background: var(--bg-raised); padding: 10px 12px; }
+.evstudy .nums b { display: block; font-family: var(--mono); font-size: 17px; font-weight: 600; color: var(--ink); }
+.evstudy .nums small { font-size: 11.5px; color: var(--muted); line-height: 1.35; display: block; margin-top: 3px; }
+.ev-verdict { font-family: var(--sans); border-left: 3px solid var(--line-strong); padding-left: 14px; margin-top: 14px; }
+.ev-verdict p { font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+.ev-verdict .tag { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line-strong); color: var(--muted); margin-right: 6px; vertical-align: 1px; }
+.ev-verdict .tag.real { border-color: var(--good); color: var(--good); }
+.ev-fig { margin: 0; padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--bg-raised); }
+.ev-fig figcaption { font-family: var(--sans); font-size: 13px; color: var(--muted); margin-top: 10px; }
+.evchart { display: block; width: 100%; height: auto; font-family: var(--sans); }
+.evchart + .evchart { margin-top: 18px; }
+.evchart .grid { stroke: var(--line); stroke-width: 1; fill: none; }
+.evchart .diag { stroke: var(--ink-2); stroke-width: 1.2; stroke-dasharray: 5 4; fill: none; }
+.evchart .band { fill: color-mix(in srgb, var(--accent) 10%, transparent); }
+.evchart .pt { fill: var(--accent); fill-opacity: 0.72; stroke: var(--bg-raised); stroke-width: 0.8; }
+.evchart .pt.big { fill-opacity: 1; }
+.evchart .stem { stroke: var(--line-strong); stroke-width: 2; }
+.evchart .bar { fill: var(--accent); }
+.evchart .bar.dim { fill: var(--line-strong); }
+.evchart .whisk { stroke: var(--ink); stroke-width: 1.5; fill: none; }
+.evchart .hit { fill: var(--accent); }
+.evchart .miss { fill: none; stroke: var(--line-strong); stroke-width: 1.5; }
+.evchart text { fill: var(--ink-2); font-size: 12px; }
+.evchart .tick { font-size: 11.5px; fill: var(--ink-2); }
+.evchart .dim { fill: var(--muted); }
+.evchart .axis { font-size: 12px; fill: var(--muted); }
+.evchart .note { font-family: var(--mono); font-size: 12.5px; fill: var(--ink); }
+.heat { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 13.5px; }
+.heat caption { caption-side: bottom; text-align: left; font-size: 12.5px; color: var(--muted); padding-top: 10px; }
+.heat th, .heat td { padding: 9px 8px; border-bottom: 1px solid var(--line); text-align: left; }
+.heat thead th { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.heat td { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); background: color-mix(in srgb, var(--accent) calc(var(--p, 0) * 42%), transparent); }
+@media (max-width: 900px) { .evstudy { grid-template-columns: 1fr; gap: 22px; padding: 34px 0; } .evstudy h3 { font-size: 26px; } }
+@media (max-width: 520px) { .ev-fig { padding: 12px; } .heat { font-size: 12px; } .heat th, .heat td { padding: 7px 4px; } .scoreboard .sb b { font-size: 28px; } }
+@media (max-width: 560px) {
+  .evchart text, .evchart .tick { font-size: 15px; }
+  .evchart .axis { font-size: 15px; }
+  .evchart .note { font-size: 15px; }
+}
+.ev-more { margin: 16px 0 0; font-family: var(--sans); }

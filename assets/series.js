@@ -34,12 +34,19 @@
   $$('.menu-btn').forEach((b) => {
     const nav = document.getElementById(b.getAttribute('aria-controls'));
     if (!nav) return;
-    b.addEventListener('click', () => {
-      const open = nav.classList.toggle('open');
+    const set = (open, focusButton) => {
+      nav.classList.toggle('open', open);
       b.setAttribute('aria-expanded', String(open));
       b.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      if (open) { const first = nav.querySelector('a'); if (first) first.focus(); }
+      else if (focusButton) b.focus();
+    };
+    b.addEventListener('click', () => set(!nav.classList.contains('open'), false));
+    nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => set(false, false)));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && nav.classList.contains('open')) set(false, true); });
+    document.addEventListener('pointerdown', (e) => {
+      if (nav.classList.contains('open') && !nav.contains(e.target) && !b.contains(e.target)) set(false, false);
     });
-    nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => { nav.classList.remove('open'); b.setAttribute('aria-expanded', 'false'); }));
   });
 
   /* ---------------- reading progress ---------------- */

@@ -23,11 +23,17 @@
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <div class="progress" aria-hidden="true"><span></span></div>
-  <header class="topbar">
+  <div class="sitebar">
     <div class="in">
-      <a class="brand" href="../index.html">Rory Millard</a><a class="product" href="../abyssal/index.html">ABYSSAL</a>
+      <a class="home" href="../index.html"><span aria-hidden="true">&larr;</span> Rory Millard</a>
+      <nav aria-label="Rory Millard's site"><a href="../projects.html">Work</a><a href="../writing.html">Writing</a><a href="../about.html">About</a><a href="../contact.html">Contact</a></nav>
+    </div>
+  </div>
+  <header class="topbar productbar">
+    <div class="in">
+      <a class="product" href="../abyssal/index.html" aria-label="ABYSSAL, overview"><span class="pmark" aria-hidden="true"></span>ABYSSAL</a>
       <span class="crumb"></span>
-      <nav aria-label="Main navigation" id="site-nav"><a href="../abyssal/index.html" aria-current="page">Overview</a><a href="../abyssal/engines.html">The machine</a><a href="../abyssal/01-a-tour.html">Series</a><a href="../abyssal/index.html#labs">Labs</a><a href="../contact.html">Contact</a></nav>
+      <nav aria-label="ABYSSAL sections" id="site-nav"><span class="nav-k" aria-hidden="true">ABYSSAL</span><a href="../abyssal/index.html" aria-current="page">Overview</a><a href="../abyssal/engines.html">The machine</a><a href="../abyssal/evidence.html">Real data</a><a href="../abyssal/01-a-tour.html">Series</a><a href="../abyssal/index.html#labs">Labs</a><span class="nav-k site" aria-hidden="true">Rory Millard</span><span class="nav-site"><a href="../projects.html">Work</a><a href="../writing.html">Writing</a><a href="../about.html">About</a><a href="../contact.html">Contact</a></span></nav>
       <button class="theme-btn" type="button" aria-label="Toggle theme"></button>
       <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
     </div>
@@ -103,7 +109,7 @@
       <div><b>−34%</b><span>ARA San Juan: search area cut by the collapse-depth constraint, <strong>wreck kept</strong></span></div>
     </div>
     <p>Every number has receipts: the exact radar windows, satellite scenes, buoy files, AIS days and chart records it came from, and a script that re-runs it. The limits are measured too: the ship detector raises too many unexplained echoes on rough seas, half the charted wrecks are too low or buried to stand out of a 4 m grid, and on land one satellite scene raises about eight other unusual objects per km². Comparing with an earlier pass and keeping only what is new cuts that to under one, where the earlier pass saw the ground clearly.</p>
-    <p><a class="btn primary" href="engines.html#real">Inside the machine: the results →</a></p>
+    <p><a class="btn primary" href="evidence.html">All seven studies, with charts →</a></p>
   </div>
   <figure class="shot"><img src="../assets/abyssal/evidence-real.webp" alt="ABYSSAL's evidence page: radar wind against buoy wind, and detection rate by ship length against real AIS" loading="lazy"><figcaption><b>The evidence page in the app.</b> Radar wind against buoy wind, one dot per pass, and detection rate by ship length against real AIS.</figcaption></figure>
 </div>
