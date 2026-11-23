@@ -217,10 +217,11 @@
     <div class="k">Land · Sentinel-2 imagery</div>
     <h3>The wrong colour for the place</h3>
     <p>A tent, a tarp, a car or a crashed aircraft is rarely the colour of the ground around it. The engine reads the least cloudy Sentinel-2 scene over the map (10 m pixels, six bands, cloud and shadow masked) and scores every pixel by how far its spectrum sits from the background, the Reed–Xiaoli detector: \(d^2 = (x-\mu)^\top \Sigma^{-1} (x-\mu)\), which is \(\chi^2_6\) on ordinary ground. The threshold is \(p = 10^{-9}\), and anything bigger than twelve pixels (a field, a roof, a snowfield) is dropped as not small. The same idea flew in the ARCHER hyperspectral system.</p>
-    <div class="nums"><div><b>123 / 125</b><small>20 m² orange tents found</small></div><div><b>58 / 125</b><small>at 10 m², a tenth of a pixel</small></div><div><b>~8 / km²</b><small>other anomalies on real ground</small></div></div>
-    <p class="honest"><span class="tag real">real</span> Calibrated by planting 2,500 targets with typical published spectra into real scenes in five landscapes. The background is real; the truth is made, because no public list of real tents in satellite scenes exists. Rock, roofs and vehicles also stand out, so the output is a list of places to look at more closely, never an answer. On a land case, ABYSSAL shows this engine and hides the sea ones.</p>
+    <p>Most of what stands out is permanent: rock, roofs, the cars that live there. A lost person's tent is <em>new</em>. Give the date they went missing and the engine finds the earlier pass of the same Sentinel-2 tile that saw most of the same ground clear (the two share the exact 10 m grid), and marks each contact new, already there, or not seen before. Choosing that pass by tile-wide cloud cover failed: it picked spring scenes whose ground was under snow.</p>
+    <div class="nums"><div><b>123 / 125</b><small>20 m² orange tents found</small></div><div><b>59 / 125</b><small>at 10 m², a tenth of a pixel</small></div><div><b>6.0 → 0.8</b><small>other anomalies per km², new since an earlier pass</small></div></div>
+    <p class="honest"><span class="tag real">real</span> Calibrated by planting 2,500 targets with typical published spectra into real scenes in five landscapes. The background is real; the truth is made, because no public list of real tents in satellite scenes exists. One scene alone raises about eight other anomalies per km²; "new since" cuts that to 0.8 where the earlier pass saw all the ground, still finding 122 of 125 tents. Across all five sites it is 3.2, because snow, a year of real change (heather burning) and sun on cliffs leave more. Either way the output is a list of places to look at more closely, never an answer. On a land case, ABYSSAL shows this engine and hides the sea ones.</p>
   </div>
-  <figure><img src="../assets/abyssal/eng-spectral.webp" alt="A real Sentinel-2 scene over Yosemite with spectral anomaly contacts marked, and the Signal Lab panel listing the strongest contacts" loading="lazy"><figcaption>Real Sentinel-2, Yosemite, July 2025: 83 small anomalies in 9 km² of usable ground, each a place to look rather than an answer.</figcaption></figure>
+  <figure><img src="../assets/abyssal/eng-spectral.webp" alt="A real Sentinel-2 scene over Yosemite with anomaly contacts: orange rings for new ones, grey for ones already there in an earlier pass, and the Signal Lab panel counting them" loading="lazy"><figcaption>Real Sentinel-2 over Yosemite, 5 July 2023, against the 20 June pass: 17 of 89 small anomalies are new (orange); the grey ones were already there.</figcaption></figure>
 </section>
 
 <section class="feature flip" id="eng-earlier">
@@ -241,7 +242,8 @@
     <tr><td>Dark vessels</td><td>9 windows, 4 days, three US approaches</td><td>NOAA MarineCadastre AIS at image time</td><td class="n">≥100 m: 47/51; &lt;35 m: 37/54; 958 unexplained echoes in 5,464 km²</td></tr>
     <tr><td>Persistence</td><td>8 passes over 3 platform fields</td><td>NOAA charted platforms</td><td class="n">15/16, median 33 m; Eva (near shore) missed</td></tr>
     <tr><td>Seabed</td><td>85 NOAA BlueTopo windows, 12 regions</td><td>Survey-located chart wrecks</td><td class="n">41/85, median 9 m</td></tr>
-    <tr><td>Spectral anomalies (land)</td><td>Sentinel-2 L2A, 5 landscapes (Sierra, Cairngorms, Cascades, Nevada)</td><td>2,500 targets planted at known places</td><td class="n">20 m² orange tent: 123/125; 10 m²: 58/125; ~8 other anomalies per km²</td></tr>
+    <tr><td>Spectral anomalies (land)</td><td>Sentinel-2 L2A, 5 landscapes (Sierra, Cairngorms, Cascades, Nevada)</td><td>2,500 targets planted at known places</td><td class="n">20 m² orange tent: 123/125; 10 m²: 59/125; ~8 other anomalies per km²</td></tr>
+    <tr><td>New since (land)</td><td>5 real pairs of Sentinel-2 passes, same tile</td><td>2,500 targets planted in the later pass</td><td class="n">other anomalies 6.0 → 0.8 per km² where the earlier pass saw the ground (8.0 → 3.2 over all five); tent 122/125</td></tr>
     <tr><td>Lost-submarine drill</td><td>ARA San Juan, public facts + ETOPO 2022</td><td>The wreck, found at 907 m</td><td class="n">95% area −34% (0.5° bearing error), wreck inside the 50% region</td></tr>
   </tbody>
 </table></div>
@@ -264,7 +266,7 @@
     <tr><td>Magnetic dipole</td><td>position, depth, moment</td><td class="n">0.95 POD; 3 cm depth</td><td>none yet</td></tr>
     <tr><td>Seabed &amp; sonar</td><td>relief and shadow contacts</td><td class="n">47/48 wrecks; 58/64 side-scan</td><td>41/85 charted wrecks, NOAA BlueTopo</td></tr>
     <tr><td>Debris back-track</td><td>where finds entered the water</td><td class="n">30/30 coverage, shared environment</td><td>none yet</td></tr>
-    <tr><td>Spectral anomalies (land)</td><td>small objects that are the wrong colour</td><td class="n">implants in real scenes: 98% at 20 m², 46% at 10 m²</td><td>5 real Sentinel-2 landscapes; ~8 other anomalies per km²</td></tr>
+    <tr><td>Spectral anomalies (land)</td><td>small objects that are the wrong colour</td><td class="n">implants in real scenes: 98% at 20 m², 47% at 10 m²</td><td>5 real Sentinel-2 landscapes; 0.8 other anomalies per km² new since an earlier clear pass</td></tr>
   </tbody>
 </table>
 </div>
