@@ -1335,164 +1335,216 @@
   });
 
   /* ================================================================
-     Fig. 1 (main site): a belief map drawn as a technical figure.
-     A hidden target is drawn from the prior; a searcher sweeps the most
-     probable ground; every empty cell multiplies its probability by 1 - p.
-     The contours are the 50% and 90% credible regions plus density levels.
+     Main site: a live Bayesian search behind the dark bands.
+     Probability is a few drifting blobs (the target can move); a searcher
+     sweeps the likeliest ground, and every pass with no detection multiplies
+     the belief under it by the chance of having missed. Belief seeps back as
+     the target could have drifted in. Contours, the 50% credible region and
+     the search trail are drawn over the field. One hidden target is sampled
+     from the prior; when the searcher finds it, the search restarts.
      ================================================================ */
-  $$('canvas[data-fig="contour"]').forEach((c) => {
-    const fig = c.closest('figure');
-    const nx = 80, ny = 60, POD = 0.5, KM = 0.5;
-    const L = 30, B = 22, T = 8, R = 8;
-    let rng, p, swept, target, mass, path, pi, steps, found, hold, track;
-    let ctx, w, h, col = {};
-    const css = () => {
-      const st = getComputedStyle(document.documentElement);
-      const g = (k) => st.getPropertyValue(k).trim();
-      col = { bg: g('--bg-raised'), ink: g('--ink'), ink2: g('--ink-2'), muted: g('--muted'), line: g('--line'), acc: g('--accent'), soft: g('--accent-soft') };
-    };
-    function reset(seed) {
-      rng = mulberry(seed);
-      p = new Float64Array(nx * ny);
-      const k = 3;
-      const blobs = [];
-      for (let b = 0; b < k; b++) blobs.push([nx * (0.2 + 0.6 * rng()), ny * (0.22 + 0.56 * rng()), 6 + rng() * 9, 5 + rng() * 7, 0.5 + rng()]);
-      let s = 0;
-      for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
-        let v = 0.004;
-        for (const [cx, cy, sx, sy, wt] of blobs) v += wt * gauss2(i, j, cx, cy, sx, sy);
-        p[j * nx + i] = v; s += v;
+  $$('canvas.flow').forEach((c) => {
+    const host = c.parentElement;
+    const quiet = c.dataset.flow === 'band';
+    const hud = host.querySelector('.hud');
+    const CELL = quiet ? 13 : 9;
+    let ctx, w, h, nx, ny, cw, ch, off, octx, img, prior, miss, post, blobs, rng, target;
+    let sx, sy, way = [], trail = [], frame = 0, hpd = 0, found = -1, mass = 1, seed = 7;
+    const STOPS = [[0, 18, 52, 140, 0], [0.18, 24, 78, 200, 0.28], [0.42, 50, 130, 255, 0.5], [0.7, 95, 212, 255, 0.72], [1, 236, 250, 255, 0.92]];
+    function colour(v) {
+      let k = 1;
+      while (k < STOPS.length - 1 && v > STOPS[k][0]) k++;
+      const a = STOPS[k - 1], b = STOPS[k], u = clamp((v - a[0]) / (b[0] - a[0]), 0, 1);
+      return [a[1] + u * (b[1] - a[1]), a[2] + u * (b[2] - a[2]), a[3] + u * (b[3] - a[3]), a[4] + u * (b[4] - a[4])];
+    }
+    function reset() {
+      rng = mulberry(seed++ * 7919 + 13);
+      const wide = w > 900;
+      blobs = [];
+      const k = 3 + Math.floor(rng() * 2);
+      for (let i = 0; i < k; i++) {
+        blobs.push({
+          x: nx * (wide ? (quiet ? 0.64 + 0.3 * rng() : 0.56 + 0.38 * rng()) : 0.12 + 0.76 * rng()),
+          y: ny * (wide ? 0.18 + 0.66 * rng() : 0.5 + 0.42 * rng()),
+          sx: nx * (0.05 + 0.06 * rng()), sy: ny * (0.07 + 0.1 * rng()), wt: 0.5 + rng(),
+          ph: rng() * 6.28, ax: 0.6 + rng(), ay: 0.4 + rng(),
+        });
       }
-      for (let i = 0; i < p.length; i++) p[i] /= s;
-      let u = rng(), acc = 0; target = p.length - 1;
-      for (let i = 0; i < p.length; i++) { acc += p[i]; if (acc >= u) { target = i; break; } }
-      swept = new Float32Array(nx * ny); mass = 1; path = []; pi = 0; steps = 0; found = -1; hold = 0; track = [];
+      miss = new Float32Array(nx * ny).fill(1);
+      prior = new Float32Array(nx * ny);
+      post = new Float32Array(nx * ny);
+      computePrior();
+      // the hidden target: sampled from the prior, riding with its blob
+      let u = rng(), acc = 0, tot = 0, pick = 0;
+      for (let i = 0; i < prior.length; i++) tot += prior[i];
+      for (let i = 0; i < prior.length; i++) { acc += prior[i] / tot; if (acc >= u) { pick = i; break; } }
+      const tx = pick % nx, ty = Math.floor(pick / nx);
+      let best = 0, bd = 1e9;
+      blobs.forEach((bl, j) => { const d = (bl.x - tx) ** 2 + (bl.y - ty) ** 2; if (d < bd) { bd = d; best = j; } });
+      target = { b: best, dx: tx - blobs[best].x, dy: ty - blobs[best].y };
+      for (let i = 0; i < post.length; i++) post[i] = prior[i];
+      way = []; trail = []; found = -1; mass = 1;
+      plan(); [sx, sy] = way[0];
+    }
+    function computePrior() {
+      const t = frame * 0.004;
+      for (const bl of blobs) { bl.cx = bl.x + Math.sin(t * bl.ax + bl.ph) * nx * 0.025; bl.cy = bl.y + Math.cos(t * bl.ay + bl.ph) * ny * 0.03; }
+      for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+        let v = 0.0006;
+        for (const bl of blobs) v += bl.wt * Math.exp(-0.5 * (((i - bl.cx) / bl.sx) ** 2 + ((j - bl.cy) / bl.sy) ** 2));
+        prior[j * nx + i] = v;
+      }
     }
     function plan() {
       let best = 0;
-      for (let i = 1; i < p.length; i++) if (p[i] > p[best]) best = i;
-      const bx = best % nx, by = Math.floor(best / nx), W = 15, H = 11;
-      path = [];
-      for (let r = 0; r < H; r += 2) {
-        const y = clamp(by - (H >> 1) + r, 0, ny - 1);
-        for (let q = 0; q < W; q++) path.push([clamp(bx - (W >> 1) + (((r >> 1) % 2) ? W - 1 - q : q), 0, nx - 1), y]);
+      for (let i = 1; i < post.length; i++) if (post[i] > post[best]) best = i;
+      const bx = best % nx, by = Math.floor(best / nx), W = Math.max(8, Math.round(nx * 0.1)), H = Math.max(5, Math.round(ny * 0.12));
+      way = [];
+      for (let r = 0; r <= H; r += 2) {
+        const y = clamp(by - H / 2 + r, 1, ny - 2);
+        const a = clamp(bx - W / 2, 1, nx - 2), b = clamp(bx + W / 2, 1, nx - 2);
+        way.push((r / 2) % 2 ? [b, y] : [a, y], (r / 2) % 2 ? [a, y] : [b, y]);
       }
-      pi = 0;
     }
     function step() {
-      if (found >= 0) { if (--hold <= 0) reset(Math.floor(rng() * 1e9)); return; }
-      if (pi >= path.length) plan();
-      const [x, y] = path[pi++];
-      track.push([x, y]); if (track.length > 260) track.shift();
-      steps++;
-      let gone = 0;
-      for (let dy = 0; dy <= 1; dy++) {
-        const yy = y + dy; if (yy >= ny) continue;
-        const i = yy * nx + x;
-        if (i === target && rng() < POD) { found = i; hold = 40; return; }
-        gone += p[i] * POD; p[i] *= 1 - POD; swept[i] = Math.min(1, swept[i] + 0.5);
+      frame++;
+      computePrior();
+      if (found >= 0) { if (frame - found > 150) reset(); return; }
+      if (!way.length) plan();
+      const [gx, gy] = way[0], dx = gx - sx, dy = gy - sy, d = Math.hypot(dx, dy), v = quiet ? 0.22 : 0.34;
+      if (d < v) { sx = gx; sy = gy; way.shift(); } else { sx += (dx / d) * v; sy += (dy / d) * v; }
+      trail.push([sx, sy]); if (trail.length > 260) trail.shift();
+      // detection hazard under the sensor: a miss multiplies belief there by exp(-hazard)
+      const R = 2.2, i0 = Math.max(0, Math.floor(sx - R)), i1 = Math.min(nx - 1, Math.ceil(sx + R));
+      const j0 = Math.max(0, Math.floor(sy - R)), j1 = Math.min(ny - 1, Math.ceil(sy + R));
+      for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
+        const q = ((i - sx) ** 2 + (j - sy) ** 2) / (R * R * 0.45);
+        if (q < 4) miss[j * nx + i] *= Math.exp(-0.16 * Math.exp(-q));
       }
-      mass *= 1 - gone;
-      let s = 0; for (let i = 0; i < p.length; i++) s += p[i];
-      for (let i = 0; i < p.length; i++) p[i] /= s;
+      // belief seeps back: the target may have drifted into searched ground
+      for (let i = 0; i < miss.length; i++) miss[i] += (1 - miss[i]) * 0.0016;
+      const bt = blobs[target.b], tx = bt.cx + target.dx, ty = bt.cy + target.dy;
+      if ((tx - sx) ** 2 + (ty - sy) ** 2 < 2.2 && rng() < 0.1) found = frame;
     }
-    const X = (i) => L + (i + 0.5) * (w - L - R) / nx;
-    const Y = (j) => T + (j + 0.5) * (h - T - B) / ny;
-    function contour(f, t) {
-      // marching squares on cell centres, linear interpolation along edges
-      const segs = [];
-      const lerp = (a, b, va, vb) => a + (b - a) * ((t - va) / (vb - va));
+    function contour(f, lev) {
+      const X = (i) => (i + 0.5) * cw, Y = (j) => (j + 0.5) * ch;
+      ctx.beginPath();
       for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) {
         const a = f[j * nx + i], b = f[j * nx + i + 1], cc = f[(j + 1) * nx + i + 1], d = f[(j + 1) * nx + i];
-        const idx = (a > t ? 8 : 0) | (b > t ? 4 : 0) | (cc > t ? 2 : 0) | (d > t ? 1 : 0);
+        const idx = (a > lev ? 8 : 0) | (b > lev ? 4 : 0) | (cc > lev ? 2 : 0) | (d > lev ? 1 : 0);
         if (idx === 0 || idx === 15) continue;
-        const top = [lerp(X(i), X(i + 1), a, b), Y(j)], right = [X(i + 1), lerp(Y(j), Y(j + 1), b, cc)];
-        const bot = [lerp(X(i), X(i + 1), d, cc), Y(j + 1)], left = [X(i), lerp(Y(j), Y(j + 1), a, d)];
-        const add = (u, v) => segs.push(u, v);
-        switch (idx) {
-          case 1: case 14: add(left, bot); break;
-          case 2: case 13: add(bot, right); break;
-          case 3: case 12: add(left, right); break;
-          case 4: case 11: add(top, right); break;
-          case 5: add(left, top); add(bot, right); break;
-          case 6: case 9: add(top, bot); break;
-          case 7: case 8: add(left, top); break;
-          case 10: add(left, bot); add(top, right); break;
-          default: break;
-        }
+        const L = (p0, p1, v0, v1) => p0 + (p1 - p0) * ((lev - v0) / (v1 - v0));
+        const T = [L(X(i), X(i + 1), a, b), Y(j)], Rr = [X(i + 1), L(Y(j), Y(j + 1), b, cc)];
+        const B = [L(X(i), X(i + 1), d, cc), Y(j + 1)], Lf = [X(i), L(Y(j), Y(j + 1), a, d)];
+        const seg = (p, q) => { ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); };
+        if (idx === 1 || idx === 14) seg(Lf, B); else if (idx === 2 || idx === 13) seg(B, Rr);
+        else if (idx === 3 || idx === 12) seg(Lf, Rr); else if (idx === 4 || idx === 11) seg(T, Rr);
+        else if (idx === 6 || idx === 9) seg(T, B); else if (idx === 7 || idx === 8) seg(Lf, T);
+        else if (idx === 5) { seg(Lf, T); seg(B, Rr); } else if (idx === 10) { seg(Lf, B); seg(T, Rr); }
       }
-      ctx.beginPath();
-      for (let k = 0; k < segs.length; k += 2) { ctx.moveTo(segs[k][0], segs[k][1]); ctx.lineTo(segs[k + 1][0], segs[k + 1][1]); }
       ctx.stroke();
-    }
-    function hpd(mass) {
-      const s = Float64Array.from(p).sort().reverse();
-      let acc = 0;
-      for (let k = 0; k < s.length; k++) { acc += s[k]; if (acc >= mass) return s[k]; }
-      return 0;
     }
     function draw() {
+      let mx = 0, sp = 0, sq = 0;
+      for (let i = 0; i < post.length; i++) { const v = prior[i] * miss[i]; post[i] = v; sp += prior[i]; sq += v; if (v > mx) mx = v; }
+      mass = sq / sp;
+      const f = new Float32Array(post.length);
+      for (let i = 0; i < post.length; i++) f[i] = Math.pow(post[i] / mx, 0.62);
+      const dat = img.data, dim = quiet ? 0.72 : 1;
+      for (let i = 0; i < f.length; i++) {
+        const [r, g, b, a] = colour(f[i]);
+        dat[i * 4] = r; dat[i * 4 + 1] = g; dat[i * 4 + 2] = b; dat[i * 4 + 3] = 255 * a * dim;
+      }
+      octx.putImageData(img, 0, 0);
       ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = col.bg; ctx.fillRect(0, 0, w, h);
-      const cw = (w - L - R) / nx, ch = (h - T - B) / ny;
-      // swept ground
-      ctx.fillStyle = col.soft;
-      for (let i = 0; i < swept.length; i++) if (swept[i] > 0) ctx.fillRect(L + (i % nx) * cw, T + Math.floor(i / nx) * ch, cw + 0.5, ch + 0.5);
-      // frame, grid and ticks
-      ctx.strokeStyle = col.line; ctx.lineWidth = 1;
-      ctx.beginPath();
-      for (let i = 0; i <= nx; i += 10) { const x = Math.round(L + i * cw) + 0.5; ctx.moveTo(x, T); ctx.lineTo(x, h - B); }
-      for (let j = 0; j <= ny; j += 10) { const y = Math.round(T + j * ch) + 0.5; ctx.moveTo(L, y); ctx.lineTo(w - R, y); }
+      ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(off, 0, 0, w, h);
+      // graticule
+      ctx.strokeStyle = 'rgba(150,190,255,0.06)'; ctx.lineWidth = 1; ctx.beginPath();
+      for (let x = 0; x < w; x += 80) { ctx.moveTo(Math.round(x) + 0.5, 0); ctx.lineTo(Math.round(x) + 0.5, h); }
+      for (let y = 0; y < h; y += 80) { ctx.moveTo(0, Math.round(y) + 0.5); ctx.lineTo(w, Math.round(y) + 0.5); }
       ctx.stroke();
-      ctx.strokeStyle = col.ink2; ctx.globalAlpha = 0.7; ctx.strokeRect(L + 0.5, T + 0.5, w - L - R - 1, h - T - B - 1); ctx.globalAlpha = 1;
-      ctx.fillStyle = col.muted; ctx.font = '10px "JetBrains Mono", ui-monospace, monospace';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-      for (let i = 0; i <= nx; i += 20) ctx.fillText(String(i * KM), L + i * cw, h - B + 6);
-      ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-      for (let j = 0; j <= ny; j += 20) ctx.fillText(String((ny - j) * KM), L - 6, T + j * ch);
-      ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
-      ctx.fillText('km', w - R - 4, h - B - 4);
       // density contours
-      let mx = 0; for (let i = 0; i < p.length; i++) if (p[i] > mx) mx = p[i];
-      ctx.strokeStyle = col.ink2; ctx.lineWidth = 0.9; ctx.setLineDash([]);
-      for (const f of [0.12, 0.26, 0.42, 0.6, 0.8]) { ctx.globalAlpha = 0.22 + 0.4 * f; contour(p, f * mx); }
-      ctx.globalAlpha = 1;
-      // credible regions
-      ctx.strokeStyle = col.acc;
-      ctx.lineWidth = 1.4; ctx.setLineDash([5, 4]); contour(p, hpd(0.9));
-      ctx.lineWidth = 2.2; ctx.setLineDash([]); contour(p, hpd(0.5));
-      // track
-      if (track.length > 1) {
-        ctx.strokeStyle = col.ink; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.1; ctx.beginPath();
-        track.forEach(([x, y], k) => { const px = X(x), py = Y(y) + ch / 2; k ? ctx.lineTo(px, py) : ctx.moveTo(px, py); });
-        ctx.stroke(); ctx.globalAlpha = 1;
-        const [x, y] = track[track.length - 1];
-        ctx.fillStyle = col.ink; ctx.beginPath(); ctx.arc(X(x), Y(y) + ch / 2, 3, 0, 7); ctx.fill();
+      ctx.lineWidth = quiet ? 0.8 : 1;
+      for (const lev of [0.25, 0.45, 0.65, 0.85]) { ctx.strokeStyle = `rgba(150,215,255,${(quiet ? 0.1 : 0.14) + 0.22 * lev})`; contour(f, lev); }
+      // the 50% credible region, recomputed every few frames
+      if (frame % 6 === 0 || !hpd) {
+        const s = Float32Array.from(post).sort();
+        let acc = 0; hpd = 0;
+        for (let k = s.length - 1; k >= 0; k--) { acc += s[k]; if (acc >= 0.5 * sq) { hpd = Math.pow(s[k] / mx, 0.62); break; } }
       }
+      ctx.save(); ctx.setLineDash([6, 5]); ctx.lineWidth = quiet ? 1.2 : 1.6; ctx.strokeStyle = 'rgba(255,255,255,0.55)'; contour(f, hpd); ctx.restore();
+      // the swath and the trail
+      if (trail.length > 1) {
+        ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        ctx.strokeStyle = 'rgba(95,212,255,0.07)'; ctx.lineWidth = 4.4 * cw; ctx.beginPath();
+        trail.forEach(([x, y], k) => (k ? ctx.lineTo((x + 0.5) * cw, (y + 0.5) * ch) : ctx.moveTo((x + 0.5) * cw, (y + 0.5) * ch)));
+        ctx.stroke();
+        ctx.lineWidth = 1.5;
+        for (let k = 1; k < trail.length; k++) {
+          ctx.strokeStyle = `rgba(255,255,255,${(0.75 * k) / trail.length})`;
+          ctx.beginPath(); ctx.moveTo((trail[k - 1][0] + 0.5) * cw, (trail[k - 1][1] + 0.5) * ch); ctx.lineTo((trail[k][0] + 0.5) * cw, (trail[k][1] + 0.5) * ch); ctx.stroke();
+        }
+      }
+      const px = (sx + 0.5) * cw, py = (sy + 0.5) * ch;
+      ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(px, py, 2.2 * cw, 0, 7); ctx.stroke();
+      ctx.save(); ctx.shadowColor = '#5fd4ff'; ctx.shadowBlur = 16; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(px, py, 3.4, 0, 7); ctx.fill(); ctx.restore();
       if (found >= 0) {
-        const fx = X(found % nx), fy = Y(Math.floor(found / nx));
-        ctx.strokeStyle = col.acc; ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.arc(fx, fy, 9, 0, 7); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(fx - 4, fy - 4); ctx.lineTo(fx + 4, fy + 4); ctx.moveTo(fx + 4, fy - 4); ctx.lineTo(fx - 4, fy + 4); ctx.stroke();
-        ctx.fillStyle = col.ink; ctx.font = '600 11px Inter, system-ui, sans-serif'; ctx.textAlign = fx > w * 0.7 ? 'right' : 'left'; ctx.textBaseline = 'middle';
-        ctx.fillText(`found after ${steps} cells`, fx + (fx > w * 0.7 ? -16 : 16), fy);
+        const bt = blobs[target.b], tx = (bt.cx + target.dx + 0.5) * cw, ty = (bt.cy + target.dy + 0.5) * ch, age = frame - found;
+        for (let r = 0; r < 3; r++) {
+          const rr = 6 + ((age * 1.4 + r * 22) % 66);
+          ctx.strokeStyle = `rgba(255,184,107,${Math.max(0, 1 - rr / 72)})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(tx, ty, rr, 0, 7); ctx.stroke();
+        }
+        ctx.fillStyle = '#ffb86b'; ctx.beginPath(); ctx.arc(tx, ty, 4.5, 0, 7); ctx.fill();
+        ctx.font = '600 11px "JetBrains Mono", ui-monospace, monospace'; ctx.textBaseline = 'middle'; ctx.textAlign = tx > w - 120 ? 'right' : 'left';
+        ctx.fillText('FOUND', tx + (tx > w - 120 ? -14 : 14), ty);
       }
-      if (fig) {
-        const set = (k, v) => { const o = fig.querySelector(`[data-r="${k}"]`); if (o) o.textContent = v; };
-        set('n', String(steps));
-        set('h', entropyBits(p).toFixed(2));
-        set('pf', fmtPct(found >= 0 ? 1 : 1 - mass, 1));
+      if (hud && frame % 8 === 0) {
+        let H = 0; for (let i = 0; i < post.length; i++) { const q = post[i] / sq; if (q > 0) H -= q * Math.log2(q); }
+        let searched = 0; for (let i = 0; i < miss.length; i++) if (miss[i] < 0.8) searched++;
+        const set = (k, v) => { const o = hud.querySelector(`[data-r="${k}"]`); if (o) o.textContent = v; };
+        set('n', searched.toLocaleString()); set('pf', found >= 0 ? 'found' : fmtPct(1 - mass, 1)); set('h', H.toFixed(2));
       }
     }
-    function size() { ({ ctx, w, h } = fitCanvas(c, 4 / 3)); css(); draw(); }
-    reset(20261122);
-    if (reduced) { for (let k = 0; k < 160; k++) step(); }
+    function size() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = host.clientWidth; h = host.clientHeight;
+      c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+      ctx = c.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      nx = clamp(Math.round(w / CELL), 40, 210); ny = clamp(Math.round(h / CELL), 26, 120);
+      cw = w / nx; ch = h / ny;
+      off = document.createElement('canvas'); off.width = nx; off.height = ny; octx = off.getContext('2d'); img = octx.createImageData(nx, ny);
+      reset();
+      if (reduced) for (let k = 0; k < 520; k++) step();
+      draw();
+    }
+    let raf = 0, last = 0, running = false;
+    const loop = (ts) => { if (!running) return; if (ts - last > 33) { last = ts; step(); draw(); } raf = requestAnimationFrame(loop); };
+    const play = () => { if (reduced || running) return; running = true; raf = requestAnimationFrame(loop); };
+    const stop = () => { running = false; cancelAnimationFrame(raf); };
+    let rt = 0;
+    window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(size, 150); });
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : null));
     size();
-    let timer = 0;
-    const play = () => { if (reduced || timer) return; timer = setInterval(() => { step(); draw(); }, 70); };
-    const stop = () => { clearInterval(timer); timer = 0; };
-    window.addEventListener('resize', size);
-    window.addEventListener('themechange', () => { css(); draw(); });
-    onVisible(c, play, stop);
+    if (!('IntersectionObserver' in window)) play();
+    else new IntersectionObserver((es) => es.forEach((e) => (e.isIntersecting && !document.hidden ? play() : stop()))).observe(c);
   });
+
+  /* Count-up numbers on the main site */
+  $$('[data-count]').forEach((el) => {
+    const to = Number(el.dataset.count), suffix = el.dataset.suffix || '';
+    const fmt = (v) => Math.round(v).toLocaleString() + suffix;
+    if (reduced || !('IntersectionObserver' in window)) { el.textContent = fmt(to); return; }
+    el.textContent = fmt(0);
+    const io = new IntersectionObserver((es) => es.forEach((e) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      const t0 = performance.now(), D = 1300;
+      const tick = (now) => { const u = Math.min(1, (now - t0) / D); el.textContent = fmt(to * (1 - Math.pow(1 - u, 3))); if (u < 1) requestAnimationFrame(tick); };
+      requestAnimationFrame(tick);
+    }));
+    io.observe(el);
+  });
+
+
 })();
