@@ -615,3 +615,9 @@ html.abyssal .section-title h2::before { content: ""; display: inline-block; wid
 .feature > * { min-width: 0; }
 .eq, .feature .eq { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
 .katex-display { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+/* proven on real data: five numbers */
+.proofs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 0 0 18px; font-family: var(--sans); }
+.proofs div { border: 1px solid var(--line); border-radius: 14px; padding: 14px 14px 12px; background: var(--bg-raised); }
+.proofs b { display: block; font-family: var(--serif); font-weight: 500; font-size: 30px; line-height: 1; color: var(--accent); letter-spacing: -0.02em; }
+.proofs span { display: block; font-size: 12.5px; line-height: 1.45; color: var(--ink-2); margin-top: 8px; }
+.proofs strong { color: var(--ink); }

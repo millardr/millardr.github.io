@@ -269,6 +269,19 @@
   <figure><img src="../assets/abyssal/signal-dark-vessel-wake.webp" alt="A dark vessel with its wake, azimuth shift and heading" loading="lazy"><figcaption>A dark vessel's wake: heading, speed from the Kelvin wavelength, and the azimuth shift back to its true position.</figcaption></figure>
 </section>
 
+<div class="section-title" id="real"><h2>On real data</h2><span>independent truth, real archives, receipts for every input</span></div>
+<div class="board-wrap"><table class="board">
+  <thead><tr><th>Engine</th><th>Real data</th><th>Truth</th><th>Result</th></tr></thead>
+  <tbody>
+    <tr><td>Wind from radar</td><td>152 Sentinel-1 passes, California, 2017-2021</td><td>11 NOAA buoys, adjusted to 10 m</td><td class="n">RMSE 1.71 m/s, r 0.91; 1.49 m/s with the buoy's direction; under-reads above 10 m/s</td></tr>
+    <tr><td>Dark vessels</td><td>9 windows, 4 days, three US approaches</td><td>NOAA MarineCadastre AIS at image time</td><td class="n">≥100 m: 47/51; &lt;35 m: 37/54; 958 unexplained echoes in 5,464 km²</td></tr>
+    <tr><td>Persistence</td><td>8 passes over 3 platform fields</td><td>NOAA charted platforms</td><td class="n">15/16, median 33 m; Eva (near shore) missed</td></tr>
+    <tr><td>Seabed</td><td>85 NOAA BlueTopo windows, 12 regions</td><td>Survey-located chart wrecks</td><td class="n">41/85, median 9 m</td></tr>
+    <tr><td>Lost-submarine drill</td><td>ARA San Juan, public facts + ETOPO 2022</td><td>The wreck, found at 907 m</td><td class="n">95% area −34% (0.5° bearing error), wreck inside the 50% region</td></tr>
+  </tbody>
+</table></div>
+<p class="lede-block" style="margin-top:0">The full results, plots and receipts are in the app at <code>/?evidence=1</code> and in <code>docs/validation/REAL_DATA.md</code>. The scenario calibrations below still matter: they test the mathematics with a known answer. The real-data results test the sensor, the archive and the world.</p>
+
 <div class="section-title" id="board"><h2>The calibration board</h2><span>what each engine measured, and on what</span></div>
 <div class="board-wrap">
 <table class="board">
@@ -298,7 +311,7 @@
 <div class="cards3">
   <div class="card"><span class="k">Read next</span><h3><a href="06-signals-from-the-deep.html">Signals from the deep</a></h3><p>The first three engines, the scope line, and why a submerged wake is invisible to radar.</p></div>
   <div class="card"><span class="k">Read next</span><h3><a href="09-building-it-honestly.html">Building it honestly</a></h3><p>The gate, the receipts and the calibration discipline that this page rests on.</p></div>
-  <div class="card"><span class="k">The series</span><h3><a href="index.html">All nine parts and the labs</a></h3><p>22,155 words and 13 interactive labs, from the tour to the arithmetic of not finding.</p></div>
+  <div class="card"><span class="k">The series</span><h3><a href="index.html">All nine parts and the labs</a></h3><p>22,157 words and 13 interactive labs, from the tour to the arithmetic of not finding.</p></div>
 </div>
 
   </main>
