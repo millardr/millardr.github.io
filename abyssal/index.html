@@ -23,11 +23,17 @@
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <div class="progress" aria-hidden="true"><span></span></div>
-  <header class="topbar">
+  <div class="sitebar">
     <div class="in">
-      <a class="brand" href="../index.html">Rory Millard</a><a class="product" href="../abyssal/index.html">ABYSSAL</a>
+      <a class="home" href="../index.html"><span aria-hidden="true">&larr;</span> Rory Millard</a>
+      <nav aria-label="Rory Millard's site"><a href="../projects.html">Work</a><a href="../writing.html">Writing</a><a href="../about.html">About</a><a href="../contact.html">Contact</a></nav>
+    </div>
+  </div>
+  <header class="topbar productbar">
+    <div class="in">
+      <a class="product" href="../abyssal/index.html" aria-label="ABYSSAL, overview"><span class="pmark" aria-hidden="true"></span>ABYSSAL</a>
       <span class="crumb"></span>
-      <nav aria-label="Main navigation" id="site-nav"><a href="../abyssal/index.html" aria-current="page">Overview</a><a href="../abyssal/engines.html">The machine</a><a href="../abyssal/01-a-tour.html">Series</a><a href="../abyssal/index.html#labs">Labs</a><a href="../contact.html">Contact</a></nav>
+      <nav aria-label="ABYSSAL sections" id="site-nav"><span class="nav-k" aria-hidden="true">ABYSSAL</span><a href="../abyssal/index.html" aria-current="page">Overview</a><a href="../abyssal/engines.html">The machine</a><a href="../abyssal/evidence.html">Real data</a><a href="../abyssal/01-a-tour.html">Series</a><a href="../abyssal/index.html#labs">Labs</a><span class="nav-k site" aria-hidden="true">Rory Millard</span><span class="nav-site"><a href="../projects.html">Work</a><a href="../writing.html">Writing</a><a href="../about.html">About</a><a href="../contact.html">Contact</a></span></nav>
       <button class="theme-btn" type="button" aria-label="Toggle theme"></button>
       <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
     </div>
@@ -38,7 +44,7 @@
       <div class="kicker"><span class="dot"></span><span>A series in nine parts</span><span class="lv">tours · mathematics · physics · essays · 13 interactive labs</span></div>
       <h1>ABYSSAL: honest probability for finding what is lost</h1>
       <p class="dek">A local-first Bayesian workbench for searching for aircraft, ships and people: it keeps a probability map that cannot overclaim, explains every change in bits, says where to look next and what that is worth, and records who decided to trust each piece of evidence.</p>
-      <div class="meta"><span><b>22,170</b> words · <b>13</b> labs you can play with · every figure from the running software</span><span>Rory Millard · November 2026</span></div>
+      <div class="meta"><span><b>22,238</b> words · <b>13</b> labs you can play with · every figure from the running software</span><span>Rory Millard · November 2026</span></div>
       <div class="cta"><a class="btn primary" href="01-a-tour.html">Start with the tour →</a><a class="btn ghost" href="03-the-arithmetic-of-not-finding.html">Straight to the maths</a><a class="btn ghost" href="engines.html">Inside the machine</a><a class="btn ghost" href="#labs">Play with the labs</a></div>
       <figure class="figure-peek reveal"><img src="../assets/abyssal/demo-live.webp" alt="The ABYSSAL workspace over real terrain" fetchpriority="high"></figure>
     </div>
@@ -49,7 +55,7 @@
   <p>ABYSSAL replaces those habits with explicit arithmetic, unbroken provenance and human-admitted evidence. This series explains it from every side: what it looks like, the mathematics under every pixel, the physics of its detectors, the decisions it supports, and the times it refused to give an answer.</p>
 </div>
 
-<div class="section-title"><h2>In one minute</h2><span>three steps, repeated until the target is found</span></div>
+<div class="section-title"><h2>In one minute</h2><span>three steps, repeated until the target is found; <a href="#story">try them below</a></span></div>
 <ol class="minute reveal">
   <li>
     <svg viewBox="0 0 120 70" aria-hidden="true"><ellipse cx="44" cy="38" rx="30" ry="20" class="c1"/><ellipse cx="44" cy="38" rx="17" ry="11" class="c2"/><ellipse cx="88" cy="26" rx="18" ry="13" class="c1"/><ellipse cx="88" cy="26" rx="8" ry="6" class="c2"/></svg>
@@ -73,6 +79,40 @@
     <code>EV = P(find) · V − C</code>
   </li>
 </ol>
+
+<div class="lab story" data-lab="story" id="story">
+  <div class="lab-head"><span class="t">Try it · from evidence to a decision</span><span class="s">add evidence in any order and watch the map</span></div>
+  <div class="lab-body">
+    <div class="story-panels">
+      <figure><canvas data-panel="prior" aria-label="The map before the latest evidence"></canvas><figcaption>Before <span class="eqn">p(x)</span></figcaption></figure>
+      <span class="op" aria-hidden="true">×</span>
+      <figure><canvas data-panel="lik" aria-label="The likelihood of the latest evidence at each place"></canvas><figcaption>Likelihood <span class="eqn">L(x)</span></figcaption></figure>
+      <span class="op" aria-hidden="true">÷ Z →</span>
+      <figure><canvas data-panel="post" aria-label="The map after the evidence; the dashed box is the best next search"></canvas><figcaption>After <span class="eqn">p(x) L(x) / Z</span></figcaption></figure>
+    </div>
+    <div class="btns story-ev">
+      <button type="button" data-ev="sighting">+ A sighting near the ridge</button>
+      <button type="button" data-ev="nofind">+ A search there finds nothing</button>
+      <button type="button" data-ev="retell">+ The same witness, retold</button>
+      <button type="button" data-ev="second">+ An independent second sighting</button>
+      <button type="button" data-act="reset">Start again</button>
+    </div>
+    <label class="story-toggle"><input type="checkbox" name="double"> Count the retelling as if it were independent (the mistake)</label>
+    <div class="ledger" aria-hidden="true"></div>
+    <div class="legend"><span><i style="background:#3fae84"></i>unsearched</span><span><i style="background:#e8962e"></i>searched and missed</span><span><i style="background:#a678d8"></i>not on this map</span></div>
+    <div class="readout">
+      <div><small>Unsearched</small><b data-read="un">—</b></div>
+      <div><small>Searched &amp; missed</small><b data-read="miss">—</b></div>
+      <div><small>Not on this map</small><b data-read="out">—</b></div>
+      <div><small>Last step moved the map</small><b data-read="bits">—</b></div>
+      <div><small>Normaliser, Z</small><b data-read="Z">—</b></div>
+      <div><small>Best next search finds it</small><b data-read="next">—</b></div>
+    </div>
+    <p class="lab-status" data-read="story" aria-live="polite"></p>
+    <div class="story-steps" aria-label="The evidence so far"></div>
+    <p class="note">A fictional hiker on a 24 &times; 14 grid. Every step is one line of Bayes' rule: multiply the map by how likely the evidence would be at each place, then divide by the total, <i>Z</i>, so it sums to one again (with "not on this map" as one more place). Witness reliability, the 70% probability of detection and the dashed next-search block (6 &times; 4 cells, searched ground discounted) are stated assumptions. In ABYSSAL a person admits each piece of evidence first; here the buttons stand in for that person.</p>
+  </div>
+</div>
 
 <div class="stats reveal">
   <div><b>9</b><small>parts: tours, derivations, physics, case studies and essays</small></div>
@@ -103,7 +143,7 @@
       <div><b>−34%</b><span>ARA San Juan: search area cut by the collapse-depth constraint, <strong>wreck kept</strong></span></div>
     </div>
     <p>Every number has receipts: the exact radar windows, satellite scenes, buoy files, AIS days and chart records it came from, and a script that re-runs it. The limits are measured too: the ship detector raises too many unexplained echoes on rough seas, half the charted wrecks are too low or buried to stand out of a 4 m grid, and on land one satellite scene raises about eight other unusual objects per km². Comparing with an earlier pass and keeping only what is new cuts that to under one, where the earlier pass saw the ground clearly.</p>
-    <p><a class="btn primary" href="engines.html#real">Inside the machine: the results →</a></p>
+    <p><a class="btn primary" href="evidence.html">All seven studies, with charts →</a></p>
   </div>
   <figure class="shot"><img src="../assets/abyssal/evidence-real.webp" alt="ABYSSAL's evidence page: radar wind against buoy wind, and detection rate by ship length against real AIS" loading="lazy"><figcaption><b>The evidence page in the app.</b> Radar wind against buoy wind, one dot per pass, and detection rate by ship length against real AIS.</figcaption></figure>
 </div>
@@ -152,7 +192,7 @@
             <div class="no"><span>Part 03</span><span class="lvl">Technical · Bayesian search</span></div>
             <h3>The arithmetic of not finding</h3>
             <p>Negative evidence, the outside share, positive clues that cannot double-count, correlated misses and information in bits: the mathematics under every pixel of the map, with a grid you can search yourself.</p>
-            <div class="rt">12 min read · 3 labs</div>
+            <div class="rt">13 min read · 3 labs</div>
           </div>
         </a>
         <a class="part reveal" href="../abyssal/04-five-echoes-one-witness.html">

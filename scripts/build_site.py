@@ -126,8 +126,8 @@ NAV = {
     "site": [("work", "projects.html", "Work"), ("writing", "writing.html", "Writing"),
              ("about", "about.html", "About"), ("contact", "contact.html", "Contact")],
     "abyssal": [("overview", "abyssal/index.html", "Overview"), ("machine", "abyssal/engines.html", "The machine"),
-                ("series", "abyssal/01-a-tour.html", "Series"), ("labs", "abyssal/index.html#labs", "Labs"),
-                ("contact", "contact.html", "Contact")],
+                ("evidence", "abyssal/evidence.html", "Real data"), ("series", "abyssal/01-a-tour.html", "Series"),
+                ("labs", "abyssal/index.html#labs", "Labs")],
 }
 
 
@@ -136,11 +136,30 @@ def topbar(depth: str, crumb: str, active: str, theme: str = "abyssal") -> str:
         f'<a href="{depth}{href}"{" aria-current=\"page\"" if key == active else ""}>{label}</a>'
         for key, href, label in NAV[theme]
     )
+    controls = """<button class="theme-btn" type="button" aria-label="Toggle theme"></button>
+      <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>"""
     if theme == "abyssal":
-        brand = (f'<a class="brand" href="{depth}index.html">Rory Millard</a>'
-                 f'<a class="product" href="{depth}abyssal/index.html">ABYSSAL</a>')
-    else:
-        brand = f'<a class="brand" href="{depth}index.html">Rory Millard</a>'
+        # Two tiers: the person's site above, the product (ABYSSAL) and its own sections below.
+        site_links = "".join(f'<a href="{depth}{href}">{label}</a>' for _, href, label in NAV["site"])
+        return f"""
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <div class="sitebar">
+    <div class="in">
+      <a class="home" href="{depth}index.html"><span aria-hidden="true">&larr;</span> Rory Millard</a>
+      <nav aria-label="Rory Millard's site">{site_links}</nav>
+    </div>
+  </div>
+  <header class="topbar productbar">
+    <div class="in">
+      <a class="product" href="{depth}abyssal/index.html" aria-label="ABYSSAL, overview"><span class="pmark" aria-hidden="true"></span>ABYSSAL</a>
+      <span class="crumb">{crumb}</span>
+      <nav aria-label="ABYSSAL sections" id="site-nav"><span class="nav-k" aria-hidden="true">ABYSSAL</span>{links}<span class="nav-k site" aria-hidden="true">Rory Millard</span><span class="nav-site">{site_links}</span></nav>
+      {controls}
+    </div>
+  </header>"""
+    brand = f'<a class="brand" href="{depth}index.html">Rory Millard</a>'
     return f"""
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -150,8 +169,7 @@ def topbar(depth: str, crumb: str, active: str, theme: str = "abyssal") -> str:
       {brand}
       <span class="crumb">{crumb}</span>
       <nav aria-label="Main navigation" id="site-nav">{links}</nav>
-      <button class="theme-btn" type="button" aria-label="Toggle theme"></button>
-      <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
+      {controls}
     </div>
   </header>"""
 

@@ -34,12 +34,19 @@
   $$('.menu-btn').forEach((b) => {
     const nav = document.getElementById(b.getAttribute('aria-controls'));
     if (!nav) return;
-    b.addEventListener('click', () => {
-      const open = nav.classList.toggle('open');
+    const set = (open, focusButton) => {
+      nav.classList.toggle('open', open);
       b.setAttribute('aria-expanded', String(open));
       b.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      if (open) { const first = nav.querySelector('a'); if (first) first.focus(); }
+      else if (focusButton) b.focus();
+    };
+    b.addEventListener('click', () => set(!nav.classList.contains('open'), false));
+    nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => set(false, false)));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && nav.classList.contains('open')) set(false, true); });
+    document.addEventListener('pointerdown', (e) => {
+      if (nav.classList.contains('open') && !nav.contains(e.target) && !b.contains(e.target)) set(false, false);
     });
-    nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => { nav.classList.remove('open'); b.setAttribute('aria-expanded', 'false'); }));
   });
 
   /* ---------------- reading progress ---------------- */
@@ -84,34 +91,65 @@
     }
   }
 
-  /* ---------------- lightbox ---------------- */
+  /* ---------------- lightbox (a modal dialog) ---------------- */
   const lb = document.createElement('div');
   lb.className = 'lightbox';
   lb.setAttribute('role', 'dialog');
   lb.setAttribute('aria-modal', 'true');
-  lb.innerHTML = '<div><img alt=""><p></p></div>';
+  lb.setAttribute('aria-labelledby', 'lb-cap');
+  lb.hidden = true;
+  lb.innerHTML = '<div class="lb-in"><button type="button" class="lb-close" aria-label="Close image">\u00d7</button><img alt=""><p id="lb-cap"></p></div>';
   document.body.appendChild(lb);
-  const closeLb = () => lb.classList.remove('open');
-  lb.addEventListener('click', closeLb);
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLb(); });
+  let lbTrigger = null;
+  const closeBtn = $('.lb-close', lb);
+  const siblings = () => [...document.body.children].filter((el) => el !== lb && el.tagName !== 'SCRIPT');
+  function openLb(src, alt, capHtml, trigger) {
+    $('img', lb).src = src;
+    $('img', lb).alt = alt || '';
+    $('p', lb).innerHTML = capHtml || alt || 'Image';
+    lbTrigger = trigger;
+    lb.hidden = false;
+    requestAnimationFrame(() => lb.classList.add('open'));
+    siblings().forEach((el) => { el.inert = true; });
+    document.documentElement.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+  function closeLb() {
+    if (lb.hidden) return;
+    lb.classList.remove('open');
+    lb.hidden = true;
+    siblings().forEach((el) => { el.inert = false; });
+    document.documentElement.style.overflow = '';
+    if (lbTrigger) lbTrigger.focus();
+    lbTrigger = null;
+  }
+  closeBtn.addEventListener('click', closeLb);
+  lb.addEventListener('click', (e) => { if (e.target === lb || e.target.classList.contains('lb-in')) closeLb(); });
+  document.addEventListener('keydown', (e) => {
+    if (lb.hidden) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeLb(); }
+    if (e.key === 'Tab') { e.preventDefault(); closeBtn.focus(); } // the close button is the only control inside
+  });
+  // Enlargeable figures get a real button around the image, so the keyboard can open them too.
   $$('figure.shot img, .feature figure img').forEach((img) => {
-    img.addEventListener('click', () => {
-      $('img', lb).src = img.currentSrc || img.src;
-      $('img', lb).alt = img.alt;
+    if (img.closest('a, button')) return;
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'zoom';
+    b.setAttribute('aria-label', 'Enlarge image: ' + (img.alt || 'figure'));
+    img.replaceWith(b);
+    b.appendChild(img);
+    b.addEventListener('click', () => {
       const cap = img.closest('figure').querySelector('figcaption');
-      $('p', lb).innerHTML = cap ? cap.innerHTML : '';
-      lb.classList.add('open');
+      openLb(img.currentSrc || img.src, img.alt, cap ? cap.innerHTML : '', b);
     });
   });
   $$('a[data-lightbox]').forEach((a) => {
     a.addEventListener('click', (e) => {
       e.preventDefault();
       const img = $('img', a);
-      $('img', lb).src = a.getAttribute('href');
-      $('img', lb).alt = img ? img.alt : '';
       const cap = $('span', a);
-      $('p', lb).innerHTML = cap ? cap.innerHTML : '';
-      lb.classList.add('open');
+      openLb(a.getAttribute('href'), img ? img.alt : '', cap ? cap.innerHTML : '', a);
     });
   });
 
@@ -167,20 +205,61 @@
     return [LUT[i], LUT[i + 1], LUT[i + 2]];
   };
 
+  // Size a canvas to its box. The backing store is only reallocated when the size changes; otherwise
+  // the context is reset in place (same clean state as a resize, without the allocation).
   function fitCanvas(c, aspect) {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const w = c.clientWidth || c.parentElement.clientWidth;
     const h = aspect ? Math.round(w / aspect) : c.clientHeight;
-    if (aspect) c.style.height = h + 'px';
-    c.width = Math.round(w * dpr);
-    c.height = Math.round(h * dpr);
+    if (aspect && c.style.height !== h + 'px') c.style.height = h + 'px';
+    const W = Math.round(w * dpr), H = Math.round(h * dpr);
     const ctx = c.getContext('2d');
+    if (c.width !== W || c.height !== H) { c.width = W; c.height = H; }
+    else if (typeof ctx.reset === 'function') ctx.reset();
+    else { c.width = W; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     return { ctx, w, h, dpr };
   }
 
+  // A scale bar in the bottom-right corner, sized in pixels, with its label above it: never past the edge.
+  function scaleBar(ctx, w, h, px, label) {
+    const x1 = w - 12, x0 = Math.max(12, x1 - px);
+    ctx.save();
+    ctx.fillStyle = 'rgba(241,237,230,0.75)';
+    ctx.fillRect(x0, h - 14, x1 - x0, 2);
+    ctx.fillRect(x0, h - 18, 1.5, 6); ctx.fillRect(x1 - 1.5, h - 18, 1.5, 6);
+    ctx.font = '11px "JetBrains Mono", monospace'; ctx.textAlign = 'right';
+    ctx.fillText(label, x0 - 6, h - 10);
+    ctx.restore();
+  }
+
+  // Coalesce redraws to one per animation frame (pointer events can fire far faster than frames).
+  function frameThrottle(fn) {
+    let queued = false;
+    return () => { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; fn(); }); };
+  }
+
+  // One place for pointer drags: start, move, and every way a gesture can end (up, cancel, lost
+  // capture, window blur), so no lab is ever left painting or dragging.
+  function dragHandlers(c, { down, move, end }) {
+    let active = false;
+    const stop = () => { if (!active) return; active = false; if (end) end(); };
+    c.addEventListener('pointerdown', (e) => { active = true; try { c.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ } down(e); });
+    c.addEventListener('pointermove', (e) => { if (active) move(e); });
+    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach((t) => c.addEventListener(t, stop));
+    window.addEventListener('blur', stop);
+    c.dataset.interactive = '';
+  }
+
+  // Keyboard: a focusable canvas with a description of its keys.
+  function keyboardCanvas(c, help, onKey) {
+    c.tabIndex = 0;
+    c.setAttribute('aria-description', help);
+    c.addEventListener('keydown', (e) => { if (onKey(e)) e.preventDefault(); });
+  }
+
   // Paint a scalar field (values already in [0,1]) into a w x h image, then scale smoothly.
-  function heat(ctx, field, nx, ny, x, y, w, h, alphaFn) {
+  function heat(ctx, field, nx, ny, x, y, w, h, alphaFn, smooth = true) {
     const off = document.createElement('canvas');
     off.width = nx;
     off.height = ny;
@@ -195,8 +274,8 @@
     }
     o.putImageData(img, 0, 0);
     ctx.save();
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
+    ctx.imageSmoothingEnabled = smooth;
+    if (smooth) ctx.imageSmoothingQuality = 'high';
     ctx.drawImage(off, x, y, w, h);
     ctx.restore();
   }
@@ -327,7 +406,7 @@
   $$('[data-lab="grid"]').forEach((root) => {
     const c = $('canvas', root);
     const nx = 30, ny = 16;
-    let prior, passes, ctx, w, h, painting = false, lastBits = 0;
+    let prior, passes, ctx, w, h, lastBits = 0, cursor = -1;
     const st = () => ({ a: +$('[name=a]', root).value / 100, d: +$('[name=d]', root).value / 100, rho: +$('[name=rho]', root).value / 100 });
     function reset() {
       prior = new Float64Array(nx * ny);
@@ -361,7 +440,8 @@
       ({ ctx, w, h } = fitCanvas(c, nx / ny));
       const P = posterior();
       let mx = 0; for (const v of P.cond) mx = Math.max(mx, v);
-      heat(ctx, P.cond.map((v) => Math.pow(v / mx, 0.6)), nx, ny, 0, 0, w, h);
+      // discrete cells drawn as cells: no smoothing that would suggest detail below the grid
+      heat(ctx, P.cond.map((v) => Math.pow(v / mx, 0.6)), nx, ny, 0, 0, w, h, null, false);
       const cw = w / nx, ch = h / ny;
       ctx.strokeStyle = 'rgba(255,255,255,0.08)';
       for (let i = 0; i <= nx; i++) { ctx.beginPath(); ctx.moveTo(i * cw, 0); ctx.lineTo(i * cw, h); ctx.stroke(); }
@@ -373,7 +453,16 @@
         ctx.strokeStyle = 'rgba(160,230,255,0.7)'; ctx.strokeRect(x + 1.5, y + 1.5, cw - 3, ch - 3);
         if (passes[i] > 1) { ctx.fillStyle = 'rgba(200,240,255,0.95)'; ctx.fillText(passes[i], x + cw / 2, y + ch / 2); }
       }
+      if (cursor >= 0 && document.activeElement === c) {
+        ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2.5;
+        ctx.strokeRect((cursor % nx) * cw + 1, Math.floor(cursor / nx) * ch + 1, cw - 2, ch - 2);
+        ctx.lineWidth = 1;
+      }
       const H = entropyBits(P.cond);
+      // the same uncertainty with "outside the map" as one more state
+      const full = [...P.cond].map((v) => v * (1 - P.shares.outside));
+      const Hfull = entropyBits([...full, P.shares.outside]);
+      setRead(root, 'Hfull', Hfull.toFixed(2) + ' bits');
       setRead(root, 'unsearched', fmtPct(P.shares.unsearched));
       setRead(root, 'missed', fmtPct(P.shares.missed));
       setRead(root, 'outside', fmtPct(P.shares.outside));
@@ -397,9 +486,20 @@
       lastBits = klBits(posterior().cond, before);
       draw();
     }
-    c.addEventListener('pointerdown', (e) => { painting = true; touched = new Set(); c.setPointerCapture(e.pointerId); search(cellAt(e)); });
-    c.addEventListener('pointermove', (e) => { if (painting) search(cellAt(e)); });
-    c.addEventListener('pointerup', () => { painting = false; });
+    dragHandlers(c, {
+      down: (e) => { touched = new Set(); search(cellAt(e)); },
+      move: (e) => search(cellAt(e)),
+    });
+    keyboardCanvas(c, 'Arrow keys move the cursor; Enter or Space searches the cell under it.', (e) => {
+      if (cursor < 0) cursor = 0;
+      const i = cursor % nx, j = Math.floor(cursor / nx);
+      const moves = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+      if (moves[e.key]) { const [dx, dy] = moves[e.key]; cursor = clamp(j + dy, 0, ny - 1) * nx + clamp(i + dx, 0, nx - 1); draw(); return true; }
+      if (e.key === 'Enter' || e.key === ' ') { touched = new Set(); search(cursor); return true; }
+      return false;
+    });
+    c.addEventListener('focus', () => { if (cursor < 0) cursor = 0; draw(); });
+    c.addEventListener('blur', draw);
     $$('input', root).forEach((inp) => inp.addEventListener('input', () => {
       const { a, d, rho } = st();
       setOut(root, 'a', fmtPct(a, 0)); setOut(root, 'd', fmtPct(d, 0)); setOut(root, 'rho', rho.toFixed(2));
@@ -763,7 +863,7 @@
     const KM = 400; // scene width in km
     const C = 1.485; // km/s
     const st = [[60, 70], [330, 50], [360, 210], [80, 220]];
-    let src = [210, 140], noise, rng = mulberry(12), drag = false;
+    let src = [210, 140], noise, rng = mulberry(12);
     const reroll = () => { noise = st.map(() => randn(rng)); };
     reroll();
     function measured(sig, bad) {
@@ -841,8 +941,9 @@
       ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(fx * sx, fy * sx, 7, 0, 7); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(fx * sx - 11, fy * sx); ctx.lineTo(fx * sx + 11, fy * sx); ctx.moveTo(fx * sx, fy * sx - 11); ctx.lineTo(fx * sx, fy * sx + 11); ctx.stroke();
       ctx.fillStyle = '#3fae84'; ctx.beginPath(); ctx.arc(src[0] * sx, src[1] * sx, 4, 0, 7); ctx.fill();
-      ctx.fillStyle = 'rgba(241,237,230,0.6)'; ctx.font = '11px "JetBrains Mono", monospace'; ctx.fillText('drag the green source · 100 km', 10, h - 10);
-      ctx.fillRect(250, h - 14, 100 * sx, 2);
+      ctx.fillStyle = 'rgba(241,237,230,0.6)'; ctx.font = '11px "JetBrains Mono", monospace';
+      ctx.textAlign = 'left'; if (w >= 520) ctx.fillText('drag the green source, or use the arrow keys', 10, h - 10);
+      scaleBar(ctx, w, h, 100 * sx, '100 km');
       // chi-square consistency: m differences, 2 unknowns -> m - 2 degrees of freedom
       const chi = -2 * best;
       const dof = m - 2;
@@ -853,10 +954,18 @@
     }
     function erfc(x) { const z = Math.abs(x), t = 1 / (1 + 0.5 * z); const r = t * Math.exp(-z * z - 1.26551223 + t * (1.00002368 + t * (0.37409196 + t * (0.09678418 + t * (-0.18628806 + t * (0.27886807 + t * (-1.13520398 + t * (1.48851587 + t * (-0.82215223 + t * 0.17087277))))))))); return x >= 0 ? r : 2 - r; }
     const pos = (e) => { const r = c.getBoundingClientRect(); return [((e.clientX - r.left) / r.width) * KM, ((e.clientY - r.top) / r.width) * KM]; };
-    c.addEventListener('pointerdown', (e) => { drag = true; c.setPointerCapture(e.pointerId); src = pos(e); draw(); });
-    c.addEventListener('pointermove', (e) => { if (drag) { src = pos(e); draw(); } });
-    c.addEventListener('pointerup', () => { drag = false; });
-    $$('input', root).forEach((i) => i.addEventListener('input', draw));
+    const redraw = frameThrottle(draw);
+    const H0 = () => (KM * c.clientHeight) / Math.max(1, c.clientWidth);
+    const place = (q) => { src = [clamp(q[0], 0, KM), clamp(q[1], 0, H0())]; redraw(); };
+    dragHandlers(c, { down: (e) => place(pos(e)), move: (e) => place(pos(e)) });
+    keyboardCanvas(c, 'Arrow keys move the source 5 km; with Shift, 25 km.', (e) => {
+      const d = e.shiftKey ? 25 : 5;
+      const moves = { ArrowLeft: [-d, 0], ArrowRight: [d, 0], ArrowUp: [0, -d], ArrowDown: [0, d] };
+      if (!moves[e.key]) return false;
+      place([src[0] + moves[e.key][0], src[1] + moves[e.key][1]]);
+      return true;
+    });
+    $$('input', root).forEach((i) => i.addEventListener('input', redraw));
     $('[data-act=roll]', root).addEventListener('click', () => { reroll(); draw(); });
     window.addEventListener('resize', draw);
     draw();
@@ -902,17 +1011,33 @@
         ctx.fillStyle = 'rgba(241,237,230,0.8)'; ctx.font = '600 11px "JetBrains Mono", monospace'; ctx.fillText(t, P[0] * sx + 10, P[1] * sx - 8);
       });
       if (!ok) { ctx.fillStyle = '#ff7a7a'; ctx.font = '700 13px Inter, sans-serif'; ctx.fillText('IMPOSSIBLE JUMP at this speed: spoofing, or a wrong speed cap', 14, 22); }
-      ctx.fillStyle = 'rgba(241,237,230,0.55)'; ctx.font = '11px "JetBrains Mono", monospace'; ctx.fillText('drag either fix · 50 km', 12, h - 10);
-      ctx.fillRect(180, h - 14, 50 * sx, 2);
+      ctx.fillStyle = 'rgba(241,237,230,0.55)'; ctx.font = '11px "JetBrains Mono", monospace';
+      ctx.textAlign = 'left'; if (w >= 520) ctx.fillText('drag either fix, or use the arrow keys', 12, h - 10);
+      scaleBar(ctx, w, h, 50 * sx, '50 km');
       setRead(root, 'need', (dAB / 1.852 / gap).toFixed(1) + ' kn');
       setRead(root, 'verdict', ok ? 'possible' : 'impossible');
       void dark;
     }
     const pos = (e) => { const r = c.getBoundingClientRect(); return [((e.clientX - r.left) / r.width) * KM, ((e.clientY - r.top) / r.width) * KM]; };
-    c.addEventListener('pointerdown', (e) => { const q = pos(e); drag = Math.hypot(q[0] - A[0], q[1] - A[1]) < Math.hypot(q[0] - B[0], q[1] - B[1]) ? 'A' : 'B'; c.setPointerCapture(e.pointerId); });
-    c.addEventListener('pointermove', (e) => { if (!drag) return; const q = pos(e); if (drag === 'A') A = q; else B = q; draw(); });
-    c.addEventListener('pointerup', () => { drag = null; });
-    $$('input', root).forEach((i) => i.addEventListener('input', draw));
+    const redraw = frameThrottle(draw);
+    const H0 = () => (KM * c.clientHeight) / Math.max(1, c.clientWidth);
+    const put = (q) => { const v = [clamp(q[0], 0, KM), clamp(q[1], 0, H0())]; if (drag === 'A') A = v; else B = v; redraw(); };
+    dragHandlers(c, {
+      down: (e) => { const q = pos(e); drag = Math.hypot(q[0] - A[0], q[1] - A[1]) < Math.hypot(q[0] - B[0], q[1] - B[1]) ? 'A' : 'B'; put(q); },
+      move: (e) => put(pos(e)),
+      end: () => { drag = null; },
+    });
+    let keyFix = 'A';
+    keyboardCanvas(c, 'Arrow keys move the selected fix 5 km (Shift: 20 km); 1 or 2 picks the fix, Space swaps them.', (e) => {
+      if (e.key === '1' || e.key === '2' || e.key === ' ') { keyFix = e.key === '1' ? 'A' : e.key === '2' ? 'B' : keyFix === 'A' ? 'B' : 'A'; return true; }
+      const d = e.shiftKey ? 20 : 5;
+      const moves = { ArrowLeft: [-d, 0], ArrowRight: [d, 0], ArrowUp: [0, -d], ArrowDown: [0, d] };
+      if (!moves[e.key]) return false;
+      const P = keyFix === 'A' ? A : B;
+      drag = keyFix; put([P[0] + moves[e.key][0], P[1] + moves[e.key][1]]); drag = null;
+      return true;
+    });
+    $$('input', root).forEach((i) => i.addEventListener('input', redraw));
     window.addEventListener('resize', draw);
     draw();
   });
@@ -958,44 +1083,213 @@
   /* ================================================================
      Lab: "not here, 5%" — minimum-KL area statement on a 10 x 10 grid
      ================================================================ */
+  // Minimum-KL area statement "the region holds q". Pure, so it can be tested on its own.
+  // Inside and outside masses are summed separately (never 1 - p, which loses precision near 1).
+  // An empty region holds 0 and a full one holds 1 whatever is stated, so neither can carry a
+  // statement with 0 < q < 1: those cases return valid = false and leave the map unchanged.
+  function regionStatement(prior, inRegion, q) {
+    let pIn = 0, pOut = 0, k = 0;
+    for (let i = 0; i < prior.length; i++) { if (inRegion[i]) { pIn += prior[i]; k++; } else pOut += prior[i]; }
+    const tot = pIn + pOut;
+    pIn /= tot; pOut /= tot;
+    const base = { k, n: prior.length, p: pIn, pOut, post: prior.map((v) => v / tot) };
+    if (k === 0) return { ...base, valid: false, reason: 'empty', D: null, mIn: null, mOut: null };
+    if (k === prior.length || pOut <= 1e-12) return { ...base, valid: false, reason: 'full', D: null, mIn: null, mOut: null };
+    if (pIn <= 1e-12) return { ...base, valid: false, reason: 'no-mass', D: null, mIn: null, mOut: null };
+    if (!(q > 0 && q < 1)) return { ...base, valid: false, reason: 'q', D: null, mIn: null, mOut: null };
+    const mIn = q / pIn, mOut = (1 - q) / pOut;
+    const post = prior.map((v, i) => (v / tot) * (inRegion[i] ? mIn : mOut));
+    const D = q * Math.log2(q / pIn) + (1 - q) * Math.log2((1 - q) / pOut);
+    return { ...base, valid: true, reason: null, D, mIn, mOut, post };
+  }
+  window.AbyssalLabs = Object.assign(window.AbyssalLabs || {}, { regionStatement, entropyBits, klBits });
+
   $$('[data-lab="region"]').forEach((root) => {
     const c = $('canvas', root);
     const n = 10;
     const prior = (() => { const p = []; let s = 0; for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const v = 0.02 + gauss2(i, j, 3, 3, 2, 1.8) + 0.8 * gauss2(i, j, 7, 6.5, 1.6, 2.2); p.push(v); s += v; } return p.map((v) => v / s); })();
     let region = new Set([33, 34, 43, 44, 23, 24, 32, 42, 22]);
+    let cursor = 44;
+    const slider = $('[name=q]', root);
+    const REASON = {
+      empty: 'No cells chosen: an empty region holds 0% whatever is stated, so the statement cannot apply. Choose some cells.',
+      full: 'Every cell chosen: the whole map must hold 100%, so no statement below 100% can be true of it. Leave some cells out.',
+      'no-mass': 'The chosen cells hold no probability at all, so no statement can raise them without changing the prior support.',
+      q: 'The stated mass must lie strictly between 0% and 100%.',
+    };
     function draw() {
-      const q = +$('[name=q]', root).value / 100;
+      const q = +slider.value / 100;
       setOut(root, 'q', fmtPct(q, 0));
-      const p = [...region].reduce((a, i) => a + prior[i], 0);
-      const post = prior.map((v, i) => (region.size === 0 || region.size === n * n ? v : region.has(i) ? (v * q) / p : (v * (1 - q)) / (1 - p)));
-      const D = region.size && region.size < n * n ? q * Math.log2(q / p) + (1 - q) * Math.log2((1 - q) / (1 - p)) : 0;
-      const { ctx, w, h } = fitCanvas(c, 1);
-      const mx = Math.max(...prior, ...post);
+      const mask = prior.map((_, i) => region.has(i));
+      const R = regionStatement(prior, mask, q);
+      const { ctx, w } = fitCanvas(c, 1);
+      const mx = Math.max(...prior, ...R.post);
       const cw = w / n;
       for (let i = 0; i < n * n; i++) {
-        const [r, g, b] = ember(Math.pow(post[i] / mx, 0.6));
+        const [r, g, b] = ember(Math.pow(R.post[i] / mx, 0.6));
         ctx.fillStyle = `rgb(${r},${g},${b})`;
         ctx.fillRect((i % n) * cw, Math.floor(i / n) * cw, cw - 1, cw - 1);
       }
       ctx.strokeStyle = '#fcd25c'; ctx.lineWidth = 2;
       region.forEach((i) => ctx.strokeRect((i % n) * cw + 1.5, Math.floor(i / n) * cw + 1.5, cw - 4, cw - 4));
-      setRead(root, 'p', fmtPct(p));
-      setRead(root, 'D', D.toFixed(3) + ' bits');
-      setRead(root, 'k', region.size + ' / ' + n * n);
-      setRead(root, 'in', region.size ? 'cells ×' + (q / p).toFixed(2) : '—');
-      setRead(root, 'out', region.size ? 'cells ×' + ((1 - q) / (1 - p)).toFixed(2) : '—');
+      if (document.activeElement === c) { ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2.5; ctx.strokeRect((cursor % n) * cw + 4, Math.floor(cursor / n) * cw + 4, cw - 9, cw - 9); }
+      slider.disabled = !R.valid && (R.reason === 'empty' || R.reason === 'full');
+      setRead(root, 'p', R.k ? fmtPct(R.p) : '—');
+      setRead(root, 'D', R.valid ? R.D.toFixed(3) + ' bits' : '—');
+      setRead(root, 'k', R.k + ' / ' + n * n);
+      setRead(root, 'in', R.valid ? 'cells ×' + R.mIn.toFixed(2) : '—');
+      setRead(root, 'out', R.valid ? 'cells ×' + R.mOut.toFixed(2) : '—');
+      const status = $('[data-read=status]', root);
+      if (status) status.textContent = R.valid
+        ? `${R.k} of ${n * n} cells chosen, holding ${fmtPct(R.p)} now. Stating ${fmtPct(q, 0)} multiplies them by ${R.mIn.toFixed(2)} and every other cell by ${R.mOut.toFixed(2)}, at a cost of ${R.D.toFixed(3)} bits.`
+        : REASON[R.reason];
     }
+    const toggle = (k) => { if (region.has(k)) region.delete(k); else region.add(k); draw(); };
     c.addEventListener('click', (e) => {
       const r = c.getBoundingClientRect();
       const i = Math.floor(((e.clientX - r.left) / r.width) * n), j = Math.floor(((e.clientY - r.top) / r.height) * n);
-      const k = j * n + i;
-      if (region.has(k)) region.delete(k); else region.add(k);
-      draw();
+      if (i < 0 || j < 0 || i >= n || j >= n) return;
+      cursor = j * n + i;
+      toggle(cursor);
     });
+    c.dataset.interactive = '';
+    keyboardCanvas(c, 'Arrow keys move the cursor; Enter or Space adds or removes the cell.', (e) => {
+      const i = cursor % n, j = Math.floor(cursor / n);
+      const moves = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+      if (moves[e.key]) { const [dx, dy] = moves[e.key]; cursor = clamp(j + dy, 0, n - 1) * n + clamp(i + dx, 0, n - 1); draw(); return true; }
+      if (e.key === 'Enter' || e.key === ' ') { toggle(cursor); return true; }
+      return false;
+    });
+    c.addEventListener('focus', draw);
+    c.addEventListener('blur', draw);
     $$('input', root).forEach((i) => i.addEventListener('input', draw));
     $('[data-act=clear]', root).addEventListener('click', () => { region = new Set(); draw(); });
+    const all = $('[data-act=all]', root);
+    if (all) all.addEventListener('click', () => { region = new Set(prior.map((_, i) => i)); draw(); });
     window.addEventListener('resize', draw);
     draw();
+  });
+
+  /* ================================================================
+     Lab: from evidence to a decision (the hub's one-minute story)
+     ================================================================ */
+  // Bayes on a grid with "outside the map" as one more state. Pure: tested on its own.
+  function bayesStep(m, out, L, Lout) {
+    let Z = out * Lout;
+    for (let i = 0; i < m.length; i++) Z += m[i] * L[i];
+    if (!(Z > 0)) throw new Error('evidence rules out everything');
+    const post = new Float64Array(m.length);
+    for (let i = 0; i < m.length; i++) post[i] = (m[i] * L[i]) / Z;
+    const postOut = (out * Lout) / Z;
+    let kl = postOut > 0 ? postOut * Math.log2(postOut / out) : 0;
+    for (let i = 0; i < m.length; i++) if (post[i] > 0) kl += post[i] * Math.log2(post[i] / m[i]);
+    return { m: post, out: postOut, Z, kl: Math.max(0, kl) };
+  }
+  window.AbyssalLabs = Object.assign(window.AbyssalLabs || {}, { bayesStep });
+
+  $$('[data-lab="story"]').forEach((root) => {
+    const nx = 24, ny = 14, N = nx * ny;
+    const cv = { prior: $('[data-panel=prior]', root), lik: $('[data-panel=lik]', root), post: $('[data-panel=post]', root) };
+    const POD = 0.7;
+    const gauss = (cx, cy, s) => { const g = new Float64Array(N); let t = 0; for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) { const v = Math.exp(-0.5 * (((i - cx) ** 2 + (j - cy) ** 2) / (s * s))); g[j * nx + i] = v; t += v; } return g.map((v) => v / t); };
+    // a witness who is right with probability r points at the place; otherwise the report says nothing about where
+    const sightingL = (cx, cy, s, r) => { const g = gauss(cx, cy, s); return { L: g.map((v) => r * v + (1 - r) / N), Lout: (1 - r) / N }; };
+    const block = (x0, y0, x1, y1) => { const b = new Uint8Array(N); for (let j = y0; j <= y1; j++) for (let i = x0; i <= x1; i++) b[j * nx + i] = 1; return b; };
+    const EVIDENCE = {
+      sighting: { label: 'A sighting near the ridge', note: 'One witness, 70% reliable, points at the ridge (±2 cells). Cells near it are multiplied up; because the witness may be wrong, nothing is multiplied by zero.', make: () => sightingL(15, 4, 2.2, 0.7) },
+      nofind: { label: 'A search there finds nothing', note: 'A team sweeps the 6 × 4 block under the ridge with a 70% chance of seeing the target if it is there. Those cells keep 30% of their probability; nothing else changes until the map is normalised, when everywhere else, outside included, rises.', make: () => { const b = block(12, 2, 17, 5); return { L: Float64Array.from(b, (v) => (v ? 1 - POD : 1)), Lout: 1, searched: b }; } },
+      retell: { label: 'The same witness, retold', note: 'A neighbour repeats the first witness’s story. It shares the same provenance root, so it is pooled with the original: the likelihood is 1 everywhere and the map does not move.', make: () => ({ L: new Float64Array(N).fill(1), Lout: 1, pooled: true }) },
+      second: { label: 'A second, independent sighting', note: 'A different person, who never spoke to the first, reports a light by the lake (±2.5 cells, 60% reliable). Independent evidence multiplies.', make: () => sightingL(17, 9, 2.5, 0.6) },
+    };
+    let m, out, searched, steps, shown, anim = 0, lastL = null, lastLout = 1, lastNote = '';
+    const doubleCount = $('[name=double]', root);
+    function reset() {
+      const a = gauss(7, 5, 3.2), b = gauss(17, 9.5, 2.6);
+      m = new Float64Array(N); for (let i = 0; i < N; i++) m[i] = 0.9 * (0.62 * a[i] + 0.34 * b[i] + 0.04 / N);
+      out = 0.1; searched = new Uint8Array(N); steps = []; lastL = null; shown = m.slice();
+      renderAll(m, m, null, 'The prior: before any evidence, the analyst’s reasoning about where the hiker could be, with 10% kept for “not on this map”.', null);
+    }
+    function apply(kind) {
+      let ev = EVIDENCE[kind].make();
+      let note = EVIDENCE[kind].note;
+      if (kind === 'retell' && doubleCount && doubleCount.checked) { ev = EVIDENCE.sighting.make(); note = 'Counted as if it were independent: the mistake provenance pooling prevents. The ridge is now trusted far more than one witness justifies.'; }
+      const before = m.slice(), outBefore = out;
+      const R = bayesStep(m, out, ev.L, ev.Lout);
+      if (ev.searched) for (let i = 0; i < N; i++) if (ev.searched[i]) searched[i] = 1;
+      m = R.m; out = R.out; lastL = ev.L; lastLout = ev.Lout;
+      steps.push({ kind, kl: R.kl, Z: R.Z, wrong: kind === 'retell' && doubleCount && doubleCount.checked });
+      animate(before, outBefore, R, note);
+    }
+    function ledger() {
+      let un = 0, miss = 0;
+      for (let i = 0; i < N; i++) (searched[i] ? (miss += m[i]) : (un += m[i]));
+      return { un, miss };
+    }
+    function bestBlock() {
+      let best = null;
+      for (let y0 = 0; y0 <= ny - 4; y0++) for (let x0 = 0; x0 <= nx - 6; x0++) {
+        let p = 0; for (let j = y0; j < y0 + 4; j++) for (let i = x0; i < x0 + 6; i++) p += m[j * nx + i] * (searched[j * nx + i] ? 0.6 : 1);
+        if (!best || p > best.p) best = { x0, y0, p };
+      }
+      return best;
+    }
+    function drawGrid(c, field, mode) {
+      const { ctx, w, h } = fitCanvas(c, nx / ny);
+      let mx = 0; for (const v of field) mx = Math.max(mx, v);
+      const f = Array.from(field, (v) => (mx > 0 ? (mode === 'lik' ? v / mx : Math.pow(v / mx, 0.6)) : 0));
+      if (mode === 'lik') {
+        const cw = w / nx, ch = h / ny;
+        ctx.fillStyle = '#0c1014'; ctx.fillRect(0, 0, w, h);
+        for (let i = 0; i < N; i++) { ctx.fillStyle = `rgba(127,211,255,${0.08 + 0.85 * f[i]})`; ctx.fillRect((i % nx) * cw, Math.floor(i / nx) * ch, cw - 0.5, ch - 0.5); }
+      } else heat(ctx, f, nx, ny, 0, 0, w, h, null, false);
+      return { ctx, w, h };
+    }
+    const sci = (z) => { const e = Math.floor(Math.log10(z)); const mnt = z / 10 ** e; return e === 0 ? z.toFixed(2) : `${mnt.toFixed(2)} × 10${String(e).replace('-', '⁻').replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d])}`; };
+    function renderAll(prior, post, L, note, best) {
+      lastNote = note;
+      drawGrid(cv.prior, prior, 'p');
+      if (L) drawGrid(cv.lik, L, 'lik');
+      else { const { ctx, w, h } = fitCanvas(cv.lik, nx / ny); ctx.fillStyle = '#0c1014'; ctx.fillRect(0, 0, w, h); ctx.fillStyle = 'rgba(241,237,230,0.6)'; ctx.font = '12px Inter, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('add evidence below', w / 2, h / 2); }
+      const { ctx, w, h } = drawGrid(cv.post, post, 'p');
+      const cw = w / nx, ch = h / ny;
+      ctx.strokeStyle = 'rgba(160,230,255,0.8)'; ctx.lineWidth = 1.2;
+      for (let i = 0; i < N; i++) if (searched[i]) ctx.strokeRect((i % nx) * cw + 1, Math.floor(i / nx) * ch + 1, cw - 2, ch - 2);
+      const B = best || bestBlock();
+      ctx.setLineDash([5, 4]); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2;
+      ctx.strokeRect(B.x0 * cw + 1, B.y0 * ch + 1, 6 * cw - 2, 4 * ch - 2); ctx.setLineDash([]);
+      const { un, miss } = ledger();
+      const last = steps[steps.length - 1];
+      setRead(root, 'un', fmtPct(un)); setRead(root, 'miss', fmtPct(miss)); setRead(root, 'out', fmtPct(out));
+      setRead(root, 'bits', last ? last.kl.toFixed(2) + ' bits' : '—');
+      setRead(root, 'Z', last ? sci(last.Z) : '—');
+      setRead(root, 'next', fmtPct(B.p * POD));
+      const bar = $('.ledger', root);
+      if (bar) bar.innerHTML = `<span style="width:${100 * un}%;background:#3fae84"></span><span style="width:${100 * miss}%;background:#e8962e"></span><span style="width:${100 * out}%;background:#a678d8"></span>`;
+      const trail = $('.story-steps', root);
+      if (trail) trail.innerHTML = ['<span>Prior</span>', ...steps.map((s) => `<span class="${s.wrong ? 'wrong' : ''}">${EVIDENCE[s.kind].label}${s.kind === 'retell' ? (s.wrong ? ' (counted twice!)' : ' (pooled: ×1)') : ''} · ${s.kl.toFixed(2)} bits</span>`)].join('<i aria-hidden="true">→</i>');
+      const st = $('[data-read=story]', root);
+      if (st) st.textContent = note + (last ? ` The map moved ${last.kl.toFixed(2)} bits. Unsearched ${fmtPct(un)}, searched and missed ${fmtPct(miss)}, outside ${fmtPct(out)}. Best next search: the dashed block, which would find the target with probability ${fmtPct(B.p * POD)}.` : '');
+    }
+    function animate(before, outBefore, R, note) {
+      cancelAnimationFrame(anim);
+      const prior = before;
+      priorShown = before;
+      if (reduced) { renderAll(prior, m, lastL, note); return; }
+      const t0 = performance.now();
+      const frame = (t) => {
+        const u = Math.min(1, (t - t0) / 650), e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+        shown = prior.map((v, i) => v + (m[i] - v) * e);
+        renderAll(prior, shown, lastL, note);
+        if (u < 1) anim = requestAnimationFrame(frame);
+      };
+      anim = requestAnimationFrame(frame);
+      void outBefore; void R;
+    }
+    $$('[data-ev]', root).forEach((b) => b.addEventListener('click', () => apply(b.dataset.ev)));
+    $('[data-act=reset]', root).addEventListener('click', reset);
+    let priorShown = null;
+    window.addEventListener('resize', () => renderAll(priorShown || m, m, lastL, lastNote));
+    reset();
   });
 
   /* ================================================================
