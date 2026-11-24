@@ -338,6 +338,62 @@
   ],
   "w": 2000
  },
+ "mh370-prog-01-no-data": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-prog-02-add-acars": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-prog-03-add-bto": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-prog-04-add-csiro": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-prog-3d-seabed": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-prog-etopo-data": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-prog-ops-quakes-sat": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
  "mh370-real-drift-bto": {
   "h": 791,
   "variants": [
@@ -346,8 +402,48 @@
   ],
   "w": 1920
  },
+ "mh370-real-final-fused-map": {
+  "h": 1186,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-real-flight-families": {
+  "h": 1186,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
  "mh370-real-hydrophone-seismic": {
   "h": 791,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-real-ledger-28-sweeps": {
+  "h": 1186,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-real-sat-wspr-nulls": {
+  "h": 1186,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-real-searched-corridors": {
+  "h": 1186,
   "variants": [
    640,
    1280

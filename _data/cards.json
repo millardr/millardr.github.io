@@ -99,8 +99,8 @@
  },
  {
   "slug": "abyssal-mh370-case-study",
-  "title": "MH370 in ABYSSAL: Live Evidence Fusion, 3D Surface, Raw Physics & Residual Search",
-  "desc": "Running Malaysia Airlines flight 370 inside ABYSSAL's Ember workspace on real public data: full-detail 7th arc map, 3D probability surface, live evidence toggling, provenance fusion graphs, movement & time drift, Ops wind/currents/relief, Satellite View, Plan Studio, Where next, pixel-measured ATSB sonar coverage, 36 years of NOAA drifters, IMOS hydrophones, FDSN seismometers, MODIS/Jason-2/WSPR null tests.",
+  "title": "MH370 in ABYSSAL: From Zero Data to the Final Fused Search Map",
+  "desc": "A complete progressive raw-data investigation of Malaysia Airlines flight 370 inside ABYSSAL's Ember workspace: starting from 0 observations (30.7M km²), adding ACARS, Inmarsat BTO/BFO, and CSIRO drift step by step; 3D probability and seabed surfaces; 4,400 autopilot paths; 5,040 BTO-only timing scans; 36 years of NOAA drifters; pixel-measured ATSB sonar coverage and 2,024-tile re-scan; IMOS hydrophones; 22 FDSN seismometers; MODIS/Jason-2/WSPR nulls; and the final fused 7th-arc map.",
   "kicker": "ABYSSAL",
   "theme": "abyssal"
  },
