@@ -1,314 +1,700 @@
 <!--meta
-{"out": "abyssal/mh370-case-study.html", "title": "MH370 in ABYSSAL: From Zero Data to Full-Physics Fuel & Terrain Fusion v3 — Rory Millard", "desc": "A complete progressive raw-data investigation of Malaysia Airlines flight 370 inside ABYSSAL's native workbench: starting from 0 observations (30.7M km²), adding ACARS, Inmarsat BTO/BFO, and CSIRO drift; 3D probability and seabed surfaces; 4,400 autopilot paths; Trent 892 fuel-burn physics; 155,000 non-steady trajectories; 252 IMOS hydrophone transients recovering Curtin's 01:33 UTC events; 3D ETOPO SOFAR ray-blocking; NOAA OISST barnacle SST; and terrain-aware sonar POD.", "active": "mh370", "layout": "note", "maths": true, "crumb": "MH370 case study", "image": "mh370-ember-12-fuel-peak-zoom.webp", "peek": "mh370-ember-12-fuel-peak-zoom.webp", "peek_alt": "Native ABYSSAL workspace zoomed into the MH370 7th-arc fuel-peak core showing the glowing Ember posterior and dashed 90% contour", "kicker": "<span>ABYSSAL · Case Study</span><span class=\"lv\">Real Investigation · Full-Physics Fusion v3</span>", "h1": "MH370 inside ABYSSAL: from zero data to full-physics fusion", "dek": "Building the entire public investigation step by step inside ABYSSAL's native workbench — starting from an empty 30.7 million km² prior, admitting each observation, running custom fuel, non-steady, hydrophone bubble-pulse, SOFAR ray-blocking, barnacle SST, and sonar-shadow engines, and converging natively on the 37.7°S–38.25°S escarpment core.", "meta": "<span><b>35 min</b> read · 28 live UI &amp; custom-engine figures · 100% real public data (SHA-256)</span><span>Status: not found · evidence fusion, not a detection</span>"}
+{"out": "abyssal/mh370-case-study.html", "title": "MH370 inside ABYSSAL: from an empty map to a 2,600 km² target — Rory Millard", "desc": "A complete, progressive reconstruction of the search for Malaysia Airlines flight 370 inside ABYSSAL's ordinary workbench: every public dataset with receipts, every engine including the ones that failed, satellite rings, a calibrated Boeing 777 fuel model, 155,000 manoeuvring flights, debris drift, barnacle temperatures, hydrophones, seismometers, sonar mosaics, satellites and altimeters, fused into one auditable probability map.", "active": "mh370", "layout": "note", "maths": true, "crumb": "MH370 case study", "image": "mh370x-s19-final-escarpment.webp", "peek": "mh370x-s19-final-escarpment.webp", "peek_alt": "ABYSSAL's final MH370 probability map, zoomed to the 7th-arc core south-west of Perth: a bright ridge of probability threading between searched sonar footprints near 38 degrees south.", "kicker": "<span>ABYSSAL · Case Study</span><span class=\"lv\">Real data · ordinary workbench · not found</span>", "h1": "MH370 inside ABYSSAL: from an empty map to a 2,600 km² target", "dek": "Twelve years, 230,000 km² of seabed and no wreck. This is the whole public investigation rebuilt from raw data in an ordinary ABYSSAL case, one piece of evidence at a time: every source with a receipt, every engine including the ones that failed, and what is left when it all adds up.", "meta": "<span><b>60 min</b> read · 150+ figures · every number reproducible</span><span>Status: not found · an evidence fusion, not a detection</span>"}
 -->
-<p class="lede">Malaysia Airlines flight 370 disappeared on 8 March 2014 and has not been found. Over twelve years, seabed surveys by the Australian Transport Safety Bureau (ATSB) and Ocean Infinity have imaged more than 230,000 km² of the southern Indian Ocean along the seventh Inmarsat arc without locating the aircraft. What follows is not a static post-mortem with hardcoded checkboxes. It is the complete, progressive investigation run step by step inside ABYSSAL's <strong>general-purpose workbench</strong> — starting from literally <strong>zero location evidence</strong> (`30,701,049 km²`), admitting each dataset one piece at a time, testing every physical engine and fringe lead against raw public archives (even when they return inconclusive or null), and arriving at the final residual probability map.</p>
-
-<p>Everything here uses <strong>real public data</strong> with cryptographic receipts (URL, timestamp, byte length, SHA-256 digest, licence). Every forward model is calibrated against independent physical truth — ground-station calibrations, the aircraft's own ACARS weather reports, catalogued Indian Ocean earthquakes, published ATSB sonar contacts — before it is allowed to score MH370. Nothing synthetic or simulated is admitted.</p>
-
-<div class="callout">
-  <div class="t">Headline result · Full-Physics Fusion v3 (24 November 2026)</div>
-  <p><strong>Not found.</strong> Coupling a validated Boeing 777-200ER / Trent 892 fuel-burn model (<code>abyssal/signal/aircraft_fuel.py</code>, matching 9M-MRO's ACARS cruise burn to <strong>0.2%</strong>) and a 155,000-trajectory non-steady scan (<code>abyssal/signal/nonsteady_flight.py</code>) eliminates both extreme ends of the 7th arc: the South Extension (39.45°S–40.5°S) collapses 400×–900× to <strong>0.08%</strong> (out of fuel and too cold for <em>Lepas anatifera</em> barnacle colonisation at 15.15–15.39°C), and the North Arc (18°S–30°S) collapses from 46.5% to <strong>0.00%</strong>. With 99.67% of the ATSB Phase 2 sonar mosaic imaged, 3D ETOPO 2022 terrain analysis identifies steep fracture-zone escarpments dead-centre on the fuel-constrained 7th-arc peak (<code>-37.81°S, 88.47°E</code> and <code>-38.20°S, 88.15°E</code>, up to 16.0° slope and <strong>8.8% deep acoustic shadow</strong> — 2.4× flat seabed). The fuel-peak core re-look (<strong>36.8°S–38.8°S, ±15 NM</strong>) ranks #1 in every sweep at <strong>43.4%</strong> (<strong>1.90% per 1,000 km²</strong>), with the top four precision escarpment targets (~2,600 km²) carrying <strong>12.1%</strong> (~4.6% per 1,000 km²).</p>
+<div class="tldr">
+  <div class="t">TL;DR</div>
+  <ul>
+    <li><b>Everything here is public data with receipts</b>, and the case is an <b>ordinary ABYSSAL project</b>: no MH370 plugin, no special buttons. The satellite arc is a ring observation, the flight model is a distance ring with alternative readings, the debris and barnacles are area statements, and every seabed search is a completed search with a detection probability.</li>
+    <li><b>Satellite timing, Doppler and a calibrated Boeing 777 fuel model</b> together put the end of the flight on the 7th arc between <b>33°S and 38.8°S</b>, most likely 37–38.5°S. The far south (beyond 39.5°S) runs out of fuel; the north (beyond 32.5°S) cannot be reached by any manoeuvre that fits the data.</li>
+    <li><b>Coverage gaps cannot hide it.</b> The public sonar mosaic images 99.67% of the ±25 NM band in the high-probability zone. If MH370 lies in searched ground, it was imaged and missed, most plausibly on steep fracture-zone walls where towed sonar casts shadows.</li>
+    <li><b>Hydrophones, seismometers, oil slicks, altimeters, contrails, radio propagation, ship tracks</b>: all tried on real 2014 data, all null or impossible. Each is documented below with the number that decides it.</li>
+    <li><b>The final map</b> puts about 43% of the probability in a 22,800 km² re-look of the fuel-peak core (36.8–38.8°S, within 15 NM of the arc), and 12% in a single 2,600 km² escarpment massif near <b>38.1°S, 88.2°E</b>, the densest ground in the Indian Ocean on this evidence. Five of the ATSB's own 43 published sonar contacts lie inside it, all reviewed and none identified as wreckage.</li>
+  </ul>
 </div>
 
-<h2><span class="num">01</span>Starting from zero data: building the belief map step by step</h2>
+<p class="lede">Malaysia Airlines flight 370 left Kuala Lumpur at 00:42 local time on 8 March 2014 with 239 people on board and has never been found. Since then the Australian Transport Safety Bureau (ATSB) and Ocean Infinity have imaged more than 230,000 km² of the southern Indian Ocean floor. Dozens of analysts have argued over a handful of satellite messages, some drifting debris and a great deal of empty sea.</p>
 
-<p>In ABYSSAL, nothing enters the map implicitly. With every admitted observation unchecked (`0 observations · 0 independent source roots`), the workspace begins with a flat uniform prior over the entire southern Indian Ocean search domain: <strong>30,701,049 km²</strong> (`90% region`). Every primary document remains retained in the Archive, but none shapes the belief surface until an analyst explicitly admits it.</p>
+<p>This page rebuilds the whole public investigation from raw data inside <a href="index.html">ABYSSAL</a>, a probabilistic search workbench, and tells it in the order the evidence arrives. It starts from a blank map of 33 million km² and adds one piece of evidence at a time. Every engine gets a turn, including the ones that failed, and each step shows what the map looks like afterwards. Nothing here is a detection. It is an argument about where to look, laid out so that every number can be checked.</p>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-prog-01-no-data.webp" alt="ABYSSAL workspace with 0 admitted observations showing a uniform 30,701,049 square kilometre prior across the Indian Ocean" loading="lazy"><figcaption><b>Step 0 · Zero location evidence (`0 observations · 30,701,049 km²`).</b> All observations unchecked via `Use in model`: the map refuses to guess and displays a uniform prior across the entire domain.</figcaption></figure>
-
-<p><strong>Step 1 — Admitting ACARS reachability (`1 observation`):</strong> Checking `Use in model` on the 17:07 UTC ACARS position and maximum elapsed-time travel bound (`Malaysia · MH370 Safety Investigation Report`) establishes a necessary physical reach envelope without assuming fuel endurance or autopilot mode. The 90% region remains `30,701,049 km²` because a 7-hour maximum-speed circle covers the whole Indian Ocean box.</p>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-prog-02-add-acars.webp" alt="ABYSSAL workspace with 1 admitted observation (ACARS position and elapsed-time reach) still spanning 30,701,049 square kilometres" loading="lazy"><figcaption><b>Step 1 · Adding ACARS position &amp; elapsed-time reach (`1 observation`).</b> A necessary kinematic outer bound, recorded explicitly as insufficient on its own to narrow the ocean.</figcaption></figure>
-
-<p><strong>Step 2 — Admitting the Inmarsat 7th arc (`2 observations`):</strong> Checking `Terminal BTO and published southern-flight condition` (`Inmarsat · The Search for MH370`) collapses the `30.7 million km²` uniform domain by a factor of forty onto the glowing 7th arc: the 90% region drops straight to <strong>756,423 km²</strong>.</p>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-prog-03-add-bto.webp" alt="ABYSSAL workspace with Terminal BTO admitted, collapsing the 30.7M square kilometre prior onto the thin glowing 7th arc (756,423 square kilometres)" loading="lazy"><figcaption><b>Step 2 · Adding Inmarsat Terminal BTO (`2 observations · 756,423 km²`).</b> Round-trip satellite propagation time pins the aircraft onto the thin 00:19:29 UTC range ring across the eastern Indian Ocean.</figcaption></figure>
-
-<p><strong>Step 3 — Admitting CSIRO flaperon arrival &amp; drift (`3 observations`):</strong> Checking `Positive flaperon recovery and published drift interpretation` (`CSIRO`) trims the northern and southernmost extremes of the arc, shrinking the 90% region down to <strong>596,936 km²</strong> (`10.29 bits`). Equally, clicking `Remove` inside the <strong>Evidence Map</strong> reverses any step live (`596,936 → 756,423 km²` or `10.29 → 15.02 bits` when Terminal BTO is removed) with one-click `Undo`.</p>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-prog-04-add-csiro.webp" alt="ABYSSAL workspace with all 3 observations admitted (ACARS, Terminal BTO, CSIRO flaperon drift), tightening the 90% region to 596,936 square kilometres" loading="lazy"><figcaption><b>Step 3 · Adding CSIRO flaperon drift (`3 observations · 596,936 km²`).</b> Combining all three independent source roots tightens the 7th arc before any seabed search deductions are applied.</figcaption></figure>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-ui-evidence-toggled.webp" alt="ABYSSAL Evidence Map live sensitivity check removing CSIRO flaperon drift with Undo toast showing 596,936 to 756,423 square kilometres and 10.29 to 10.73 bits" loading="lazy"><figcaption><b>Live Evidence Map sensitivity check.</b> Toggling CSIRO off inside Evidence Map reports the exact shift (`596,936 → 756,423 km²`, `10.29 → 10.73 bits`) and keeps `Undo` one click away.</figcaption></figure>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-ember-04-evidence-toggle.webp" alt="ABYSSAL Evidence Map with Terminal BTO toggled off live, expanding entropy from 10.29 to 15.02 bits and 30,701,049 square kilometres" loading="lazy"><figcaption><b>Live Evidence Map toggle #2 (`Terminal BTO` excluded).</b> Instantly shows how much information the satcom ring alone carries (`10.29 → 15.02 bits`).</figcaption></figure>
-
-<h2><span class="num">02</span>Provenance Fusion Graph, Model Diagnostics, and 3D Surfaces</h2>
-
-<p>To ensure five citing papers never count as five independent measurements, ABYSSAL's <strong>Fusion Graph</strong> wires every retained source root (<em>ETOPO seabed bathymetry</em>, <em>CSIRO drift analysis</em>, <em>Malaysia Annex 13 Safety Report</em>, <em>Inmarsat Journal of Navigation</em>) into explicit claims and observations, while <strong>Inspector · Model</strong> exposes the exact `v2 · normalized contamination` rule (\(L = (1 - r) + r\,K / \mathbb{E}_{\text{prior}}[K]\)), posterior entropy (`7.881 bits`), information gained (`5.309 bits`), and read-only uncertainty controls.</p>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-ui-fusion-graph.webp" alt="ABYSSAL Fusion Graph dock open beneath the MH370 7th arc map showing provenance links from ETOPO, CSIRO, Malaysia Safety Report, and Inmarsat" loading="lazy"><figcaption><b>The Fusion Graph dock.</b> Every posterior cell traces back through explicit provenance edges to its retained source roots; context-only bathymetry stays visually separate from admitted likelihoods.</figcaption></figure>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-ember-06-model-uncertainty.webp" alt="ABYSSAL Inspector Model pane open to Uncertainty tab alongside the full MH370 7th arc map" loading="lazy"><figcaption><b>Inspector · Model (`Uncertainty` &amp; `Diagnostics`).</b> Exposes exact contamination semantics, bit counts, and read-only uncertain quantities without altering the saved belief map.</figcaption></figure>
-
-<p>Collapsing all sidebars gives the entire screen to the `240 × 240` full-detail map (`mh370-ember-01-full-map`), a <strong>Tilted 3D perspective</strong> looking down the glowing 7th arc (`mh370-ember-02-tilted-arc`), and the <strong>3D Data Explorer</strong> — rendering both the <strong>3D Probability Surface</strong> (`peak 0.000362% per km²`) and the <strong>3D Acquired Seabed Grid</strong> (`maximum 7,174 m · 50× vertical exaggeration`) across Broken Ridge and the Diamantina Trench.</p>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-ember-01-full-map.webp" alt="Full-viewport ABYSSAL workspace showing the MH370 7th arc posterior at 240 by 240 full detail with 50% core and 90% contours" loading="lazy"><figcaption><b>Full-viewport `240 × 240` detail map.</b> Sidebars collapsed, `Always full detail` and `Evidence geometry` active.</figcaption></figure>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-ember-02-tilted-arc.webp" alt="Tilted 3D perspective in ABYSSAL looking south-west along the glowing MH370 7th arc peak" loading="lazy"><figcaption><b>Tilted 3D perspective along the 7th arc.</b> Zoomed in to inspect the sharp lateral falloff across the 50% and 90% contours.</figcaption></figure>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-ember-03-3d-surface.webp" alt="ABYSSAL 3D Data Explorer showing the MH370 7th arc probability density rising as a sharp glowing mountain ridge above the Indian Ocean and Western Australia" loading="lazy"><figcaption><b>3D Probability Surface (`3D DATA EXPLORER`).</b> Relative probability density rendered as elevation and colour (`peak 0.000362% per km²`) above the Indian Ocean reference plane.</figcaption></figure>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-prog-3d-seabed.webp" alt="ABYSSAL 3D Data Explorer switched to Acquired seabed grid showing Indian Ocean bathymetry at 50x vertical exaggeration down to 7,174 metres" loading="lazy"><figcaption><b>3D Acquired Seabed Grid (`50× vertical exaggeration · max 7,174 m`).</b> Inspecting the actual Broken Ridge, Ninetyeast Ridge, and Diamantina Trench topography beneath the search corridor.</figcaption></figure>
-
-<h2><span class="num">03</span>Satellite physics, ERA5 winds, 4,400 autopilot paths, and the BTO-only test</h2>
-
-<p>Each Inmarsat Classic Aero handshake yields two independent observables: <strong>Burst Timing Offset (BTO)</strong> (total round-trip range) and <strong>Burst Frequency Offset (BFO)</strong> (carrier Doppler shift driven by relative velocity, Inmarsat-3F1's \(\approx 1.6^\circ\) orbital inclination, and SDU uplink pre-compensation):</p>
-
-<div class="eq"><span class="tag">satcom forward model</span>
-\[
-\begin{aligned}
-\operatorname{BTO}(t) &= \tfrac{2}{c}\bigl(R_{\text{GES}} + R_{\text{ac}}\bigr) + \tau_{\text{cal}} \\
-\operatorname{BFO}(t) &= \Delta f_{\text{up}} + \Delta f_{\text{down}} + \Delta f_{\text{comp}} + \delta f_{\text{bias}}
-\end{aligned}
-\]
+<div class="callout honest">
+  <div class="t">How this was built</div>
+  <p>The case is a <b>new, ordinary ABYSSAL project</b>. Every observation went in through the same public interface the app's <i>Add</i> and <i>Sketch evidence</i> panels use, as an explicit, logged decision. Context items (radar fixes, debris find places, sonar contacts) stay as drafts and never enter the model. The heavy physics (satellite geometry, flight paths through real winds, the fuel model, drift, acoustics) runs in ABYSSAL's general signal engines. The app only receives their outputs, in its own generic vocabulary. The screenshots are the real application, captured automatically from a running workbench. The only display tweak is hiding floating toolbars on the full-screen maps.</p>
 </div>
 
-<p>Before scoring a single MH370 path, ABYSSAL's forward model was validated against published calibrations from Ashton et al. (2015) and Davey et al. (2016): reproducing the 88 Hz ground calibration (Table 5) to <strong>0.3 Hz</strong>, the 17:07 UTC state (Tables 7–8) to ~<strong>1 Hz</strong>, and all 12 validation rows (Table 9) within <strong>1.5 Hz</strong> — catching an inverted downlink Doppler sign on the first draft. Hourly ERA5 upper-air winds and temperatures (175–350 hPa, \(0.5^\circ\) grid) from ARCO-ERA5 were checked directly against the aircraft's own pre-disappearance ACARS reports:</p>
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-s19-final-escarpment.webp" alt="ABYSSAL map zoomed to the 7th-arc core: a bright probability ridge between the outlines of searched sonar footprints near 38 degrees south, 88 degrees east." loading="lazy"><figcaption><b>Where this ends up.</b> ABYSSAL's final map, zoomed to the core of the 7th arc south-west of Perth. Outlines are seabed already searched; the bright ridge is where the evidence still points. The rest of this page is how it gets here.</figcaption></figure>
 
-<table>
-  <thead><tr><th>ACARS time (UTC, FL350)</th><th class="n">Measured wind</th><th class="n">ERA5 wind</th><th class="n">Temp diff</th></tr></thead>
-  <tbody>
-    <tr><td>17:01:43</td><td class="n">069.6° / 17.4 kt</td><td class="n">069° / 19.4 kt</td><td class="n">−1.1 °C</td></tr>
-    <tr><td>17:06:43</td><td class="n">070.0° / 17.1 kt</td><td class="n">067° / 17.3 kt</td><td class="n">−1.1 °C</td></tr>
-  </tbody>
-</table>
+<nav class="callout" aria-label="Chapters">
+  <div class="t">Chapters</div>
+  <p><a href="#ch-night">00 The night</a> · <a href="#ch-empty">01 Starting from nothing</a> · <a href="#ch-radar">02 The radar</a> · <a href="#ch-rings">03 Satellite rings</a> · <a href="#ch-doppler">04 Doppler</a> · <a href="#ch-flight">05 The flight engine</a> · <a href="#ch-sea">06 What the sea returned</a> · <a href="#ch-surface">07 The surface</a> · <a href="#ch-listen">08 Listening</a> · <a href="#ch-searches">09 Searches</a> · <a href="#ch-seabed">10 The seabed again</a> · <a href="#ch-fusion">11 Fusion</a> · <a href="#ch-final">12 The final map</a> · <a href="#ch-next">13 Where next</a> · <a href="#ch-tried">14 Everything tried</a> · <a href="#ch-tour">15 The workbench</a> · <a href="#ch-limits">16 Limits</a> · <a href="#ch-method">17 Method</a> · <a href="#ch-appendix">A Every frame</a></p>
+</nav>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-chart-era5-wind-field.webp" alt="ERA5 250 hPa wind speed and vectors across the Indian Ocean at 00:00 UTC on 8 March 2014 showing the 35 to 50 m/s subtropical jet crossing the 7th arc" loading="lazy"><figcaption><b>ERA5 250 hPa Upper-Air Wind Field (`2014-03-08 00:00 UTC`).</b> Real ARCO-ERA5 0.25° reanalysis showing the 35–50 m/s subtropical westerly jet slicing across the southern 7th-arc corridor.</figcaption></figure>
+<h2 id="ch-night"><span class="num">00</span>The night, in two minutes</h2>
 
-<p>Across <strong>4,400 wind-aware autopilot configurations</strong> in three families — Family A (constant Mach, 1,100 configs), Family B (falling Mach long-range cruise, 2,200 configs), and Family C (Mach 0.55–0.86 with inflated 15 Hz BFO noise, 1,100 configs), marginalising over 0 or 12 NM lateral offset past MEKAR — geodesic (LNAV) and constant-true-track solutions fit all 13 measurements cleanly (\(\chi^2 \approx 6\)) and cross the 00:19:29 UTC 7th arc between <strong>37.2°S and 39.8°S</strong> (median <strong>38.15°S–38.50°S</strong>).</p>
+<p>At 17:19:30 UTC the crew said “Good night Malaysian three seven zero” to Kuala Lumpur air traffic control. Seventy seconds later, over waypoint IGARI in the South China Sea, the transponder went dark. Malaysian military primary radar, which needs no cooperation from the aircraft, then watched a target turn back across the Malay Peninsula, pass south of Penang at 17:52 and head out over the Strait of Malacca. The last radar return came at 18:22:12, 10 NM beyond waypoint MEKAR, north-west of Sumatra.</p>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-real-flight-families.webp" alt="Two-panel real data chart: left showing 4,400 wind-aware autopilot configurations across Families A, B, and C clustering between 37.2 and 39.8 degrees south; right showing 00:19:29 to 00:19:37 UTC downward acceleration of 0.67 g" loading="lazy"><figcaption><b>4,400 Wind-Aware Autopilot Configs &amp; End-of-Flight Dive Kinematics.</b> Left: Families A, B, and C all cluster cleanly at `37.2°S–39.8°S`. Right: the 00:19:29 and 00:19:37 UTC APU log-on BFOs imply descent accelerating from `3,100–6,000 ft/min` to `13,600–16,500 ft/min` (`~0.67 g`), cutting extended-glide posterior weight from `0.50` down to `0.17`.</figcaption></figure>
+<p>Three minutes later the aircraft's satellite terminal logged back on to Inmarsat's 3F1 satellite over the Indian Ocean. For six more hours it answered routine hourly calls from the ground station in Perth. None of those messages carried a position. At 00:19:29 UTC the terminal logged on again, unprompted. Investigators concluded this was the auxiliary power unit restarting it after both engines ran out of fuel. Eight seconds later it sent one more burst, and then nothing. The full public chronology is retold, without analysis, in the <a href="../index.html">MH370 essay</a>.</p>
 
-<p>Even more decisively, discarding every BFO measurement completely and running a <strong>5,040-cell timing-only scan</strong> (Mach 0.45–0.86, 1° grid) still places <strong>90% of the timing-only mass between 39.7°S and 37.4°S</strong> (median <strong>38.4°S</strong>, every steady cell north of 36°S below \(10^{-9}\)) — and those timing-only tracks hit the unseen BFOs at <strong>3.7–5.9 Hz RMS</strong>. Both satellite channels agree independently.</p>
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-chart-arcs.webp" alt="Map of the eastern Indian Ocean with the ACARS track from Kuala Lumpur to IGARI, the radar waypoints, the satellite sub-point and seven arcs, the last highlighted." loading="lazy"><figcaption><b>Seven handshakes, seven rings.</b> Each satellite message's timing puts the aircraft on a ring around the point beneath the satellite. The highlighted ring is the 7th arc, logged at 00:19:29 UTC when the fuel ran out. Blue: the aircraft's own ACARS positions to IGARI.</figcaption></figure>
 
-<h2><span class="num">04</span>Surface drift, Ops Console live layers, and 36 years of NOAA drifters</h2>
+<h2 id="ch-empty"><span class="num">01</span>Starting from nothing</h2>
 
-<p>Inside ABYSSAL, <strong>Movement &amp; time</strong> projects exploratory surface-drift evolution (`+48.0 h`, `+0.06 bits`, widening the 90% region from `596,936 km²` to `623,773 km²`), while the <strong>Ops Console</strong> overlays live 10 m wind streamlines, surface ocean currents, terrain relief, live earthquakes, and satellite orbits directly over the Indian Ocean 7th arc.</p>
+<p>A search in ABYSSAL begins with an honest admission of ignorance. The new case covers the whole region the aircraft could conceivably have reached, from 50°S to 10°N and 70°E to 120°E. With no evidence every square kilometre is equally likely. The map is a flat wash, its 90% region is the entire box of <b>33,285,051 km²</b>, and its entropy is 16.25 bits.</p>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-ember-07-movement-time.webp" alt="ABYSSAL Movement and time panel projecting +48 hours of exploratory surface drift along the MH370 7th arc" loading="lazy"><figcaption><b>Movement &amp; time (`+48.0 h` drift evolution).</b> Exploratory advection-diffusion preview (`596,936 → 623,773 km²`, `+0.06 bits`) kept read-only until admitted.</figcaption></figure>
+<div class="mh-step">Step 0 <b>An empty case</b> <span class="km">90% region 33,285,051 km² · 0 observations</span></div>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-ember-08-ops-wind-currents.webp" alt="Full-screen ABYSSAL Ops Console with panel collapsed so live 10 m wind streamlines, surface ocean currents, and terrain relief fill the Indian Ocean" loading="lazy"><figcaption><b>Ops Console · live 10 m winds, surface currents, and relief across the 7th arc.</b> Real-time oceanographic forcing rendered across the entire Indian Ocean frame.</figcaption></figure>
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-s00-empty-ui.webp" alt="The ABYSSAL workspace over the Indian Ocean with a uniform probability wash over the search domain and no observations." loading="lazy"><figcaption><b>Zero evidence.</b> The whole search domain, 50°S to 10°N, in the ordinary ABYSSAL workspace. The map refuses to guess: every cell is equally likely.</figcaption></figure>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-prog-ops-quakes-sat.webp" alt="ABYSSAL Ops Console displaying live Indian Ocean earthquakes including M6.4 on Southwest Indian Ridge, satellite orbital tracks, and terrain relief over the 7th arc" loading="lazy"><figcaption><b>Ops Console · live earthquakes (`M6.4`, `M5.0`), satellite tracks, and relief.</b> Live contextual telemetry overlaid in the exact same coordinate frame.</figcaption></figure>
-
-<p>To turn the 27 recovered 9M-MRO debris items into an honest likelihood surface, ABYSSAL ingested <strong>36 years of NOAA Global Drifter Program 6-hourly tracks</strong> (1990–2025: 6.0 million fixes, 4,700 drifters, 3.5 million undrogued fixes). Our first attempt — a \(1^\circ\), 4-day Markov transition matrix — was <strong>rejected as over-diffused</strong>: it predicted ~5–7% Réunion arrival probability within 508 days from 39°S, whereas <strong>0 out of 72 real undrogued drifters</strong> near 39°S ever reached Réunion in 508 days. Replacing it with direct censored drifter analogs produced a sharp gradient (`0/60–80` at 37°S–40°S; `0–1/40–60` at 32°S–36°S; `3–5/27–46` at 25°S–31°S), balanced against <strong>zero debris found on Western Australia</strong> and CSIRO's near-100% 2014 aerial search POD across 26°S–33°S.</p>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-real-drift-bto.webp" alt="Two-panel real data chart showing 36-year NOAA drifter analog Réunion arrival rates versus rejected Markov chain and the 5,040-cell timing-only flight scan" loading="lazy"><figcaption><b>36-Year NOAA Drifters vs Rejected Markov Chain &amp; 5,040-Cell Timing-Only Flight Scan.</b> Left: real censored drifters expose the 1° Markov chain's over-diffusion. Right: discarding BFO Doppler completely still places 90% of steady paths at `39.7°S–37.4°S`.</figcaption></figure>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-chart-noaa-drifter-regions.webp" alt="Timeline and capture radii for all 9 Indian Ocean MH370 debris arrival regions from Reunion at 506 days to South Africa East at 833 days" loading="lazy"><figcaption><b>All 9 Indian Ocean Debris Arrival Gates (`drift_likelihood.json`).</b> Observed first-arrival dates and NOAA capture gate radii (`120–350 km`) from Réunion (`2015-07-29`) through South Africa East (`2016-06-21`).</figcaption></figure>
-
-<h2><span class="num">05</span>Seabed sonar: ETOPO bathymetry, mosaic coverage, and 2,024-tile re-scan</h2>
-
-<p>Inside <strong>Data explorer → Measurements</strong>, ABYSSAL loads the retained `Indian Ocean regional seabed · ETOPO` grid (`44,807` valid depth cells, median `4,078 m`) directly under the 7th arc. To eliminate prose errors in searched-area polygons, ABYSSAL fetched Geoscience Australia's public Phase 2 mosaic at zoom 11 (`60.5 m` pixels) and counted imaged pixels cell by cell (`120,522 km²` total): north of ~35.5°S, the ATSB ±25 NM strip was only `42–69%` imaged (explaining Ocean Infinity's 2018 starting corridor), while inside the ATSB core (`36.0°S–39.45°S`, `59,607 km²`), <strong>99.67% is imaged</strong> — leaving only `197.8 km²` of holes (`0.013%` steady prior mass hidden for a 250 m debris field).</p>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-prog-etopo-data.webp" alt="ABYSSAL Data explorer Measurements tab draping 44,807 ETOPO regional seabed bathymetry values (median 4,078 metres) beneath the MH370 7th arc" loading="lazy"><figcaption><b>Data explorer (`Indian Ocean regional seabed · ETOPO`).</b> 44,807 measured depth cells (`median 4,078 m`) overlaid as context beneath the 7th-arc probability corridor.</figcaption></figure>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-real-searched-corridors.webp" alt="Prior versus posterior marginal density along the 7th arc showing how ATSB 2014-17 and Ocean Infinity 2018 negative searches carve out the steady peak, leaving Zone S and Zone N" loading="lazy"><figcaption><b>Prior vs Posterior Density After Negative Seabed Searches.</b> Dashed = flight+descent prior (peaking at `38.2°S`). Solid Ember = residual posterior after ATSB 2014–17 (`99.67%` imaged) and OI 2018 carve out the middle, spiking at the unsearched southern lip (`39.45°S–40.5°S`).</figcaption></figure>
-
-<p>We then pulled <strong>2,024 zoom-15 tiles</strong> (~3.8 m pixels, ~1,900 km² across `37.65°S–38.8°S` within ±7.5 NM — ~25% of the steady prior) through ABYSSAL's local-residual anomaly detector. As a positive control, it flagged <strong>16 of the 43 published ATSB contacts</strong> (median 88th percentile). Inspecting the top 40 of 225 candidate clusters showed scarps, ridge crests, volcanic outcrops, swath seams, and boulders — no angular aircraft debris fan. <strong>If MH370 sits inside the searched core, sonar imaged it and missed it in terrain shadow — not in coverage gaps.</strong></p>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-real-sonar-scan.webp" alt="Two-panel real ATSB Phase 2 sonar mosaic audit showing 0.013% hidden prior mass in gaps and 16 of 43 ATSB positive-control contacts flagged across 2,024 zoom-15 tiles" loading="lazy"><figcaption><b>ATSB Phase 2 Mosaic Gaps &amp; 2,024-Tile Re-Scan.</b> Left: mosaic holes hide just `0.013%` of a 250 m debris field. Right: positive control on 43 published ATSB contacts (`16` flagged) vs the top 200 mosaic clusters (candidate coordinates withheld).</figcaption></figure>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-chart-terrain-pod-1arcmin.webp" alt="ETOPO 2022 1-arcmin along-arc seabed slope and terrain-degraded side-scan sonar probability of detection dropping to 0.55 on Broken Ridge escarpments" loading="lazy"><figcaption><b>ETOPO 2022 1-Arcmin Terrain Slope &amp; Sonar POD (`terrain_pod_grid.npz`).</b> Cross-corridor mean POD stays near `0.90` on flat abyssal plains but drops to `0.55–0.61` across Broken Ridge escarpments (max slope `18.6°`).</figcaption></figure>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-chart-escarpment-shadow-audit.webp" alt="GA Phase 2 copper-colormap shadow and wall-clutter audit comparing 37.81S and 38.20S escarpments against 37.43S flat control alongside top 4 precision AUV targets" loading="lazy"><figcaption><b>GA Phase 2 Escarpment Shadow Audit &amp; Top 4 Precision AUV Targets.</b> Steep escarpments exhibit `5.9%` and `8.8%` deep acoustic shadow (`1.6×–2.4×` the `3.7%` flat control) and `2.8×` bright wall clutter.</figcaption></figure>
-
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin:1.5rem 0;">
-  <figure class="shot reveal" style="margin:0;"><img src="../assets/abyssal/mh370-sonar-escarpment-37-81s.webp" alt="GA Phase 2 copper-sepia sonar mosaic overview tile at 37.81S 88.47E showing 1,045 m relief escarpment and multi-swath acoustic shadows" loading="lazy"><figcaption><b>GA Mosaic · `37.81°S, 88.47°E` (`1,045 m` relief).</b> Deep nadir &amp; wall shadow zones (`5.89%` deep shadow, `2.46%` clutter).</figcaption></figure>
-  <figure class="shot reveal" style="margin:0;"><img src="../assets/abyssal/mh370-sonar-escarpment-38-20s.webp" alt="GA Phase 2 copper-sepia sonar mosaic overview tile at 38.20S 88.15E showing 16-degree escarpment slope and acoustic shadow bands" loading="lazy"><figcaption><b>GA Mosaic · `38.20°S, 88.15°E` (`16°` slope).</b> Steep fracture-zone flank (`8.80%` deep shadow, `15.15%` total shadow).</figcaption></figure>
+<div class="mh-grid">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s00-checklist.webp" alt="A new ABYSSAL case with the case checklist open: add what you know, import data, review and admit evidence, see where to search next." loading="lazy"><figcaption><b>A new case.</b> The checklist that opens with every case: add what you know, import data, review and admit evidence, see where to search next.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s00-empty-map.webp" alt="The search domain drawn as a uniform rectangle over the Indian Ocean, Africa to Australia." loading="lazy"><figcaption><b>The domain.</b> 3,000 by 5,500 km of ocean and land, uniform.</figcaption></figure>
 </div>
 
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:1.5rem 0;">
-  <figure class="shot reveal" style="margin:0;"><img src="../assets/abyssal/mh370-sonar-cand-01.webp" alt="GA Phase 2 sonar mosaic chip candidate 01 in copper sepia showing bright backscatter cluster against scarp shadow" loading="lazy"><figcaption><b>Mosaic Chip #01.</b> High-backscatter outcrop along scarp seam.</figcaption></figure>
-  <figure class="shot reveal" style="margin:0;"><img src="../assets/abyssal/mh370-sonar-cand-02.webp" alt="GA Phase 2 sonar mosaic chip candidate 02 in copper sepia showing bright wall reflection beside swath boundary" loading="lazy"><figcaption><b>Mosaic Chip #02.</b> Swath-boundary wall return &amp; acoustic shadow.</figcaption></figure>
-  <figure class="shot reveal" style="margin:0;"><img src="../assets/abyssal/mh370-sonar-cand-03.webp" alt="GA Phase 2 sonar mosaic chip candidate 03 in copper sepia showing curved ridge nadir transition" loading="lazy"><figcaption><b>Mosaic Chip #03.</b> Nadir edge &amp; terraced basement step.</figcaption></figure>
-  <figure class="shot reveal" style="margin:0;"><img src="../assets/abyssal/mh370-sonar-cand-04.webp" alt="GA Phase 2 sonar mosaic chip candidate 04 in copper sepia showing point reflector on fault trace" loading="lazy"><figcaption><b>Mosaic Chip #04.</b> Isolated hard-target reflector on fault line.</figcaption></figure>
-  <figure class="shot reveal" style="margin:0;"><img src="../assets/abyssal/mh370-sonar-cand-05.webp" alt="GA Phase 2 sonar mosaic chip candidate 05 in copper sepia" loading="lazy"><figcaption><b>Mosaic Chip #05.</b> Linear ridge facet &amp; shadow pocket.</figcaption></figure>
-  <figure class="shot reveal" style="margin:0;"><img src="../assets/abyssal/mh370-sonar-cand-06.webp" alt="GA Phase 2 sonar mosaic chip candidate 06 in copper sepia" loading="lazy"><figcaption><b>Mosaic Chip #06.</b> Steep basaltic block return.</figcaption></figure>
-  <figure class="shot reveal" style="margin:0;"><img src="../assets/abyssal/mh370-sonar-cand-07.webp" alt="GA Phase 2 sonar mosaic chip candidate 07 in copper sepia" loading="lazy"><figcaption><b>Mosaic Chip #07.</b> Escarpment talus bright cluster.</figcaption></figure>
-  <figure class="shot reveal" style="margin:0;"><img src="../assets/abyssal/mh370-sonar-cand-08.webp" alt="GA Phase 2 sonar mosaic chip candidate 08 in copper sepia" loading="lazy"><figcaption><b>Mosaic Chip #08.</b> Swath-overlap specular glint.</figcaption></figure>
-  <figure class="shot reveal" style="margin:0;"><img src="../assets/abyssal/mh370-sonar-cand-09.webp" alt="GA Phase 2 sonar mosaic chip candidate 09 in copper sepia" loading="lazy"><figcaption><b>Mosaic Chip #09.</b> Volcanic knoll shadow margin.</figcaption></figure>
-  <figure class="shot reveal" style="margin:0;"><img src="../assets/abyssal/mh370-sonar-cand-10.webp" alt="GA Phase 2 sonar mosaic chip candidate 10 in copper sepia" loading="lazy"><figcaption><b>Mosaic Chip #10.</b> Fracture-zone wall backscatter.</figcaption></figure>
-  <figure class="shot reveal" style="margin:0;"><img src="../assets/abyssal/mh370-sonar-cand-11.webp" alt="GA Phase 2 sonar mosaic chip candidate 11 in copper sepia" loading="lazy"><figcaption><b>Mosaic Chip #11.</b> Step-fault acoustic shadow lip.</figcaption></figure>
-  <figure class="shot reveal" style="margin:0;"><img src="../assets/abyssal/mh370-sonar-cand-12.webp" alt="GA Phase 2 sonar mosaic chip candidate 12 in copper sepia" loading="lazy"><figcaption><b>Mosaic Chip #12.</b> High-relief boulder / outcrop clutter.</figcaption></figure>
+<p>The first real step does not change the map at all. Each primary source goes into the case library with its link and a note on what it says: the Malaysian safety investigation, the Inmarsat paper, the ATSB search report, the drifter archive, the hydrophone archive, the sonar mosaic, the sea-temperature record and the published statements on the later searches. Retaining a source is not evidence. The map moves only when someone decides what a source means and admits that interpretation as an observation.</p>
+
+<div class="mh-step">Step 1 <b>Nine primary sources retained</b> <span class="km">map unchanged</span></div>
+
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-s01-library-ui.webp" alt="ABYSSAL sources library listing the Malaysian report, Inmarsat paper, ATSB search report, NOAA drifters, IMOS hydrophones, Geoscience Australia sonar mosaic and NOAA sea temperature." loading="lazy"><figcaption><b>The library.</b> Each source carries its link, notes and provenance root. Two observations drawn from the same root are pooled, never counted twice.</figcaption></figure>
+
+<p>The investigation behind this case keeps the same discipline for its raw data. Every file it downloaded carries a receipt: the URL, retrieval time, size, SHA-256 hash and licence. That covers about 4 GB of reanalysis winds, seismograms, drifter tracks, hydrophone recordings, sonar tiles, satellite images and altimeter passes. Every computed result records its model version, code commit and input hashes.</p>
+
+<h2 id="ch-radar"><span class="num">02</span>Where it was is not where it ended</h2>
+
+<p>The last radar return, at 18:22:12 UTC, is a hard fact about where MH370 was. It is not evidence of where the flight ended six hours later, so it goes into the case as a <b>draft</b>, visible on the map and kept out of the model. In ABYSSAL a dashed outline means exactly that: recorded, not admitted.</p>
+
+<div class="mh-step">Step 2 <b>Last radar contact, kept as a draft</b> <span class="km">map unchanged</span></div>
+
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-s02-radar-ui.webp" alt="ABYSSAL workspace with the last radar contact recorded as a draft, the map still uniform." loading="lazy"><figcaption><b>A draft, not an observation.</b> The 18:22:12 radar fix is recorded and kept, but it does not move the belief map.</figcaption></figure>
+
+<h2 id="ch-rings"><span class="num">03</span>Seven handshakes: the satellite rings</h2>
+
+<p>Two numbers in each satellite message do all the work. The <b>burst timing offset</b> (BTO) is how late the reply arrived. It measures the round trip from Perth to the satellite, to the aircraft and back, so it fixes the aircraft's distance from the satellite. The <b>burst frequency offset</b> (BFO) is a small shift in the radio frequency, set mostly by the aircraft's speed towards or away from the satellite. On its own it cannot place the aircraft, but it tells you which way along the rings the aircraft was moving.</p>
+
+<p>The investigation rebuilt both from first principles in <code>abyssal.signal.satcom</code>. It uses the published satellite ephemeris, the ground-station geometry, the terminal's Doppler pre-compensation and the satellite's own frequency drift. The model reproduces all twelve rows of Inmarsat's published frequency table (Ashton et al. 2015, Table 9) to within 1.5 Hz, and the ATSB's reference 7th arc.</p>
+
+<p>One finding matters for what follows. Projected onto the Earth, the 7th arc is a <b>geodesic circle of radius 4,924.5 km ± 2.5 km</b> around the satellite's sub-point (0.535°N, 64.464°E). ABYSSAL's generic ring observation stays within 5.4 km of the reference arc across the search region, and within 6.8 km along its whole length, far inside the ring's own ±19 km width. A ring around a fixed point is exactly what an acoustic range, a radio range or a satellite timing gives, so no MH370-specific code is needed.</p>
+
+<p>The ring needs a width, and that depends on how the flight ended. The last two BFOs, at 00:19:29 and 00:19:37, imply a descent of about 4,400 ft/min steepening to about 14,900 ft/min eight seconds later. That is a downward acceleration of roughly 0.68 g: an unpiloted, steepening dive after fuel exhaustion. A controlled glide would need a recovery from that dive. The investigation also checked the satellite signal strength recorded for those two bursts: 40.6 and 43.4 dB-Hz, with zero bit errors. The aircraft's antenna was still locked onto the satellite eight seconds into the descent, which rules out a near-vertical dive at that moment.</p>
+
+<p>So the 7th arc goes into ABYSSAL as <b>one ring with alternative readings</b>. A dive lands within about 10 NM of the arc (95.2% weight). A recovered glide could carry up to 110 NM, 70% of it on the far side (4.8% weight after the final-BFO penalty). The readings are mutually exclusive interpretations inside one observation, not separate evidence, and ABYSSAL marginalises over them.</p>
+
+<div class="mh-step">Step 3 <b>The 7th arc</b> <span class="km">90% region 973,468 km² · entropy 11.21 bits</span></div>
+
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-s03-arc7-corridor.webp" alt="ABYSSAL map of the southern Indian Ocean with a thin glowing arc running across the map." loading="lazy"><figcaption><b>One observation: 33 million km² becomes 973,468 km².</b> The 7th arc, admitted as a single ring with dive and glide readings. The whole map collapses onto a thread thousands of kilometres long. The dashed line is the 90% region.</figcaption></figure>
+
+<div class="mh-grid">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s03-arc7-core.webp" alt="Close view of the 7th arc in ABYSSAL: a smooth bright band crossing the map diagonally with a dashed 90% contour." loading="lazy"><figcaption><b>Close up.</b> The ring's width is the dive reading (±19 km) plus a faint glide halo either side.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s03-arc7-ui.webp" alt="ABYSSAL workspace with the sources library open and the 7th arc visible as a thin line." loading="lazy"><figcaption><b>In the workspace.</b> The arc is drawn from the Inmarsat source and listed in the library with its provenance.</figcaption></figure>
 </div>
 
-<h2><span class="num">06</span>Custom acoustic, SOFAR, barnacle SST, and seismic engines</h2>
+<h2 id="ch-doppler"><span class="num">04</span>Which way along the ring: Doppler</h2>
 
-<p>Every public acoustic, seismic, radio, optical, and altimeter lead was rebuilt from primary archives and run through ABYSSAL's custom physical detectors — recovering real published points of interest directly from raw waveforms while documenting every null result transparently.</p>
+<p>The ring runs from the Southern Ocean up through Indonesia. Inmarsat's original insight was that the frequency offsets fit a southbound aircraft and not a northbound one. For a northern route the BFO residuals run to tens of hertz, against a measurement noise of about 5–7 Hz. Military radar coverage and the lack of any northern-hemisphere sighting point the same way. In ABYSSAL this is an <b>area statement</b>: the region north of 15°S is a thousand times less likely than the rest.</p>
 
-<p>Running ABYSSAL's custom transient and cepstral bubble-pulse engine (<code>abyssal.signal.bubble_pulse</code>, `5–300 ms` period search) across `1.05 GB` of raw `6 kHz` IMOS CMST recordings (`00:00–03:30 UTC`, Perth Canyon `3315/3376` and Scott Reef `3250`) recovered <strong>252 impulsive transients</strong> — including <strong>5 exact detections matching Curtin University's `01:33:32–01:33:43 UTC` paper events</strong> (`10.7 dB` over median at Perth Canyon `3315`, `22.5 dB` at Scott Reef `3250`). Across all 252 transients, zero showed a corroborated second-harmonic implosion bubble pulse.</p>
+<div class="mh-step">Step 4 <b>Doppler says south</b> <span class="km">90% region 620,279 km² · entropy 10.65 bits</span></div>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-real-imos-transients.webp" alt="252 impulsive transients recovered by ABYSSAL's custom hydrophone and bubble-pulse engine across IMOS Perth Canyon and Scott Reef recordings, highlighting 5 recovered detections matching Curtin University's 01:33 UTC paper events" loading="lazy"><figcaption><b>Custom Hydrophone Transient &amp; Bubble-Pulse Engine (`imos_transients.json`).</b> Out of `252` raw transients (`10–400 Hz`, `>10 dB` over median), the detector independently recovers Curtin's `01:33:32–43 UTC` reference events (amber) while ruling out implosion bubble-pulse trains.</figcaption></figure>
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-s04-bfo-corridor.webp" alt="ABYSSAL map with the arc bright through the southern Indian Ocean." loading="lazy"><figcaption><b>The northern arc fades.</b> One area statement, sourced to the Inmarsat analysis, down-weights everything north of 15°S. The ring now lives in the southern Indian Ocean.</figcaption></figure>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-real-hydrophone-seismic.webp" alt="Two-panel real acoustic and seismic audit showing IMOS Perth Canyon duty-cycle blind band across 32.5 to 34.5 degrees south, flat 4-hydrophone stack, and 24 real calibration earthquakes versus null MH370 seismic T-phase windows" loading="lazy"><figcaption><b>IMOS Hydrophones (`1.05 GB` + `384` Portland files) &amp; 22-Station FDSN Seismometers.</b> Left: Perth Canyon's interleaved 5-in-15 minute duty cycle opens a `32.5°S–34.5°S` blind band while covered windows and the 4-station stack stay flat (`p ≈ 0.6`). Right: 24 real earthquakes (`Carlsberg Ridge Mw 5.07`, `p = 0.0002`) calibrate the T-phase beam; capped MH370 windows stay null (`p = 0.29–0.97`).</figcaption></figure>
+<div class="mh-grid">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s04-bfo-core.webp" alt="Close view of the arc after the Doppler statement." loading="lazy"><figcaption><b>Along the arc</b> nothing has changed yet: every latitude south of 15°S is still equally plausible.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s04-bfo-ui.webp" alt="ABYSSAL workspace after the Doppler area statement." loading="lazy"><figcaption><b>The status bar</b> counts admitted observations and area statements, and reports the 90% region after every change.</figcaption></figure>
+</div>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-chart-imos-calibration-pings.webp" alt="IMOS hydrophone calibration across 9 regional earthquakes from 571 to 4962 km showing up to 34.2 dB excess SNR plus Curtin reference detections" loading="lazy"><figcaption><b>IMOS Hydrophone Calibration (`imos_acoustic_likelihood.json`).</b> Nine regional earthquakes (`M3.2–M4.2`, `571–4,962 km`) plus Curtin's `01:33:44` (`15.6 dB`) and `05:03:01` (`17.8 dB`) clock-check pings confirm the duty-cycle loggers reliably capture real arrivals.</figcaption></figure>
+<h2 id="ch-flight"><span class="num">05</span>The flight engine: winds, autopilots and fuel</h2>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-chart-imos-portland-bands.webp" alt="IMOS Perth Canyon 300 windows and Portland Logger 3274 384 windows 8 to 20 Hz peak-over-median dB time series" loading="lazy"><figcaption><b>Perth Canyon (`300` Windows) &amp; Portland Array (`384` Windows) 8–20 Hz Scan.</b> Full duty-cycle window series across both arrays: no unattributed aircraft-impact transient exceeds calibrated background noise.</figcaption></figure>
+<p>The ring says <i>how far</i> from the satellite. It does not say <i>where along the ring</i>, and that is where most analyses have disagreed. Answering it means flying the aircraft. The investigation built a general flight engine, <code>abyssal.signal.flightpath</code>, for this. It integrates candidate autopilot paths through real hourly <b>ERA5</b> winds and temperatures, checked against 9M-MRO's own ACARS wind reports to within 3° and 2 kt, and scores each path against every satellite message.</p>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-chart-tphase-seismic-spikes.webp" alt="T-band Hilbert envelopes across 22 Indian Ocean seismic stations highlighting uncatalogued Christmas Island XMIS and Reunion RER spikes" loading="lazy"><figcaption><b>22-Station Seismic T-Band Hilbert Envelopes (`23:00–03:30 UTC`).</b> Raw vertical ground-velocity envelopes isolate the uncatalogued Christmas Island (`AU.XMIS`, `01:16:11 UTC`) and Réunion (`G.RER`, `01:26 UTC`) local earthquake spikes while the 7th-arc beam remains quiet.</figcaption></figure>
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-chart-era5-wind-field.webp" alt="ERA5 250 hPa wind speed over the eastern Indian Ocean at 00:00 UTC on 8 March 2014, with the subtropical jet south of 30 degrees south and the 7th arc overlaid." loading="lazy"><figcaption><b>The winds it flew through.</b> ERA5 at 250 hPa, 00:00 UTC on 8 March 2014. The subtropical jet south of 30°S pushes every southern path east, which is why steady-heading and steady-track paths end in different places.</figcaption></figure>
 
-<p>To resolve open bathymetric caveats on both acoustics and ocean drift, ABYSSAL's 3D SOFAR ray-blocking engine (<code>abyssal/signal/sofar_blocking.py</code>) traced exact geodesic depth profiles across <strong>1- and 2-arcmin NOAA ETOPO 2022 bathymetry</strong>, proving that paths from `34°S–42°S` to Perth Canyon, Portland, and CTBTO HA01 remain deeper than `2,094 m` (`T = 1.00`, unobstructed), whereas <strong>Broken Ridge (`~32°S`)</strong> rises to `779–874 m` and blocks transmission (`T = 0.18–0.27`). Simultaneously, real <strong>2014–2015 NOAA OISST v2.1 paleothermometry</strong> checked against Poupin's Réunion barnacle growth (`24.81°C` vs `25.4 ± 1.0°C`) placed `40.0°S` at `15.15–15.39°C` — below <em>Lepas anatifera</em>'s `18–20°C` colonisation threshold.</p>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-real-bathy-barnacle-v3.webp" alt="Two-panel real engine output: left showing 3D ETOPO 2022 SOFAR ray-blocking with Broken Ridge shadowing 32 degrees south to T=0.18; right showing 2014 NOAA OISST v2.1 barnacle SST below the 18-20 C threshold at 40 degrees south" loading="lazy"><figcaption><b>3D ETOPO 2022 SOFAR Ray-Blocking &amp; NOAA OISST v2.1 Barnacle SST.</b> Left: `34°S–42°S` is acoustically unobstructed to HA01/Perth Canyon (`T = 1.00`), while Broken Ridge (`~32°S`) blocks `T = 0.18`. Right: `40.0°S` sits at `15.15–15.39°C`, disfavouring southern origin for barnacle-colonised debris.</figcaption></figure>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-ember-09-satellite-view.webp" alt="ABYSSAL Satellite View Time Machine draping live NASA GIBS VIIRS 250 metre satellite imagery over the Indian Ocean underneath the MH370 7th arc" loading="lazy"><figcaption><b>Satellite View Time Machine on MH370.</b> Full-width NASA GIBS / EOSDIS VIIRS 250 m imagery (+ Sentinel-2 30 m &amp; Landsat 8/9 30 m) directly beneath the 7th arc.</figcaption></figure>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-real-sat-wspr-nulls.webp" alt="Two-panel real null audit: left showing 95-96% MODIS cloud cover in Zone S on 7-8 March 2014; right showing 145 MB WSPRnet time-shift enrichment E=0.62 to 0.91 below 30 control nights" loading="lazy"><figcaption><b>MODIS Cloud Cover, Jason-2 Pass 077 &amp; WSPR Radio Null Tests.</b> Left: Zone S was `96%` cloud-covered on 8 March (`30–540` false specks per 10k km² in clear 7 March controls), and Jason-2 Pass 077 returned flat `+0.05 dB` backscatter. Right: across `1,634` crossing WSPR spots, enrichment (`E = 0.91` SNR, `E = 0.62` drift, `p = 0.19–0.48`) was <em>lower</em> than 30 control nights.</figcaption></figure>
-
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-chart-jason2-altimeter-passes.webp" alt="Jason-2 Ku-band sigma0 backscatter null test across 22 Indian Ocean passes and 8482 open-ocean points showing +0.05 dB on Pass 077 versus +3.0 dB threshold" loading="lazy"><figcaption><b>Jason-2 Ku-Band Altimetry (`22` Passes · `8,482` Null Points).</b> Zero blooms exceed `+3.0 dB` near any predicted fuel-sheen track (`Pass 077` over `40.0°S` at `6.9 m/s` wind: `+0.05 dB`), consistent with `7.67 m/s` median wind rapidly dispersing surface sheens.</figcaption></figure>
+<p>After the last radar fix, each candidate flies along airway N571 and makes a single <i>final major turn</i> between 18:29 and 18:39. It then holds one of five autopilot modes (great circle, true or magnetic track, true or magnetic heading) at a constant or slowly falling Mach number and altitude. A Gauss–Newton fit and a Laplace evidence integral weight each configuration. Three families came out:</p>
 
 <ul>
-  <li><strong>Uncatalogued local earthquakes caught by raw waveform inspection:</strong> Before capping single-station spikes in the 22-station seismic stack, three MH370 windows hit \(p = 0.03\text{–}0.07\). Opening the raw seismograms traced all three to two uncatalogued local earthquakes (Christmas Island at `01:16:11 UTC` with a P-wave followed 35 s later by S-waves ~290 km away, and Réunion at `01:26 UTC`).</li>
-  <li><strong>Maldives sighting, overflight seismometers, Gaofen-1, DART buoys &amp; 2014 SAR/AIS:</strong> Kudahuvadhoo sits ~2,000 km inside the 00:19:29 UTC 7th arc (BTO residual \(-13,200\;\mu\text{s}\)); MY.KUM and MY.IPM sample at 20 sps (10 Hz Nyquist, below jet noise); Gaofen-1 sits 732 km off-arc (0.85 m/s mean drift for 10 days); DART buoys filter out ~0.5 mm 10–30 s impact waves beneath metre-scale swell; and no public SAR (Sentinel-1A launched 3 April 2014) or public 2014 satellite AIS archive exists.</li>
+  <li><b>Family A</b>, constant Mach: 1,100 configurations.</li>
+  <li><b>Family B</b>, falling Mach, a stand-in for long-range cruise: 2,200 configurations.</li>
+  <li><b>Family C</b>, slow speeds allowed with down-weighted Doppler, as a hedge against a wrong BFO model: 1,100 configurations.</li>
 </ul>
 
-<h2><span class="num">07</span>Full-physics fuel &amp; non-steady scan, native final map, and Plan Studio</h2>
+<p>All three end between 37.4°S and 39.7°S, with χ² of 4–6 for 13 measurements.</p>
 
-<p>In Revision 3 (<code>fusion_2026_v3.py</code>), replacing constant-Mach book approximations with a coupled <strong>Boeing 777-200ER / Trent 892 fuel-burn model</strong> (<code>abyssal/signal/aircraft_fuel.py</code>: clean drag polar + Korn/Lock transonic wave drag + RK2 weight depletion through ERA5 winds, validated to <strong>0.2%</strong> against 9M-MRO's own ACARS burn `6,955` vs `6,967 kg/h`, `-1.3%` on `5h 34m` KLIA–Beijing trip fuel `36,700` vs `37,200 kg`, and `+0.1%` on `7h 31m` endurance `49,150` vs `49,100 kg`) and a <strong>155,000-trajectory physics-constrained non-steady scan</strong> (<code>abyssal/signal/nonsteady_flight.py</code>) transforms the residual map:</p>
+<p>Then a sharper test. If the Doppler model were wrong, where could the aircraft be? A <b>timing-only</b> scan dropped the BFOs entirely and allowed speeds down to Mach 0.45. The satellite timing alone still puts 90% of the end points between 37.4°S and 39.7°S. Slow northern paths fit the timing rings about 10<sup>10</sup> times worse. The best timing-only paths match the Doppler data to 4–5 Hz even though Doppler was never used to fit them. <b>The two satellite channels agree independently.</b></p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-chart-families.webp" alt="Ridgeline chart of where each flight-engine family ends along the 7th arc: families A, B and C and the timing-only scan peak between 37 and 40 degrees south; the fuel-coupled distribution peaks near 37.8 degrees south." loading="lazy"><figcaption><b>Where the flight ends, engine by engine.</b> Steady autopilot families and the timing-only scan agree on 37.4–39.7°S. Adding fuel (top) moves the peak north and closes the far south.</figcaption></figure>
+
+<h3>A Boeing 777 that has to run out of fuel at 00:17</h3>
+
+<p>The families above say nothing about fuel, yet fuel is the hardest constraint in the problem: the aircraft had to run dry at about 00:17 UTC, not an hour earlier or later. Revision 3 of the investigation added a full aerodynamic fuel model, <code>abyssal.signal.aircraft_fuel</code>. It combines a Boeing 777-200ER drag polar, transonic wave-drag rise and Rolls-Royce Trent 892 fuel consumption scaled by temperature and Mach, and integrates the aircraft's falling weight through the real ERA5 temperatures. It was calibrated against the aircraft's own data before it was allowed to score anything:</p>
 
 <ul>
-  <li><strong>Pre-FMT fuel ledger &amp; 400×–900× collapse of the South Extension (`< -39.45°S`):</strong> Starting from `43,800 kg` at `17:06:43 UTC` minus `250 kg` unusable (`43,550 kg`, ZFW `174,369 kg`), the `597.0 NM` military radar leg (`17:06:43 → 18:22:12 UTC` via IGARI, Kota Bharu, Penang, Pulau Perak, VAMPI, `10 NM` past MEKAR) burns `8,249 kg` → `35,301 kg` usable at `18:22:12` (`~33,764 kg` at `18:36 FMT`). `P(< -39.45°S)` drops `3.92% → 0.01%` (Family A), `8.91% → 0.01%` (Family B), `7.46% → 0.02%` (Family C), and `2.49% → 0.00%` (Family D `FL350–FL410`, joint DSTG bias-marginalised BFO `σ_b = 25 Hz`); even at `-4%` optimistic book burn (`0.96`) or `σ_fuel = 1,800 kg`, `P(< -39.45°S)` stays `0.07–0.20%`.</li>
-  <li><strong>Altitude, mode &amp; per-burst forensic residuals:</strong> `FL300` drops to `0.00%` (runs dry ~1 h early); `FL390–FL410` captures `86%` of Family D weight; constant true track beats LNAV `68% vs 32%`; free `±25 Hz` BFO bias is pinned by the data to `-0.4 Hz`; and steady median shifts north to <strong>37.78°S</strong> (`90%` interval `37.18°S–38.65°S`). Top steady paths show level cruise at `00:11:00` (`BFO residual -1.7..-2.5 Hz`), a systematic `-21..-38 µs` negative BTO residual at `00:19:29` (~`3 NM` shorter range matching `~2.5 min` unpowered deceleration after `00:17` flameout), and at `37.5°S, 89.2°E` imply `-4,400 → -14,909 ft/min` (`~0.68 g` downward).</li>
-  <li><strong>North Arc (`18°S–30°S`) collapses from `46.5%` to `0.00%`:</strong> Non-steady trajectories hit a sharp physical cliff at `-32°S` (`tot_ll = -79.0`, `BTO chi2 = 42.0`, collapsing to `-100..-262` across `31–18°S`), while peaking dead-centre at `-37°S` (`FL392→410`, `M 0.84→0.79`, `tot_ll = -58.59`, `BTO chi2 = 0.3`, `BFO rms = 4.5 Hz`, `fuel_rem = +170 kg`) and `-36°S` (`FL346→406`, `BTO chi2 = 2.8`, `BFO rms = 3.2 Hz`, `fuel_rem = +83 kg`).</li>
-  <li><strong>1,452-tile northern fuel-peak sonar audit &amp; escarpment shadows:</strong> Scanning `4,447 km²` across `36.95°S–37.65°S` plus auditing real GA mosaic tiles over the steep fracture-zone escarpments at `(-37.81°S, 88.47°E)` (`1,045 m` relief) and `(-38.20°S, 88.15°E)` (`906 m` relief, `16.0°` slope) measures <strong>5.9% and 8.8% deep acoustic shadow (`1.6×` and `2.4×` the `3.7%` flat-seabed control at `-37.43°S, 89.43°E`)</strong> and `2.8×` wall clutter — explaining how towed side-scan missed the wreck without coverage gaps.</li>
+  <li>The ACARS cruise at 17:01–17:06 (FL350, Mach 0.82, 218.3 t): modelled <b>6,955 kg/h</b> against <b>6,967 ± 218 kg/h</b> derived from the aircraft's reported weights, a 0.2% difference.</li>
+  <li>The planned Beijing trip fuel: about 36,700 kg modelled against 37,200 kg in the flight plan (−1.3%).</li>
+  <li>The planned endurance of 7 h 31 min: 49,150 kg modelled against 49,100 kg (+0.1%).</li>
 </ul>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-real-fuel-nonsteady.webp" alt="155,000-trajectory non-steady scan peaking at minus 37 degrees south alongside v2 to v3 posterior shifts collapsing South Extension to 0.08% and North Arc to 0.00% while elevating Fuel-Peak Core to 43.4%" loading="lazy"><figcaption><b>Trent 892 Fuel Model &amp; 155,000-Trajectory Non-Steady Scan (`v2 → v3`).</b> Left: joint 6-BTO + 7-BFO + fuel log-likelihood peaks at `37°S` and collapses south of `39°S` and north of `32°S`. Right: `v3` eliminates both the South Extension (`0.08%`) and North Arc (`0.00%`), concentrating `43.4%` in the fuel-peak core.</figcaption></figure>
+<p>The budget follows. At 17:06:43 the aircraft held 43,800 kg, less 250 kg unusable. Flying the 597 NM military-radar leg through the real atmosphere burns 8,249 kg, leaving <b>35,301 kg at 18:22:12</b>. Every candidate path must then burn exactly that by about 00:17. The result is decisive:</p>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-chart-fuel-family-d-altitudes.webp" alt="Fuel-coupled Family D flight-level posterior showing 86.4% at FL390-410 and autopilot steering mode posterior showing 68.0% Constant True Track vs 32.0% LNAV" loading="lazy"><figcaption><b>Fuel-Coupled Family D Altitude &amp; Autopilot Mode Posterior (`1,200` Configs).</b> Coupled to Trent 892 weight depletion, `FL390–FL410` captures `86.4%` of posterior weight (`FL300` drops to `0.0%`), Constant True Track leads LNAV `68.0% vs 32.0%`, and free `±25 Hz` BFO bias locks onto `-0.4 Hz`.</figcaption></figure>
+<ul>
+  <li><b>The far south closes.</b> The probability south of 39.45°S falls from 3.9–8.9% to 0.00–0.02% in every family. It stays under 0.2% even with a 4% more efficient airframe or a fuel uncertainty of ±1,800 kg.</li>
+  <li><b>The altitude is pinned.</b> FL300 runs dry about an hour early, while FL390–FL410 carries 86% of the weight.</li>
+  <li><b>The aircraft's BFO bias is pinned.</b> Even when it is left free (±25 Hz), the data put it at −0.4 Hz.</li>
+</ul>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-chart-fuel-sensitivity-bounds.webp" alt="7th-arc crossing 5th to 95th percentile latitude intervals across 6 fuel-model perturbations showing all cases remain north of 38.85S" loading="lazy"><figcaption><b>Fuel-Model Sensitivity Sweep (`±4%` Burn, `σ = 800–1,800 kg`, `00:15–00:19 UTC`).</b> Across all six perturbations, `P(lat &lt; 39.45°S)` remains `≤ 0.20%` and the 5th percentile stays north of `38.85°S`.</figcaption></figure>
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-chart-fuel.webp" alt="Two charts: probability south of 39.45 degrees south collapsing to almost zero when the fuel model is added, and altitude weights concentrating at FL390 to FL410." loading="lazy"><figcaption><b>Fuel closes the south and picks the altitude.</b> Left: the far-south probability for each family without and with the calibrated Trent 892 model. Right: the fuel-coupled family's altitude weights.</figcaption></figure>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-real-ledger-28-sweeps.webp" alt="KL information ledger in bits alongside one-at-a-time assumption sensitivity sweeps" loading="lazy"><figcaption><b>KL Information Ledger &amp; Sensitivity Sweeps.</b> Seabed non-detections dominate (`1.37 bits`), while sensitivity sweeps test stability across drift, POD, hydrophone, and fuel perturbations.</figcaption></figure>
+<div class="mh-grid">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370-chart-fuel-family-d-altitudes.webp" alt="Bar charts of the fuel-coupled family's posterior over flight levels and autopilot steering modes: constant true track 68 percent, LNAV great circle 32 percent." loading="lazy"><figcaption><b>Altitude and autopilot mode</b> in the fuel-coupled family: true track 68%, great circle (LNAV) 32%, all heading modes near zero.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370-chart-fuel-sensitivity-bounds.webp" alt="Interval chart of 7th-arc crossing latitudes under six fuel-model perturbations, all centred between 37 and 38.5 degrees south." loading="lazy"><figcaption><b>Six ways to be wrong about fuel.</b> Older or newer airframe, tighter or looser fuel, earlier or later exhaustion: the crossing stays between 37°S and 38.5°S.</figcaption></figure>
+</div>
 
-<p>Returning natively inside ABYSSAL's own workspace — zoomed straight into the 7th-arc core, inspecting individual cells with <strong>Probe</strong> (`Log Bayes factors relative to the prior`), allocating search tracks in <strong>Plan Studio</strong>, and ranking sweep boxes in <strong>Where next?</strong> — the operational conclusion is sharp:</p>
+<h3>What if nobody flew a straight line?</h3>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-ember-12-fuel-peak-zoom.webp" alt="Native ABYSSAL workspace zoomed into the MH370 7th-arc fuel-peak core showing the glowing Ember posterior and dashed 90% contour" loading="lazy"><figcaption><b>Native ABYSSAL Workspace · Zoomed on the 7th-Arc Core.</b> The live Ember posterior ridge rendered natively inside ABYSSAL at `~6.6 km` viewport detail with zero bespoke UI.</figcaption></figure>
+<p>Steady autopilot flight after one turn is an assumption. Revision 3 tested it with <b>155,000 manoeuvring flights</b> (<code>abyssal.signal.nonsteady_flight</code>). They include holding patterns of up to 70 minutes before 19:41, two-leg flights with mid-flight heading, speed or altitude changes, low-altitude cruise at high fuel burn, and the unpowered slowdown after flameout. Each was refined against the 6 BTOs, 7 BFOs and the fuel budget, in every 1° bin from 41°S to 18°S.</p>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-ember-13-probe-arc.webp" alt="Native ABYSSAL Probe tool inspecting a cell near the 7th arc and displaying exact Log Bayes factors relative to the prior" loading="lazy"><figcaption><b>Native `Probe` Tool (`Why this cell?`).</b> Inspecting exact prior cell mass, posterior cell mass, and per-source log Bayes factors (`satcom-inmarsat`) directly on the map.</figcaption></figure>
+<p>The answer is a cliff at both ends. South of 39°S no manoeuvre works: at 40°S the best path is 7,105 kg short of fuel. North of 32.5°S the timing and Doppler fits collapse, with χ² of 53–367 against about 6 timing points and BFO residuals of 15–21 Hz. In between, 33–38.5°S is <i>flyable</i>. The global best fit is at 37°S: a climb from FL392 to FL410 with the speed easing from Mach 0.84 to 0.79, timing χ² 0.3, Doppler 4.5 Hz, 170 kg to spare. A late-descent family reaches 34–33°S. The 10% "anything goes" allowance that the previous revision had spread along the arc is replaced by physics.</p>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-ember-10-plan-studio.webp" alt="ABYSSAL Plan Studio open on the MH370 7th arc with Suggest routes placing search boxes directly along the glowing probability ridge" loading="lazy"><figcaption><b>Plan Studio (`Suggest routes`).</b> Multi-asset search allocation placing sweep boxes directly along the highest-density ridge of the 7th-arc posterior.</figcaption></figure>
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-chart-nonsteady.webp" alt="Line chart of log-likelihood of the best manoeuvring flight for each target latitude: a plateau between 33 and 38 degrees south, collapsing sharply to the north and south." loading="lazy"><figcaption><b>155,000 manoeuvring flights.</b> The best possible flight to each latitude, scored on timing, Doppler and fuel. Only 33–38.5°S is flyable.</figcaption></figure>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-ember-11-where-next.webp" alt="ABYSSAL Where next panel zoomed to 50 kilometre scale on the MH370 7th arc core showing ranked next-best search cells" loading="lazy"><figcaption><b>Where next? (`50 km` scale on the 7th arc core).</b> Zoomed into the highest-density corridor to rank incremental sweep cells by expected probability of success.</figcaption></figure>
+<p>In ABYSSAL the whole flight engine becomes <b>one more ring</b>. It measures distance flown from the last radar fix, and its eight alternative readings are a Gaussian mixture fitted to the engine's end-point density: 80% fuel-coupled steady families, 20% manoeuvring scan. The fit reproduces the engine's distribution along the arc to within 1.7% total variation. Where this ring crosses the 7th arc, the map collapses.</p>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-ember-14-measure-arc.webp" alt="Native ABYSSAL Measure tool measuring 1,901.967 km across the Indian Ocean 7th arc corridor in Ember dark mode" loading="lazy"><figcaption><b>Native `Measure` Tool (`1,901.967 km`).</b> Live geodesic distance measurement across the Indian Ocean basin directly over the 7th-arc posterior.</figcaption></figure>
+<div class="mh-step">Step 5 <b>The flight engine</b> <span class="km">90% region 85,909 km² · entropy 7.62 bits · peak 37.68°S 89.02°E</span></div>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-ember-15-outside-area.webp" alt="Native ABYSSAL Search Ledger Outside area probability declaration popover over the 7th arc core" loading="lazy"><figcaption><b>Search Ledger · `Outside area` Declaration.</b> Explicit pre-search outside-area probability accounting so negative seabed sweeps update honest remaining mass.</figcaption></figure>
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-s05-flight-core.webp" alt="Close view of the probability concentrated where the flight ring crosses the 7th arc: a bright elongated patch along the arc with a dashed 90% contour." loading="lazy"><figcaption><b>From 620,279 km² to 85,909 km².</b> Distance flown (from the flight engine) times distance from the satellite (from the 7th arc). 84% of the probability now lies between 36.8°S and 38.8°S, and nothing about the sea has been admitted yet.</figcaption></figure>
 
-<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-ember-16-plan-assets.webp" alt="Native ABYSSAL Plan Studio showing side-scan vessel and multibeam USV asset parameters alongside auto-allocated orange sweep boxes along the 7th arc" loading="lazy"><figcaption><b>Plan Studio · Multi-Asset Sweep Allocation.</b> Side-scan vessel and multibeam USV parameters (`POD`, `sweep width`, `speed`, `endurance`) auto-allocated along the 7th-arc core.</figcaption></figure>
+<div class="mh-grid">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s05-flight-corridor.webp" alt="ABYSSAL map with the arc reduced to a short bright segment." loading="lazy"><figcaption><b>The corridor view.</b> The same map as step 3, now a single bright patch on a 2,000 km stretch of arc.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s05-flight-ui.webp" alt="ABYSSAL workspace after the flight engine ring is admitted." loading="lazy"><figcaption><b>Two observations.</b> Two rings, each with alternative readings, and one area statement. That is the whole satellite and flight analysis in ABYSSAL's vocabulary.</figcaption></figure>
+</div>
+
+<h2 id="ch-sea"><span class="num">06</span>What the sea returned</h2>
+
+<p>On 29 July 2015 a flaperon washed up on Réunion. Over the next two years about 30 more pieces turned up in Mozambique, South Africa, Mauritius, Madagascar and Tanzania. The Malaysian report classes 27 of them as confirmed, probable or unverified. Their timing and places are evidence about where they started, if you can model how the sea carried them.</p>
+
+<h3>Debris drift, scored against real drifters</h3>
+
+<p>The investigation's drift engine, <code>abyssal.signal.drift_markov</code>, uses <b>6.0 million real drifting-buoy fixes</b> from NOAA's Global Drifter Program, 1990–2025, as analogs. For each candidate start latitude it asks how often real drifters from there reached each find region by each find date. A Markov chain on a 1° grid was tried first and rejected, because it over-diffuses over one to two years. The direct analog count, with censoring for finds that might have arrived earlier unseen, is what is used.</p>
+
+<p>The answer depends on <b>windage</b>, how much faster than a drogued drifter wind-blown debris travels, which is the biggest single uncertainty in the problem. If debris drifted like the buoys, the timing favours starts north of about 31°S. If it drifted 1.5 times faster, the arc is nearly flat.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-chart-drift.webp" alt="Line chart of debris-drift log-likelihood along the 7th arc for three windage stretch factors; slower windage favours the north strongly, faster windage is nearly flat." loading="lazy"><figcaption><b>Debris timing favours the north, unless debris outran the drifters.</b> 27 finds against 36 years of real drifters, for three windage assumptions.</figcaption></figure>
+
+<p>In ABYSSAL the drift likelihood, averaged over the three windage stretches, goes in as <b>thirteen relative-density bands</b> along the arc. Each is an area statement of the form "this band is 0.24 times as likely as the most favoured band", sourced to the drifter analysis. A second set of five bands encodes a silence: <b>nothing washed up in Western Australia</b>. Real drifters from the far south often reach the WA coast within two years, and no MH370 debris was ever found there.</p>
+
+<div class="mh-step">Step 6 <b>Debris drift</b> <span class="km">90% region 94,437 km²</span></div>
+<div class="mh-grid">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s06-drift-core.webp" alt="ABYSSAL map after adding debris drift bands: the probability patch shifts slightly north-east along the arc." loading="lazy"><figcaption><b>Drift bands admitted.</b> The patch leans north-east, towards the latitudes the drifters favour.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s07-wa-core.webp" alt="ABYSSAL map after adding the Western Australia absence bands." loading="lazy"><figcaption><b>No debris in Western Australia.</b> Five more bands; the far south loses a little more. 90% region 101,796 km².</figcaption></figure>
+</div>
+
+<h3>The barnacles' thermometer</h3>
+
+<p>The flaperon arrived covered in goose barnacles, <i>Lepas anatifera</i>, which only settle and grow in water warmer than roughly 18–20°C. Revision 3 pulled the real NOAA OISST v2.1 sea-surface temperatures for March–May 2014 along the arc. It first validated them off Réunion: the June 2015 OISST of 24.8°C matches the 25.4 ± 1.0°C measured from the barnacles' final growth. At 40°S the sea was 15.2–15.4°C, too cold even if the flaperon drifted 2.5° north within 60 days. At 34–36°S it was 18.3–19.9°C from the start.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-chart-barnacle.webp" alt="Line chart of sea-surface temperature along the 7th arc in March 2014 and the warmest temperature reachable within 60 days, against the barnacle settlement threshold band." loading="lazy"><figcaption><b>The barnacles needed warmer water than the far south offered.</b> NOAA OISST v2.1 along the arc, March–May 2014.</figcaption></figure>
+
+<div class="mh-step">Step 7 <b>Barnacle temperature</b> <span class="km">90% region 108,728 km²</span></div>
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-s08-barnacle-core.webp" alt="Close view of the probability after adding barnacle temperature bands; mass shifts towards the north-eastern half of the patch." loading="lazy"><figcaption><b>Six temperature bands.</b> The southern end of the patch dims; 34–36.8°S rises from 17% to 20%.</figcaption></figure>
+
+<h2 id="ch-surface"><span class="num">07</span>Looking at the surface</h2>
+
+<h3>The 2014 air and sea search</h3>
+
+<p>From 18 March to 28 April 2014, aircraft and ships from several nations searched the surface for floating debris, moving north along the arc as the analysis changed. They found nothing, and that is evidence too. CSIRO computed the probability that the search would have seen low-windage debris for each impact latitude (ATSB 2017, Figure 20). It was near-certain for 26–32.5°S, where the search spent late March, and small in the far south. ABYSSAL takes it as eight bands of <code>1 − 0.8 × POD</code>, where 0.8 is the assumed chance that recognisable debris was afloat to be seen.</p>
+
+<div class="mh-step">Step 8 <b>The surface search saw nothing</b> <span class="km">90% region 105,617 km²</span></div>
+<div class="mh-grid">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s09-surface-ui.webp" alt="ABYSSAL workspace after adding the surface-search bands." loading="lazy"><figcaption><b>Eight bands from one CSIRO curve.</b> Each band is an area statement with its relative factor and source.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s09-surface-core.webp" alt="Core view of the probability after the surface-search bands." loading="lazy"><figcaption><b>Small change in the core.</b> The surface search was weakest exactly where the flight engine puts the most probability.</figcaption></figure>
+</div>
+
+<h3>Oil slicks, sun glint and the best day to look</h3>
+
+<p>A crash leaves a trace on the surface, even after fuel exhaustion. Unusable fuel, engine oil and hydraulic fluid amount to perhaps 0.1–1 m³. That can make a sheen of order 1–10 km², which drifts with the current plus about 3% of the wind and shows up as a bright or dark smooth patch in sun glint. The investigation drifted a sheen forward from every point on the arc using real March 2014 currents (OSCAR) and winds (NAVGEM). It then pulled NASA MODIS images from Terra and Aqua centred on where the sheen should have been at each overpass from 8 to 12 March.</p>
+
+<p>It failed, for reasons worth knowing. Over the south extension the predicted sheen <b>never had a clear look</b> in five days: every pass was cloud. Clear looks exist at 41°S (Terra, 10 March) and 34°S (Aqua, 11 March), but outside sun glint. There the free true-colour product spans about one grey level of dark ocean: a standard deviation of 0.93 brightness steps out of 255. A sheen simply cannot be seen in it, even over a fully clear scene. A real attempt needs calibrated radiances and glint geometry.</p>
+
+<div class="mh-grid">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-slick-best.webp" alt="Eight MODIS image windows centred on predicted fuel-sheen positions, most heavily clouded, two clear but uniform dark ocean." loading="lazy"><figcaption><b>The best looks at where a sheen should have been</b>, 8–12 March 2014. Circles: predicted sheen position ±30 km.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-slick-stretch.webp" alt="Contrast-stretched and high-pass versions of the two clear windows, showing only detector striping and compression steps." loading="lazy"><figcaption><b>Stretched to the limit.</b> Only detector striping and compression steps. The product has no dynamic range left over dark ocean.</figcaption></figure>
+</div>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-gibs-sheet.webp" alt="Sheet of MODIS true-colour tiles along the 7th arc for 8 to 12 March 2014, mostly cloud-covered." loading="lazy"><figcaption><b>The whole arc, 8–12 March 2014</b> (NASA GIBS, MODIS Terra and Aqua). The southern arc spent most of the week under cloud.</figcaption></figure>
+
+<h3>A radar altimeter flew over the predicted sheen</h3>
+
+<p>An oil film damps the centimetre ripples that scatter radar. A nadir altimeter therefore sees a sharp jump in backscatter over a slick, called a "sigma-zero bloom". The investigation read every Jason-2 pass from 8 to 12 March 2014 (128 passes, 22 crossing the region) and interpolated each predicted sheen track to the exact time of each crossing. One coincidence stands out. <b>Pass 077 flew straight over the predicted sheen of a 40.0°S impact, 11 hours after the crash</b>, at 11:25 UTC on 8 March, with 7 one-second measurements inside the uncertainty circle. Its backscatter was flat: +0.05 dB at a wind of 6.9 m/s, so no bloom. A sheen a few kilometres wide inside a 32 km circle would be hit only 10–15% of the time, so this is weak evidence against the far south, consistent with the fuel result.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370-chart-jason2-altimeter-passes.webp" alt="Jason-2 altimeter null calibration: 22 passes, 8,482 open-ocean background points, 0.2 percent false-alarm rate, and no blooms at predicted sheen intersections." loading="lazy"><figcaption><b>Jason-2, 8–12 March 2014.</b> The open-ocean false-alarm rate for a +3 dB bloom is 0.2%; no bloom near any predicted sheen.</figcaption></figure>
+
+<h3>Radar ripple rings and dark vessels</h3>
+
+<p>Synthetic-aperture radar would show slicks, ship wakes and the ring of ripples from an impact regardless of cloud. There was none to look at. ENVISAT ended in 2012, and Sentinel-1A launched on 3 April 2014, four weeks too late. Commercial archives from RADARSAT-2, TerraSAR-X and COSMO-SkyMed are paid. Historical satellite AIS ship tracks from 2014 are commercial or need a registered key. ABYSSAL's Signal Lab has the engines (Sentinel-1 scene search, SAR vessel detection, dark-track matching), but for March 2014 the honest result is <b>no data</b>. The objects that satellites photographed near 44–45°S in mid-March 2014 do not fit either. The nearest point on the arc is 732 km from the Chinese Gaofen-1 object, which would need 0.85 m/s of sustained drift for ten days.</p>
+
+<p>These are the matching engines in ABYSSAL's Signal Lab, open on this case. The investigation ran the acoustic and seismic ones on real 2014 recordings (next chapter). The radar, vessel and ripple-ring engines have no March 2014 input at all. In the app, each panel runs only on its own labelled SCENARIO demo until real data is loaded, and nothing from them entered this case.</p>
+
+<div class="mh-grid three" id="mh-signal">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-signal-0.webp" alt="ABYSSAL Signal Lab panel for the Dark vessels · SAR + AIS engine." loading="lazy"><figcaption><b>Dark vessels · SAR + AIS.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-signal-1.webp" alt="ABYSSAL Signal Lab panel for the Persistence · many passes engine." loading="lazy"><figcaption><b>Persistence · many passes.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-signal-2.webp" alt="ABYSSAL Signal Lab panel for the Impact rings · splash clock engine." loading="lazy"><figcaption><b>Impact rings · splash clock.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-signal-3.webp" alt="ABYSSAL Signal Lab panel for the Acoustic localiser engine." loading="lazy"><figcaption><b>Acoustic localiser.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-signal-4.webp" alt="ABYSSAL Signal Lab panel for the Ocean-basin acoustics · SOFAR engine." loading="lazy"><figcaption><b>Ocean-basin acoustics · SOFAR.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-signal-5.webp" alt="ABYSSAL Signal Lab panel for the Implosion forensics engine." loading="lazy"><figcaption><b>Implosion forensics.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-signal-6.webp" alt="ABYSSAL Signal Lab panel for the Lost-submarine drill engine." loading="lazy"><figcaption><b>Lost-submarine drill.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-signal-7.webp" alt="ABYSSAL Signal Lab panel for the Magnetic dipoles engine." loading="lazy"><figcaption><b>Magnetic dipoles.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-signal-8.webp" alt="ABYSSAL Signal Lab panel for the Seabed · multibeam &amp; side-scan engine." loading="lazy"><figcaption><b>Seabed · multibeam &amp; side-scan.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-signal-9.webp" alt="ABYSSAL Signal Lab panel for the Debris back-track engine." loading="lazy"><figcaption><b>Debris back-track.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-signal-10.webp" alt="ABYSSAL Signal Lab panel for the Ring finder engine." loading="lazy"><figcaption><b>Ring finder.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-signal-dark-scenario.webp" alt="ABYSSAL Signal Lab dark-vessel engine on a synthetic scenario." loading="lazy"><figcaption><b>Dark vessels, run on the built-in SCENARIO scene.</b> Synthetic data, labelled as such in the app. It shows what the engine does; there is no real 2014 radar to run it on.</figcaption></figure>
+</div><!--/mh-signal-->
+
+<h2 id="ch-listen"><span class="num">08</span>Listening for the impact</h2>
+
+<p>A 200-tonne aircraft hitting the sea at several hundred kilometres an hour makes sound, and the deep sound channel, the SOFAR channel, carries sound thousands of kilometres. Even a weak signal, if recorded, could be matched across instruments by its arrival times. This was the most thoroughly tried idea in the investigation, and the most thoroughly negative.</p>
+
+<h3>Hydrophones that were recording</h3>
+
+<p>IMOS publishes raw recordings from its passive acoustic observatories. The MH370 release covers two loggers in the Perth Canyon and one at Scott Reef. Each records 5 minutes in every 15 at 6 kHz, and the two Perth Canyon loggers are interleaved. The investigation reduced every recording from 7 to 8 March to per-second band energies. A dive impact anywhere on most of the arc would have arrived while a Perth Canyon logger was recording, and they heard nothing unusual. Only a blind band near 32.5–34.5°S fell into the duty-cycle gaps.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-imos-overview.webp" alt="Spectrograms of the three IMOS loggers through the night of 7 to 8 March 2014, showing five-minute recordings separated by ten-minute gaps." loading="lazy"><figcaption><b>The duty cycle.</b> Perth Canyon and Scott Reef recorded 5 minutes in every 15. Each bright column is one recording; anything that arrived in the gaps was never heard.</figcaption></figure>
+
+<p>It then found a hydrophone nobody had used. IMOS deployment 3274 off <b>Portland, Victoria</b>, recording since 30 December 2013, was running all night. Its 01:14:46–01:19:53 recording covers exactly when sound from an impact at 39.0–41.0°S would have arrived, the south extension again. The recording is quiet. Portland's band is busy, though: short 10–30 Hz bursts every few minutes, whale calls, ice, distant earthquakes. A catalogued magnitude-4.0 ridge earthquake 2,400 km away does not stand out from that clutter.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-portland-spectrograms.webp" alt="Six spectrograms from the IMOS Portland hydrophone: the 01:14 UTC recording on 8 March is quiet; adjacent recordings and control nights show short low-frequency bursts and ship tones." loading="lazy"><figcaption><b>Portland, Victoria, 8 March 2014.</b> Panel two is the recording that covers a south-extension impact's arrival window. Quiet, but the background clutter limits what quiet means.</figcaption></figure>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-portland-calib.webp" alt="Portland hydrophone spectrograms around the arrival of a catalogued magnitude 4 ridge earthquake, indistinguishable from background bursts." loading="lazy"><figcaption><b>The calibration that limits it.</b> A catalogued magnitude-4.0 earthquake 2,400 km away is lost among Portland's background bursts.</figcaption></figure>
+
+<p>The most sensitive test adds the faint energy at all four loggers together, at the arrival times predicted for every candidate impact point and time. Paths that cross land are excluded. The null is the same statistic shifted by whole 15-minute periods, which preserves the recording on/off pattern exactly. No latitude stands out: the lowest p-value among 97 latitudes is 0.047, about what chance gives. The south extension's windows are, if anything, quieter than usual.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-chart-hydrophones.webp" alt="Two charts: Perth Canyon recording coverage of impact times along the arc, and four-logger stack p-values along the arc, none below about 0.05." loading="lazy"><figcaption><b>Who could have heard it, and did anything stand out?</b> Top: Perth Canyon duty-cycle coverage. Bottom: the four-logger weak-signal stack against a time-shift null.</figcaption></figure>
+
+<p>Revision 3 then screened every path through 3-D ETOPO 2022 bathymetry. <b>Broken Ridge, near 32°S, rises to 780–870 m below the surface</b> and blocks the deep sound channel to Perth Canyon, Portland and the CTBTO station HA01 (transmission 0.18–0.27). Paths from 34–42°S stay deeper than 2,090 m and are unobstructed. The hydrophone factor that goes into ABYSSAL (eleven bands) uses the Perth Canyon coverage, screened by that blocking, with an assumed detection probability of 0.5. That probability is uncalibrated, because nobody knows how loud an airliner impact is at 4,000 km.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-chart-sofar.webp" alt="Line chart of SOFAR transmission from the 7th arc to Perth Canyon and Portland: full transmission except a deep notch near 32 degrees south where Broken Ridge blocks the channel." loading="lazy"><figcaption><b>Broken Ridge casts an acoustic shadow near 32°S.</b> 3-D ray screening through ETOPO 2022.</figcaption></figure>
+
+<div class="mh-step">Step 9 <b>The hydrophones heard nothing</b> <span class="km">90% region 120,963 km²</span></div>
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-s10-acoustic-core.webp" alt="ABYSSAL map after adding the hydrophone bands; the core remains bright." loading="lazy"><figcaption><b>Eleven hydrophone bands.</b> A small shift towards the acoustic blind band and the Broken Ridge shadow; 34–36.8°S rises to 23%. This is the last positive-information step: everything after it is a search that found nothing.</figcaption></figure>
+
+<h3>Implosions, engine tones and the 01:34 signal</h3>
+
+<p>Air trapped in sinking wreckage collapses at depth with a bubble-pulse signature, the way the submarine ARA <i>San Juan</i> was heard 6,000 km away. The investigation catalogued every impulsive transient in the IMOS recordings from 00:00 to 03:30 UTC (252 events) and tested each for an implosion bubble train with ABYSSAL's cepstral detector. None matched the arrival window of an implosion on the arc. It also re-examined the signal Curtin University reported near 01:34 UTC. It is present in the Perth Canyon recording with no bubble train, and its published bearing points to the Carlsberg Ridge, far from the arc. Listening for the engines' tones in a tight band was a non-starter: no hydrophone lay within 1,000 km of the southern route, and almost none of the sound of an aircraft at 35,000 ft gets into the water.</p>
+
+<h3>Island seismometers, calibrated</h3>
+
+<p>Twenty-two island and coastal seismometers were recording, from Cocos, Christmas Island, Diego Garcia and the Maldives to Réunion, Amsterdam Island and Kerguelen. The investigation built a T-phase back-projection, <code>abyssal.signal.tphase</code>, with an empirical time-shift null. Before letting it say anything about MH370, it calibrated it on real earthquakes from the same 72 hours. It detects a magnitude-5.1 Carlsberg Ridge earthquake but misses magnitude 3.7–4.0 ocean quakes at 300–3,200 km. An aircraft impact is far weaker, so the seismometers cannot hear it and their factor is flat. Two apparent coincidences turned out to be uncatalogued local earthquakes.</p>
+
+<div class="mh-grid">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-chart-seismic.webp" alt="Scatter of calibration earthquakes by distance and magnitude: only the largest events are detected by the island network." loading="lazy"><figcaption><b>Can island seismometers hear an impact? Calibrated: no.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370-chart-tphase-seismic-spikes.webp" alt="Band-passed envelopes for six island seismometers from 23:00 to 03:30 UTC, with two spikes on Christmas Island and Réunion stations." loading="lazy"><figcaption><b>The two spikes</b> on Christmas Island and Réunion, 23:00–03:30 UTC. Both are uncatalogued local events, not an impact.</figcaption></figure>
+</div>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-seismic-waves.webp" alt="Three-component seismograms and spectrograms: impulsive local-earthquake arrivals at Christmas Island and Réunion, and quiet windows at the Maldives and Diego Garcia." loading="lazy"><figcaption><b>The two coincidences, up close.</b> Christmas Island (01:15 UTC) and Réunion (01:25 UTC) show sharp arrivals with separate phases, the signature of small nearby earthquakes rather than a T-phase from 2,000 km. The Maldives and Diego Garcia windows show nothing. Bottom row: a reference window from the day before.</figcaption></figure>
+
+<h3>Seismometers under the known flight path</h3>
+
+<p>If seismometers cannot hear the impact, could they hear the aircraft itself? Aircraft show up on seismometers as Doppler-gliding tones, and MH370 passed almost directly over the Kulim seismometer (MY.KUM) at about 17:49–17:50 UTC on its turn back across the peninsula. The open data, though, are sampled at 20 per second, which cuts off everything above 10 Hz, where most jet noise lives. Nothing matches the overflight timing, and the features that look aircraft-like at Ipoh recur on the control night. The station 22 km from the 16:46 climb-out position has no public 2014 data.</p>
+
+<div class="mh-grid">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-overflight-kum.webp" alt="Spectrogram of the Kulim seismometer, 17:45 to 18:00 UTC on 7 March 2014." loading="lazy"><figcaption><b>Kulim, 17:45–18:00 UTC.</b> The 17:56 burst does not fit the overflight geometry.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-overflight-ipm.webp" alt="Spectrogram of the Ipoh seismometer showing rising tonal glides." loading="lazy"><figcaption><b>Ipoh.</b> The rising tones recur on the control night: local machinery or traffic.</figcaption></figure>
+</div>
+
+<h3>Radio propagation, contrails and witnesses</h3>
+
+<p>Three more ideas were tested.</p>
+
+<ul>
+  <li><b>WSPR.</b> Amateur radio propagation logs have been proposed as a tripwire for aircraft. The investigation tested the claim with a time-shift null over 30 March nights with the same geometry. The real night is unremarkable (p = 0.19–0.48) for both a 38°S and a 34°S track.</li>
+  <li><b>Contrails.</b> A contrail on the way south would be a straight cold line in infrared imagery. GridSat-B1 is too coarse at 8 km. MODIS Aqua's night pass at about 19:20 UTC, 40 minutes after the final turn, shows many thin cirrus streaks on 7 March and on the control nights, and none can be tied to MH370.</li>
+  <li><b>The Maldives sighting.</b> The island lies about 2,000 km nearer the satellite than the 7th arc, a timing residual of −13,200 µs against noise of 29–62 µs, and the reported time was an hour after the last log-on.</li>
+</ul>
+
+<div class="mh-grid three">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-chart-wspr.webp" alt="Bar chart of WSPR p-values for two candidate tracks, all well above 0.05." loading="lazy"><figcaption><b>WSPR: indistinguishable from any other night.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-contrail-gridsat.webp" alt="Four GridSat-B1 infrared high-pass windows of the eastern Indian Ocean on 7 and 8 March 2014, with cloud streaks and the satellite arcs." loading="lazy"><figcaption><b>GridSat-B1 infrared</b>, high-pass filtered. At 8 km per pixel a contrail is invisible.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-aqua-night.webp" alt="Three MODIS Aqua night thermal images of 6, 7 and 8 March 2014 north-west of Sumatra with the first two arcs overlaid." loading="lazy"><figcaption><b>MODIS Aqua night band 31</b>, 6, 7 and 8 March. Thin cirrus everywhere; no unique line.</figcaption></figure>
+</div>
+
+<h2 id="ch-searches"><span class="num">09</span>Where people already looked</h2>
+
+<p>The seabed searches are the most powerful evidence in the case, and the easiest to get wrong. Each one is negative evidence: <i>if the wreck had been here, it would probably have been seen</i>. Its weight is the probability of detection (POD) over the ground actually covered. The published text describes the searched area only roughly, so the investigation <b>measured it</b>. It fetched the public Geoscience Australia Phase 2 sonar mosaic tile by tile and counted imaged pixels: 120,522 km², consistent with the ATSB's "120,000 km²".</p>
+
+<p>Measuring corrected two errors. North of about 35.5°S, the ATSB's ±25 NM band was only 42–69% imaged. That is exactly the gap Ocean Infinity searched first in 2018, which the earlier text-based model had double-credited. In the high-probability band, the mosaic images 99.67% of ±25 NM. Gaps large enough to hide a 250 m debris field hold only 0.013% of the prior. <b>MH370 is not hiding in a coverage gap.</b></p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-chart-coverage.webp" alt="Heat map of measured sonar coverage in arc coordinates: solid coverage within 25 nautical miles from 32 to 39.5 degrees south, wider in the south." loading="lazy"><figcaption><b>The searched seabed, measured pixel by pixel</b> from the public mosaic, in distance from the arc against arc latitude.</figcaption></figure>
+
+<p>Revision 3 then asked a harder question: <i>imaged</i> is not <i>seen</i>. Towed side-scan sonar casts acoustic shadows behind steep relief. ETOPO 2022 slopes inside the search band reach 18.6°, and two fracture-zone escarpments sit right on the fuel-constrained peak. In the real mosaic tiles over them, deep shadow covers 5.9% and 8.8% of the ground, 1.6 and 2.4 times the flat-seabed control, with dense hairpin turns of the towfish.</p>
+
+<div class="mh-grid">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370-chart-terrain-pod-1arcmin.webp" alt="Along-arc seabed slope and terrain-degraded sonar POD from ETOPO 2022, dipping at Broken Ridge and the escarpments." loading="lazy"><figcaption><b>Slope and sonar POD along the arc</b> (ETOPO 2022, 1 arc-minute). POD dips where slopes exceed about 10°.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370-chart-escarpment-shadow-audit.webp" alt="Shadow and bright-clutter fractions in the real sonar mosaic over two escarpments and a flat control, beside four precision re-survey targets." loading="lazy"><figcaption><b>The shadow audit</b> over 1,452 mosaic tiles: the escarpments against a flat control, with the four targets they produce.</figcaption></figure>
+</div>
+
+<p>So ABYSSAL receives the ATSB search as <b>four completed searches by terrain class</b>:</p>
+
+<ul>
+  <li>POD 0.95 over flat seabed.</li>
+  <li>POD 0.90 over moderate slopes.</li>
+  <li>POD 0.84 over steep escarpment flanks.</li>
+  <li>POD 0.60 over the steepest, shadowed walls.</li>
+</ul>
+
+<p>Three more completed searches follow:</p>
+
+<ul>
+  <li>Ocean Shield's AUV survey around the 2014 pinger detections near 21°S.</li>
+  <li>Ocean Infinity in 2018, credited only where the ATSB mosaic has no data.</li>
+  <li>Ocean Infinity in 2025–26, whose 7,571 km² of unpublished polygons are spread as a 25% effective coverage.</li>
+</ul>
+
+<div class="mh-step">Step 10 <b>Ocean Shield, April–May 2014</b> <span class="km">90% region unchanged</span></div>
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-s11-oceanshield-ui.webp" alt="ABYSSAL workspace with the Ocean Shield AUV search listed in the search ledger." loading="lazy"><figcaption><b>The pinger search.</b> 860 km² near 21°S. By now that ground carries almost no probability, so the map does not move. Searching where the aircraft probably isn't tells you little about where it is.</figcaption></figure>
+
+<div class="mh-step">Step 11 <b>ATSB 2014–2017, terrain by terrain</b> <span class="km">90% region 316,481 → 382,281 km²</span></div>
+
+<p>Here something counter-intuitive happens. The 90% region <b>grows</b>, from 120,963 km² to 382,281 km². The search removes most of the probability from the densest ground, so what is left is spread more thinly over the unsearched fringes and the shadowed walls. A map that shrank under negative evidence would be lying. This one spreads, and the peak moves onto the escarpments.</p>
+
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-s12-atsb-flat-core.webp" alt="ABYSSAL map after the ATSB flat-seabed search: the central core is hollowed out, leaving probability along the edges and in unsearched fringes." loading="lazy"><figcaption><b>The first ATSB search class (flat seabed, POD 0.95).</b> The core is hollowed out. What remains sits on the edges of the searched band and on the higher-risk terrain still to come.</figcaption></figure>
+
+<div class="mh-grid">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s13-atsb-moderate-core.webp" alt="Core view after the moderate-slope ATSB search class." loading="lazy"><figcaption><b>Moderate slopes, POD 0.90.</b> 343,033 km².</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s14-atsb-steep-core.webp" alt="Core view after the steep-escarpment ATSB search class." loading="lazy"><figcaption><b>Steep escarpment flanks, POD 0.84.</b> 360,497 km².</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s15-atsb-walls-core.webp" alt="Core view after the steepest-walls ATSB search class: residual probability concentrates on the escarpments." loading="lazy"><figcaption><b>The steepest walls, POD 0.60.</b> The residual concentrates where the sonar was weakest. 382,281 km².</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s15-atsb-walls-ui.webp" alt="ABYSSAL workspace with the search ledger listing the ATSB searches by terrain class." loading="lazy"><figcaption><b>The Search Ledger</b> lists every completed search with its sensor, POD and dates. Overlapping searches by one method are pooled, not double-counted.</figcaption></figure>
+</div>
+
+<div class="mh-step">Steps 12–13 <b>Ocean Infinity, 2018 and 2025–26</b> <span class="km">90% region 402,186 → 404,465 km²</span></div>
+<div class="mh-grid">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s16-oi2018-corridor.webp" alt="ABYSSAL map after the Ocean Infinity 2018 search north-east along the arc." loading="lazy"><figcaption><b>Ocean Infinity 2018.</b> North-east along the arc to about 25°S, wherever the ATSB had no data.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s17-oi2025-corridor.webp" alt="ABYSSAL map after the Ocean Infinity 2025-26 search." loading="lazy"><figcaption><b>Ocean Infinity 2025–26.</b> 7,571 km² spread over 33–36°S, 25–45 NM. The final evidence state.</figcaption></figure>
+</div>
+
+<h3>Twelve years in one slider</h3>
+
+<p>ABYSSAL's Retrospective replay filters the admitted ledger by event time and recomputes the map, so the searches appear in the order they were done: Ocean Shield in April 2014, the ATSB from October 2014 to January 2017, Ocean Infinity in 2018 and again in 2025–26. It uses the current evidence, filtered by date. It is not a reconstruction of what analysts believed at the time.</p>
+
+<div class="mh-grid three" id="mh-replay">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-replay-0.webp" alt="ABYSSAL retrospective replay frame over the 7th arc." loading="lazy"><figcaption><b>Frame 1.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-replay-1.webp" alt="ABYSSAL retrospective replay frame over the 7th arc." loading="lazy"><figcaption><b>Frame 2.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-replay-2.webp" alt="ABYSSAL retrospective replay frame over the 7th arc." loading="lazy"><figcaption><b>Frame 3.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-replay-3.webp" alt="ABYSSAL retrospective replay frame over the 7th arc." loading="lazy"><figcaption><b>Frame 4.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-replay-4.webp" alt="ABYSSAL retrospective replay frame over the 7th arc." loading="lazy"><figcaption><b>Frame 5.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-replay-5.webp" alt="ABYSSAL retrospective replay frame over the 7th arc." loading="lazy"><figcaption><b>Frame 6.</b></figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-replay-6.webp" alt="ABYSSAL retrospective replay frame over the 7th arc." loading="lazy"><figcaption><b>Frame 7.</b></figcaption></figure>
+</div><!--/mh-replay-->
+
+<p>Last come the things that are true but are not evidence about the ending: the 27 debris find places, the 43 sonar contacts the ATSB flagged for review, the hydrophone and seismometer stations. They go in as context drafts. They appear on the map as references and never touch the belief.</p>
+
+<div class="mh-step">Step 14 <b>Context, never admitted</b> <span class="km">map unchanged</span></div>
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-s18-context-ui.webp" alt="ABYSSAL workspace with context drafts: debris find places, sonar contacts and stations shown as dashed markers." loading="lazy"><figcaption><b>Context drafts.</b> Debris find places, sonar contacts and acoustic stations: visible for reference, outside the model.</figcaption></figure>
+
+<h2 id="ch-seabed"><span class="num">10</span>Reading the seabed again</h2>
+
+<p>If the wreck is in searched ground, it was imaged and missed. So the investigation re-read the public sonar mosaic over the densest searched ground with ABYSSAL's own anomaly detector, <code>abyssal.detect.anomaly</code>. It covered 2,024 tiles at about 3.8 m per pixel over 1,900 km² (25% of the steady-flight prior) and, in Revision 3, 1,452 more tiles over the northern fuel peak. The detector looks for clusters of bright returns that stand out from their own surroundings, which is what a field of wreckage looks like at this resolution.</p>
+
+<p>It was calibrated first on the 43 contacts the original search flagged for review, including the two 19th-century shipwreck debris fields it found. It flags 16 of the 43 (37%) and puts the median contact in the top 12% of its window: real sensitivity, but far from perfect. The top 40 candidates were then inspected by eye at the finest zoom the tile server offers. All are geology: scarps, ridge crests, outcrops, boulders and swath seams. No debris field was recognised. The ATSB's analysts had the raw sonar at about 1 m; the public product is about 5 m.</p>
+
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-scan-candidates.webp" alt="Grid of 40 sonar mosaic chips around the top detector candidates: escarpments, ridge crests, outcrops and swath seams." loading="lazy"><figcaption><b>The top 40 debris-cluster candidates</b> from the public mosaic of the densest searched ground. Every one is geology.</figcaption></figure>
+
+<div class="mh-grid">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-scan-zoom.webp" alt="Eight zoomed sonar chips of isolated bright clusters." loading="lazy"><figcaption><b>Zoomed in</b> (upsampled from the ~5 m mosaic): irregular outcrops with shadows and a few boulders, not a fan of fragments.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-contacts-z15.webp" alt="Contact sheet of the 43 published ATSB and Geoscience Australia sonar contacts at zoom 15." loading="lazy"><figcaption><b>The positive control:</b> the 43 published contacts as they appear in the public mosaic. Most are subtle at this resolution.</figcaption></figure>
+</div>
+
+<div class="mh-grid">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370-sonar-escarpment-37-81s.webp" alt="Sonar mosaic over the escarpment at 37.81 degrees south showing acoustic shadows and towfish turn loops." loading="lazy"><figcaption><b>The escarpment at 37.81°S, 88.47°E</b> (1,045 m relief): 5.9% deep shadow and tangled towfish turns in the real mosaic.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370-sonar-escarpment-38-20s.webp" alt="Sonar mosaic over the escarpment at 38.20 degrees south." loading="lazy"><figcaption><b>The escarpment at 38.20°S, 88.15°E</b>: 8.8% deep shadow, 2.4 times the flat-seabed control.</figcaption></figure>
+</div>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-chart-contacts.webp" alt="Map of the 43 published sonar contacts over the final probability density along the 7th arc." loading="lazy"><figcaption><b>The published contacts against the final map.</b> The 43 contacts the search flagged for review, over the final density. None was identified as aircraft wreckage.</figcaption></figure>
+
+<h3>The contacts on the massif</h3>
+
+<p>The published contact list is where the original search and this analysis meet. Nine of the 43 contacts lie within the frame below, and <b>five lie inside the ~2,600 km² escarpment massif</b> that the evidence now ranks first. That massif is about 2% of the ATSB's searched area but holds 12% of its contacts. Rough ground makes bright returns, so that is expected, and the reviewers' own notes say so. It also means this is the ground where a wreck would be hardest to tell apart from rock.</p>
+
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-chart-massif.webp" alt="Close map of the escarpment massif near 38 degrees south 88.3 degrees east: the final probability density, four ringed re-survey targets and nine numbered published sonar contacts." loading="lazy"><figcaption><b>Where the evidence and the ATSB's own contacts meet.</b> Final posterior around the massif, the top four re-survey targets (rings, from the terrain-aware plan at finer resolution than this grid) and the published contacts (diamonds), numbered north to south as in the table.</figcaption></figure>
 
 <table>
-  <thead>
-    <tr>
-      <th>Candidate zone (Full-Physics Fusion v3)</th>
-      <th class="n">Area (km²)</th>
-      <th class="n">v3 Posterior</th>
-      <th class="n">Density (% / 1,000 km²)</th>
-      <th class="n">17-Sweep Rank</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>1. Fuel-peak core re-look</strong> (36.8°S–38.8°S, ±15 NM)</td>
-      <td class="n">22,842</td>
-      <td class="n"><strong>43.4%</strong></td>
-      <td class="n"><strong>1.90</strong></td>
-      <td class="n">#1 in all 17 sweeps</td>
-    </tr>
-    <tr>
-      <td><strong>↳ Top 4 escarpment targets</strong> (37.7°S–38.25°S, 88.0°E–88.6°E)</td>
-      <td class="n">~2,600</td>
-      <td class="n"><strong>12.1%</strong></td>
-      <td class="n"><strong>~4.6</strong></td>
-      <td class="n">25× glide belt</td>
-    </tr>
-    <tr>
-      <td><strong>2. Mid-core re-look</strong> (34.0°S–36.8°S, ±25 NM)</td>
-      <td class="n">45,261</td>
-      <td class="n">13.2%</td>
-      <td class="n">0.29</td>
-      <td class="n">Secondary</td>
-    </tr>
-    <tr>
-      <td><strong>3. Outer glide belt</strong> (34.0°S–39.45°S, +45..110 NM)</td>
-      <td class="n">122,693</td>
-      <td class="n">22.9%</td>
-      <td class="n">0.19</td>
-      <td class="n">Glide weight 36.4%</td>
-    </tr>
-    <tr>
-      <td><strong>4. South extension</strong> (39.45°S–40.5°S, ±25 NM)</td>
-      <td class="n">23,395</td>
-      <td class="n">0.08%</td>
-      <td class="n">0.003</td>
-      <td class="n">Out of fuel (0.04–0.14%)</td>
-    </tr>
-    <tr>
-      <td><strong>5. North arc</strong> (18°S–30°S)</td>
-      <td class="n">83,113</td>
-      <td class="n">0.00%</td>
-      <td class="n">0.00</td>
-      <td class="n">0.00% in all 17 sweeps</td>
-    </tr>
-  </tbody>
+<thead><tr><th>#</th><th>Position</th><th>Reviewer's note (verbatim, abridged)</th><th>Follow-up field in the record</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>37.54°S 88.89°E</td><td>“GEOLOGY. Cluster of highly reflective contacts very near nadir, in area of complex geology… definitely anomalous to data elsewhere.”</td><td>ROV_DIVE_12</td></tr>
+<tr><td>2</td><td>37.57°S 88.57°E</td><td>“Cluster of bright contacts at base of escarpment… Possibly rocky debris from debris flow.”</td><td>2R_AUV2</td></tr>
+<tr><td>3</td><td>37.63°S 88.63°E</td><td>“Cluster of small bright contacts at the base of a ridge.”</td><td>2R_AUV</td></tr>
+<tr><td>4</td><td>37.87°S 88.50°E</td><td>“Very bright contact, more than one sample wide.” 4.7 km from target T3.</td><td>3R_AUV2</td></tr>
+<tr><td>5</td><td>37.90°S 88.31°E</td><td>“Zone of multiple small contacts… most probably outcrop or rocky debris from the steep slopes of the canyon.”</td><td>3R_AUV2</td></tr>
+<tr><td>6</td><td>37.97°S 88.26°E</td><td>“Cluster of contacts in base of canyon.”</td><td>3R_AUV2</td></tr>
+<tr><td>7</td><td>38.06°S 88.32°E</td><td>“Possible scatter field… not picked from sidescan first time around but re-evaluated after noticing feature on MBES.”</td><td>3R_AUV2</td></tr>
+<tr><td>8</td><td>38.10°S 88.26°E</td><td>“GEOLOGY. Spherical area of highly reflective seabed. ROV 14 &amp; 15 were aborted.” About 310 × 250 m; 14 km from target T1.</td><td>ROV_DIVE_14_15_16</td></tr>
+<tr><td>9</td><td>38.38°S 88.13°E</td><td>“Very faint but bright cluster of contacts on seemingly featureless terrain.”</td><td>3R_AUV2</td></tr>
+</tbody>
 </table>
 
-<h3>Precision AUV escarpment targets (`12.1%` of posterior in `~2,600 km²`)</h3>
+<p>Nothing here is a detection. Every one of these contacts was reviewed by people with the full-resolution data, and none was identified as aircraft wreckage. Two records were sent for ROV dives and are classed as geology; the record for contact 8 notes that two of its three dives were aborted. Contact 7 was missed on the first side-scan pass and only picked up after a multibeam feature drew attention to it. That is a small, real illustration of the shadow problem on this terrain. The case for re-surveying the massif does not rest on any single contact. It rests on the fuel-constrained peak, the steep relief and the weaker sonar coverage there, and these records are the first things a re-survey should look at again.</p>
+
+<p>For comparison with the published hotspots: the nearest contact to CSIRO's 2017 drift estimate (35.6°S 92.8°E) is 21 km away (“possible series of scattered items”), and the 2021 UGIB position is 73 km from the nearest contact, outside the searched band.</p>
+
+<h2 id="ch-fusion"><span class="num">11</span>Fusion: how the pieces combine</h2>
+
+<p>Every step above is one factor in a single Bayesian update, computed in log space. Each observation carries a reliability, the chance it is simply wrong, so one bad input cannot zero out the map. Observations that share a source root are pooled rather than multiplied. Completed searches by one method are pooled by strongest coverage per cell. The area statements are applied as likelihood factors, so their order does not matter.</p>
+
+<p>ABYSSAL's <b>Evidence Map</b> lists what moves the belief, with one-click Remove and Undo for every item. The <b>Provenance graph</b> wires every observation back to the sources it came from. Under the current model version the per-item information figures for area statements read "Not assessed", because ABYSSAL only scores the classic observation kinds item by item. The map itself uses everything.</p>
+
+<div class="mh-grid">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-evidence-map.webp" alt="ABYSSAL Evidence Map panel listing the 7th arc, the flight engine and area statements with Remove buttons, beside the map." loading="lazy"><figcaption><b>Evidence Map.</b> What moves the belief. Every admitted item can be removed and restored in one click.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-fusion-graph.webp" alt="ABYSSAL provenance graph connecting sources to observations." loading="lazy"><figcaption><b>Provenance graph.</b> Solid lines feed the current belief; dashed lines are drafts or context.</figcaption></figure>
+</div>
+
+<h3>Turning evidence off</h3>
+
+<p>The best way to understand a fused map is to take pieces away. Each pair below is the same final case with one item removed through the Evidence Map, then restored with Undo.</p>
+
+<div class="mh-grid" id="mh-toggles">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-final-domain.webp" alt="ABYSSAL map with all evidence included, before removing the 7th arc." loading="lazy"><figcaption><b>All evidence</b>, whole domain.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-no-arc7-after.webp" alt="ABYSSAL map after removing the 7th arc in the Evidence Map." loading="lazy"><figcaption><b>Without the 7th arc.</b> Only the flight engine's ring is left: a long band of equal flown distance from the last radar fix. The searches still carve out the ground they covered.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-final-australia.webp" alt="ABYSSAL map with all evidence included, before removing the flight engine." loading="lazy"><figcaption><b>All evidence</b>, the arc off Western Australia.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-no-flight-after.webp" alt="ABYSSAL map after removing the flight engine in the Evidence Map." loading="lazy"><figcaption><b>Without the flight engine.</b> The 7th arc alone, after every search, pushes its probability to the two unsearched ends: the northern arc off Western Australia and the far south.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-final-core.webp" alt="ABYSSAL map with all evidence included, before removing the ATSB flat-seabed search." loading="lazy"><figcaption><b>All evidence</b>, core view.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-no-atsb-flat-after.webp" alt="ABYSSAL map after removing the ATSB flat-seabed search in the Evidence Map." loading="lazy"><figcaption><b>Without the ATSB flat-seabed search.</b> The hollow fills back in and the 90% region shrinks from 404,465 km² to 118,486 km²: the flat ground the ATSB covered was the most likely ground before it was searched.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-final-core.webp" alt="ABYSSAL map with all evidence included, before removing the ATSB steepest-walls search." loading="lazy"><figcaption><b>All evidence</b>, core view.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-no-atsb-walls-after.webp" alt="ABYSSAL map after removing the ATSB steepest-walls search in the Evidence Map." loading="lazy"><figcaption><b>Without the ATSB search of the steepest walls.</b> Probability returns to the escarpment walls and the 90% region narrows to 376,881 km². Those walls were searched at an assumed POD of only 0.6, so even searched, they keep a large share.</figcaption></figure>
+</div><!--/mh-toggles-->
+
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-x-no-flight-ui.webp" alt="ABYSSAL workspace with the Evidence Map open, the flight engine excluded and an Undo notice reporting the map change." loading="lazy"><figcaption><b>Excluding the flight engine in the workspace.</b> The item stays in the case with an Include button; the notice reports the change and offers Undo. Nothing is deleted, and the decision is logged.</figcaption></figure>
+
+<div class="mh-grid three" id="mh-toggle-ui">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-no-arc7-ui.webp" alt="ABYSSAL workspace with one item excluded in the Evidence Map." loading="lazy"><figcaption><b>7th arc excluded.</b> The notice reports the change and offers Undo.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-no-atsb-flat-ui.webp" alt="ABYSSAL workspace with one item excluded in the Evidence Map." loading="lazy"><figcaption><b>ATSB flat-seabed search excluded.</b> The 90% region drops to 118,486 km².</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-no-atsb-walls-ui.webp" alt="ABYSSAL workspace with one item excluded in the Evidence Map." loading="lazy"><figcaption><b>ATSB steepest-walls search excluded.</b> The 90% region is 376,881 km².</figcaption></figure>
+</div><!--/mh-toggle-ui-->
+
+<h3>Adding it up along the arc</h3>
+
+<p>The step-by-step chart below shows the same story along the arc, computed with the investigation's dedicated pipeline. One line in it is worth pausing on: the seabed searches. They remove the most from the most likely place, which is why a negative search can never shrink a map the way a positive observation does.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-chart-stepwise.webp" alt="Stacked density curves along the 7th arc showing how each evidence factor reshapes the distribution." loading="lazy"><figcaption><b>Adding evidence, one factor at a time</b> (Revision 3 pipeline, dive component). Grey: the previous step.</figcaption></figure>
+
+<p>Does re-expressing a dedicated research pipeline in ABYSSAL's generic vocabulary lose anything? The check below sums the app's own posterior into the same arc-latitude bins. The ABYSSAL case puts <b>68.8% between 36.8°S and 38.8°S</b> against the pipeline's 75.4%, and <b>24.2% at 34–36.8°S</b> against 21.7%. Under 1% falls outside 30–39.45°S in either. The small differences come from the app's coarser grid (about 20 km cells over the whole domain) and its contamination floor. The app's peak, 38.11°S 88.30°E, lands next to the pipeline's top target at 38.18°S 88.14°E.</p>
+
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-chart-app-vs-pipeline.webp" alt="Two density curves along the 7th arc, the dedicated pipeline and the ABYSSAL generic case, closely matching with a peak near 38 degrees south." loading="lazy"><figcaption><b>The generic app reproduces the dedicated pipeline.</b> Same evidence, ordinary observations.</figcaption></figure>
+
+<h2 id="ch-final"><span class="num">12</span>The final map</h2>
+
+<p>Put together, the evidence leaves MH370 in one of two places. Either it is <b>already inside searched ground, imaged and missed</b>, most plausibly on the steep fracture-zone walls of the fuel-constrained peak. Or it is <b>beyond the searched width after a controlled glide</b>, which the final BFOs argue against. The far south and the north, the two frontiers that dominated the previous revision, are physically closed.</p>
+
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-s17-oi2025-core.webp" alt="ABYSSAL final probability map over the 7th-arc core: probability concentrated on the escarpments and the edges of searched footprints." loading="lazy"><figcaption><b>The final evidence state in ABYSSAL</b>, core view. The 90% region is 404,465 km², but the density inside it is anything but uniform.</figcaption></figure>
+
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-x-final-massif.webp" alt="ABYSSAL final probability map zoomed to the escarpment massif near 38.1 degrees south, 88.2 degrees east: a bright ridge of probability between searched footprints." loading="lazy"><figcaption><b>The massif, full screen.</b> About 2,600 km² around 38.1°S, 88.2°E, inside searched ground, on the steepest relief of the fuel-constrained peak. Click for the full-resolution original.</figcaption></figure>
+
+<div class="mh-grid" id="mh-final-views">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-final-corridor.webp" alt="ABYSSAL final probability map." loading="lazy"><figcaption><b>The southern arc.</b> All the evidence, at the scale of the 7th-arc corridor.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-final-domain.webp" alt="ABYSSAL final probability map." loading="lazy"><figcaption><b>The whole domain.</b> Twelve years of evidence leave a small bright patch south-west of Perth.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-final-australia.webp" alt="ABYSSAL final probability map." loading="lazy"><figcaption><b>The arc off Western Australia.</b> The residual probability sits on the fuel-constrained stretch near 37–38.5°S.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-final-escarpment.webp" alt="ABYSSAL final probability map." loading="lazy"><figcaption><b>The escarpment core.</b> The bright ridge threads between searched footprints.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-final-core-satellite.webp" alt="ABYSSAL final probability map." loading="lazy"><figcaption><b>Over satellite imagery</b>, with ABYSSAL's strip of daily MODIS scenes along the bottom.</figcaption></figure>
+</div><!--/mh-final-views-->
+
+<figure class="shot bleed reveal"><img src="../assets/abyssal/mh370x-chart-final-map.webp" alt="High-resolution map of the final posterior density along the 7th arc with searched-area outlines and published hotspots from DSTG 2016, CSIRO 2017, UGIB 2021 and this fusion's top target." loading="lazy"><figcaption><b>The final map at full resolution</b> (Revision 3 corridor grid, 0.05° × 2.5 NM). Published hotspots for comparison: DSTG's 2016 peak near 38°S, CSIRO's 2017 drift estimate at 35.6°S 92.8°E, and the 2021 UGIB position at 33.18°S 95.30°E.</figcaption></figure>
+
+<h3>How this compares with the published analyses</h3>
+
+<ul>
+  <li><b>DSTG (Davey et al. 2016)</b> put the peak of its satellite-only distribution near 38°S. This analysis agrees on the satellite data: two satellite channels, flown through real winds with independent code, end in the same place. Fuel then moves the centre slightly north, to 37.8°S.</li>
+  <li><b>CSIRO's 2017 drift work</b> favoured about 35.6°S, 92.8°E. Here the drift evidence also leans north, but only weakly once windage uncertainty is honest. It enters as one factor among many, not as a location.</li>
+  <li><b>The 2021 UGIB estimate</b> (33.18°S, 95.30°E) sits in the 33–34°S late-descent corner that the manoeuvring scan finds flyable but unlikely. On this evidence the region carries 1–2%.</li>
+</ul>
 
 <table>
-  <thead>
-    <tr>
-      <th>Target centre</th>
-      <th>Arc cell</th>
-      <th class="n">Posterior</th>
-      <th class="n">Density (% / 1k km²)</th>
-      <th>Terrain &amp; GA shadow audit</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>1. 38.18°S, 88.14°E</strong></td>
-      <td>38.05–38.25°S, n 0..+5 NM</td>
-      <td class="n"><strong>3.74%</strong></td>
-      <td class="n"><strong>5.56</strong></td>
-      <td>848 m relief · 16.0° slope · 8.8% deep shadow</td>
-    </tr>
-    <tr>
-      <td><strong>2. 37.73°S, 88.40°E</strong></td>
-      <td>37.80–38.00°S, n -15..-10 NM</td>
-      <td class="n"><strong>3.11%</strong></td>
-      <td class="n"><strong>4.72</strong></td>
-      <td>949 m relief · 14.6° slope</td>
-    </tr>
-    <tr>
-      <td><strong>3. 37.83°S, 88.49°E</strong></td>
-      <td>37.80–38.00°S, n -7.5..-2.5 NM</td>
-      <td class="n"><strong>2.75%</strong></td>
-      <td class="n"><strong>4.16</strong></td>
-      <td>1,045 m relief · 5.9% deep shadow · 2.5% bright clutter</td>
-    </tr>
-    <tr>
-      <td><strong>4. 38.08°S, 88.04°E</strong></td>
-      <td>38.05–38.25°S, n -7.5..-2.5 NM</td>
-      <td class="n"><strong>2.51%</strong></td>
-      <td class="n"><strong>3.74</strong></td>
-      <td>952 m relief · 17.6° slope</td>
-    </tr>
-  </tbody>
+<thead><tr><th>Zone</th><th>Area (km²)</th><th>Share of final map</th><th>Per 1,000 km²</th><th>Already searched</th></tr></thead>
+<tbody>
+<tr><td><b>Fuel-peak core re-look</b> (36.8–38.8°S, ±15 NM)</td><td>22,842</td><td><b>43.4%</b></td><td><b>1.90%</b></td><td>100%</td></tr>
+<tr><td>Mid-core re-look (34.0–36.8°S, ±25 NM)</td><td>45,261</td><td>13.2%</td><td>0.29%</td><td>96%</td></tr>
+<tr><td>Outer glide belt (34–39.45°S, +45 to +110 NM)</td><td>122,693</td><td>22.9%</td><td>0.19%</td><td>0.6%</td></tr>
+<tr><td>Core flanks (15–45 NM)</td><td>93,897</td><td>11.4%</td><td>0.12%</td><td>62%</td></tr>
+<tr><td>Inner glide belt (−45 to −110 NM)</td><td>122,693</td><td>9.8%</td><td>0.08%</td><td>0.3%</td></tr>
+<tr><td>South extension (39.45–40.5°S)</td><td>23,395</td><td>0.08%</td><td>0.003%</td><td>1.3%</td></tr>
+<tr><td>North arc (18–30°S)</td><td>147,640</td><td>0.00%</td><td>0.000%</td><td>43%</td></tr>
+</tbody>
 </table>
 
-<h3>Four measurements that would settle it</h3>
+<figure class="shot wide reveal"><img src="../assets/abyssal/mh370x-chart-zones.webp" alt="Bar chart comparing zone shares between Revision 2 and Revision 3: the south extension and north arc collapse to near zero while the searched core rises." loading="lazy"><figcaption><b>Physics closed both frontiers.</b> Revision 2 (no fuel model, uniform allowance for unmodelled flight) against Revision 3 (full physics).</figcaption></figure>
+
+<h2 id="ch-next"><span class="num">13</span>Where to look next</h2>
+
+<p>The single densest target on this evidence is a compact <b>1,045 m submarine escarpment massif</b>, about 2,600 km² around <b>38.1°S, 88.2°E</b>. It sits directly on the fuel-constrained peak of the 7th arc and carries 12.1% of the whole posterior, about 4.6% per 1,000 km², 25 times denser than the outer glide belt. The real mosaic over it shows deep shadow and tangled towfish turns.</p>
+
+<p>ABYSSAL's planning tools, Where next? and Plan Studio, run on the same map. Both are generic: they know nothing about MH370, only about the belief map, the searches already done and an asset's assumed sweep width and detection probability.</p>
+
+<div class="mh-grid">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-where-next.webp" alt="ABYSSAL Where next? panel suggesting the next best search cell over the core, with search asset assumptions." loading="lazy"><figcaption><b>Where next?</b> The next best search cell and the asset assumptions behind it.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-plan-studio.webp" alt="ABYSSAL Plan Studio over the 7th-arc core." loading="lazy"><figcaption><b>Plan Studio.</b> Allocate assets against a time budget and see the expected probability of success.</figcaption></figure>
+</div>
+
+<div class="callout key">
+  <div class="t">Recommendation</div>
+  <p>A <b>multi-aspect synthetic-aperture sonar AUV re-survey</b>, flying orthogonal headings over the ~2,600 km² escarpment massif at 37.7–38.25°S, 88.0–88.6°E, then the top 5,000–15,000 km² of steep terrain between 36.8°S and 38.6°S. On this evidence that ground is 10–30 times more likely per square kilometre than any unsearched ground. Before that, the cheapest decisive step is to obtain the raw sub-metre ATSB and Ocean Infinity shadow and low-confidence polygons over the massif, which would show whether the ground was truly cleared.</p>
+</div>
+
+<h2 id="ch-tried"><span class="num">14</span>Everything that was tried</h2>
+
+<p>Most of the ideas tried returned nothing. Each is listed here with the number that decides it, because a search that only reports its successes cannot be trusted.</p>
+
+<table class="mh-verdicts">
+<thead><tr><th>Idea</th><th>Data</th><th>Result</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td>Satellite timing + Doppler</td><td>Inmarsat log, ERA5</td><td>All steady families end 37.4–39.7°S; Ashton Table 9 reproduced to 1.5 Hz</td><td><span class="v yes">Used</span></td></tr>
+<tr><td>Timing only (no Doppler)</td><td>Inmarsat BTOs</td><td>90% at 37.4–39.7°S; north fits 10<sup>10</sup>× worse</td><td><span class="v yes">Confirms</span></td></tr>
+<tr><td>Boeing 777 / Trent 892 fuel model</td><td>ACARS, flight plan, ERA5</td><td>0.2% on 9M-MRO's own fuel burn; south of 39.45°S 0.00–0.02%</td><td><span class="v yes">Used</span></td></tr>
+<tr><td>155,000 manoeuvring flights</td><td>BTO, BFO, fuel</td><td>Only 33–38.5°S flyable; north of 32.5°S rejected</td><td><span class="v yes">Used</span></td></tr>
+<tr><td>Debris drift</td><td>6.0 M NOAA drifter fixes</td><td>Favours north unless windage is high</td><td><span class="v weak">Weak, used</span></td></tr>
+<tr><td>No debris in WA</td><td>Same drifters</td><td>Mildly against the far south</td><td><span class="v weak">Weak, used</span></td></tr>
+<tr><td>Barnacle temperature</td><td>NOAA OISST v2.1</td><td>40°S too cold (15°C); 34–36°S warm enough</td><td><span class="v yes">Used</span></td></tr>
+<tr><td>2014 surface search</td><td>CSIRO POD (ATSB Fig. 20)</td><td>Strongly against 26–33°S</td><td><span class="v yes">Used</span></td></tr>
+<tr><td>IMOS hydrophones (Perth, Scott Reef)</td><td>Raw IMOS recordings</td><td>Quiet where a dive would be heard; blind band 32.5–34.5°S</td><td><span class="v weak">Weak, used</span></td></tr>
+<tr><td>Portland hydrophone (new)</td><td>IMOS deployment 3274</td><td>Window for 39–41°S quiet; band cluttered</td><td><span class="v weak">Weak</span></td></tr>
+<tr><td>Four-logger weak-signal stack</td><td>IMOS ×4, time-shift null</td><td>Min p 0.047 of 97 latitudes</td><td><span class="v no">Null</span></td></tr>
+<tr><td>Implosion bubble pulses</td><td>252 IMOS transients</td><td>None in an implosion window</td><td><span class="v no">Null</span></td></tr>
+<tr><td>Island seismometers</td><td>22 stations, calibrated</td><td>Miss mb 3.7–4.0 quakes; cannot hear an impact</td><td><span class="v no">Cannot</span></td></tr>
+<tr><td>CTBTO HA01 / IMS infrasound</td><td>IRIS archive</td><td>No public data before ~2020</td><td><span class="v no">No data</span></td></tr>
+<tr><td>Overflight seismics</td><td>MY.KUM, MY.IPM</td><td>20 Hz sampling; nothing at the overflight time</td><td><span class="v no">Null</span></td></tr>
+<tr><td>WSPR radio</td><td>March 2014 archive</td><td>p = 0.19–0.48 vs 30 nights</td><td><span class="v no">Null</span></td></tr>
+<tr><td>Oil sheen in MODIS</td><td>NASA GIBS, 7–12 March</td><td>South extension never clear; product lacks dynamic range</td><td><span class="v no">Inconclusive</span></td></tr>
+<tr><td>Altimeter sigma-0 bloom</td><td>Jason-2, 128 passes</td><td>Pass 077 over a 40°S sheen at +11 h: flat</td><td><span class="v weak">Weak</span></td></tr>
+<tr><td>SAR ripple rings, dark vessels</td><td>None for March 2014</td><td>Sentinel-1A launched 3 April 2014</td><td><span class="v no">No data</span></td></tr>
+<tr><td>Contrail</td><td>GridSat-B1, MODIS night</td><td>Cirrus everywhere; no unique line</td><td><span class="v no">Inconclusive</span></td></tr>
+<tr><td>2014 satellite "objects"</td><td>Published positions</td><td>732 km from the arc; 0.85 m/s for 10 days</td><td><span class="v no">Ruled out</span></td></tr>
+<tr><td>Impact ripples at DART buoys</td><td>Physics</td><td>~0.5 mm at 1,000 km, under metre-scale swell</td><td><span class="v no">Impossible</span></td></tr>
+<tr><td>Maldives sighting</td><td>BTO</td><td>−13,200 µs residual; after the last log-on</td><td><span class="v no">Ruled out</span></td></tr>
+<tr><td>Coverage gaps</td><td>GA mosaic, 60 m pixels</td><td>Gaps that could hide 250 m: 0.013% of prior</td><td><span class="v no">Ruled out</span></td></tr>
+<tr><td>Mosaic re-read for debris</td><td>3,476 tiles, ABYSSAL detector</td><td>All candidates geology</td><td><span class="v no">Null</span></td></tr>
+<tr><td>Terrain shadows</td><td>ETOPO 2022 + mosaic</td><td>5.9–8.8% deep shadow on the escarpments</td><td><span class="v yes">Used</span></td></tr>
+</tbody>
+</table>
+
+<h2 id="ch-tour"><span class="num">15</span>The whole workbench, on one case</h2>
+
+<p>None of what follows was built for MH370. These are the panels every ABYSSAL case gets, open on this case. Signal Lab's built-in demonstrations use synthetic data and are labelled as such in the app; nothing synthetic entered this case.</p>
+
+<div class="mh-grid" id="mh-tour">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-evidence-map-2.webp" alt="ABYSSAL evidence map panel open on the MH370 case." loading="lazy"><figcaption><b>Evidence Map.</b> What moves the belief, with Remove and Include on every admitted item.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-fusion-graph-2.webp" alt="ABYSSAL fusion graph panel open on the MH370 case." loading="lazy"><figcaption><b>Provenance graph.</b> Every observation wired back to its sources. Solid lines feed the belief; dashed lines are drafts or context.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-model-2.webp" alt="ABYSSAL model panel open on the MH370 case." loading="lazy"><figcaption><b>Inspector · Model.</b> 53 admitted observations from 3 source roots, each with its assumption, an in-model switch and a Review effect button.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-search-info-2.webp" alt="ABYSSAL search info panel open on the MH370 case." loading="lazy"><figcaption><b>Search information.</b> Uncertainty in bits inside the drawn area (9.96 bits), with full-map figures withheld until an outside-area probability is declared.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-evidence-geometry-2.webp" alt="ABYSSAL evidence geometry panel open on the MH370 case." loading="lazy"><figcaption><b>Evidence geometry.</b> The rings drawn as their alternative readings, around the satellite sub-point and the last radar fix.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-map-layers-2.webp" alt="ABYSSAL map layers panel open on the MH370 case." loading="lazy"><figcaption><b>Map layers.</b> Probability surface and evidence geometry, switched for display only.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-satellite-2.webp" alt="ABYSSAL satellite panel open on the MH370 case." loading="lazy"><figcaption><b>Satellite view.</b> NASA MODIS imagery under the belief map, with a strip of daily scenes to step through.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-ops-2.webp" alt="ABYSSAL ops panel open on the MH370 case." loading="lazy"><figcaption><b>Ops console.</b> Live aircraft, ships, satellites, wind and currents, plus field tools. Context only: nothing here changes the belief.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-signal-lab-2.webp" alt="ABYSSAL signal lab panel open on the MH370 case." loading="lazy"><figcaption><b>Signal Lab.</b> The general signal engines, from dark-vessel SAR and AIS matching to SOFAR acoustics and implosion forensics.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-where-next-2.webp" alt="ABYSSAL where next panel open on the MH370 case." loading="lazy"><figcaption><b>Where next?</b> Mark swept areas and see the next best look, with the search-asset assumptions behind it.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-plan-studio-2.webp" alt="ABYSSAL plan studio panel open on the MH370 case." loading="lazy"><figcaption><b>Plan Studio.</b> Suggested routes, expected probability of success and search cost against a time budget.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-movement-2.webp" alt="ABYSSAL movement panel open on the MH370 case." loading="lazy"><figcaption><b>Movement &amp; time.</b> An exploratory, read-only drift of the belief map under stated current, wind and leeway. It never changes saved evidence.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-layers-2.webp" alt="ABYSSAL layers panel open on the MH370 case." loading="lazy"><figcaption><b>Layers.</b> What's in this area: bathymetry, gravity and magnetics fetched on request with receipts, and live seabed layers. Context only.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-search-health-2.webp" alt="ABYSSAL search health panel open on the MH370 case." loading="lazy"><figcaption><b>Search health.</b> Checks the admitted model against the search ledger without changing the map.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-outside-area-2.webp" alt="ABYSSAL outside area panel open on the MH370 case." loading="lazy"><figcaption><b>Outside area.</b> Declaring the chance the target lies outside the mapped domain, so progress figures stay honest.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-add-2.webp" alt="ABYSSAL add panel open on the MH370 case." loading="lazy"><figcaption><b>Add.</b> Tracks, points, completed searches, rasters, sources and observations.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-sketch-2.webp" alt="ABYSSAL sketch panel open on the MH370 case." loading="lazy"><figcaption><b>Sketch evidence.</b> Points, bearings, range rings and corridors: the same vocabulary this case is written in.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-tilt-2.webp" alt="ABYSSAL tilt panel open on the MH370 case." loading="lazy"><figcaption><b>Tilt map.</b> The final belief in perspective over the core.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-surface3d-2.webp" alt="ABYSSAL surface3d panel open on the MH370 case." loading="lazy"><figcaption><b>3D surface.</b> Probability as height in the 3D data explorer: the escarpment ridge rises out of the core.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-particles-2.webp" alt="ABYSSAL particles panel open on the MH370 case." loading="lazy"><figcaption><b>Particles.</b> The particle view needs an admitted drift transport with a start time and forcing. This case has none (the wreck does not move, and debris drift was scored offline against real drifters), so the panel says so instead of inventing one.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-f-sources-2.webp" alt="ABYSSAL sources panel open on the MH370 case." loading="lazy"><figcaption><b>Sources.</b> The retained library: 64 sources, 53 of them feeding admitted observations.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-probe-massif.webp" alt="ABYSSAL panel on the MH370 case." loading="lazy"><figcaption><b>Probe.</b> Reading the belief at a point on the escarpment massif.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-change-my-mind.webp" alt="ABYSSAL panel on the MH370 case." loading="lazy"><figcaption><b>What would change my mind.</b> Twelve ranked next actions with their expected information gain, under stated and uncalibrated assumptions (POD 60%). The top one, a sweep around the core, covers 7.3% of the current belief.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-search-autopsy.webp" alt="ABYSSAL panel on the MH370 case." loading="lazy"><figcaption><b>Search autopsy.</b> For the day the target is found: enter the find point and ABYSSAL explains why the search missed it. Read-only, and kept apart from the case.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-observations-time.webp" alt="ABYSSAL panel on the MH370 case." loading="lazy"><figcaption><b>Observations in time.</b> Range rings, completed search phases and last-known points from recorded tracks, each saved as a draft for review.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-case-checklist.webp" alt="ABYSSAL panel on the MH370 case." loading="lazy"><figcaption><b>The case checklist after the build.</b> Three of four steps done; seeing where to search next is the one left.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-ops-wind-currents.webp" alt="ABYSSAL panel on the MH370 case." loading="lazy"><figcaption><b>Ops console with wind and currents.</b> Live layers for planning today; they are not 2014 conditions and never enter the model.</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-x-dossier.webp" alt="ABYSSAL panel on the MH370 case." loading="lazy"><figcaption><b>Export dossier.</b> The case, its ledger and its map as a shareable report.</figcaption></figure>
+</div><!--/mh-tour-->
+
+<h2 id="ch-limits"><span class="num">16</span>Limits, and what would settle it</h2>
+
+<p>The final map is conditional on stated, swept assumptions. Revision 3 ran 17 sensitivity variants and 6 fuel-calibration variants, and the fuel-peak core ranks first in every one. That does not make it a measurement. The main limits are these:</p>
+
+<ul>
+  <li>The fuel model is a calibrated physical model, not Boeing's proprietary performance tables.</li>
+  <li>The manoeuvring scan allows at most two legs plus a hold.</li>
+  <li>Debris windage is uncertain by a factor of 1.5.</li>
+  <li>The hydrophone detection probability is uncalibrated.</li>
+  <li>The searched area is the <i>published</i> mosaic. Ocean Infinity's polygons are not public.</li>
+  <li>The 7th arc's dive-versus-glide split rests on an interpretation of two BFO values.</li>
+  <li>The observations in this ABYSSAL case were admitted by the author, as the case's analyst. In a real search each would be reviewed and admitted by a person accountable for it.</li>
+</ul>
+
+<p>Four pieces of data would settle most of what remains:</p>
 
 <ol>
-  <li><strong>High-resolution AUV re-survey of the `37.7°S–38.25°S, 88.0°E–88.6°E` escarpment massif:</strong> Auditing real GA tiles measured `5.9–8.8%` deep acoustic shadow (`1.6–2.4×` flat-seabed control); these `~2,600 km²` hold `12.1%` of the entire v3 posterior (`~4.6% / 1,000 km²`, `25×` denser than the outer glide belt).</li>
-  <li><strong>Raw sub-metre ATSB / Ocean Infinity shadow polygons &amp; Honeywell SDU OCXO warm-reboot bench test:</strong> Raw towfish shadow masks refine `terrain_pod_grid` directly, while an OCXO warm-reboot curve decides the remaining `36.4%` glide weight.</li>
-  <li><strong>Oldest-barnacle δ¹⁸O sclerochronology &amp; non-flaperon 777 leeway windage:</strong> Measures colonisation SST directly on the oldest flaperon barnacles and calibrates the remaining 27 debris items.</li>
-  <li><strong>2014 recordings from CTBTO hydroacoustic stations HA01 (Cape Leeuwin) and HA08 (Diego Garcia):</strong> 3D ETOPO 2022 ray-tracing confirms `34°S–42°S` is unobstructed (`T = 1.00`), so continuous 2014 SOFAR waveforms would decisively test the `36.8°S–38.8°S` fuel peak.</li>
+  <li><b>The raw ATSB, Fugro and Ocean Infinity sonar and low-confidence polygons</b> over 36.8–38.8°S, especially the escarpments at 37.7–38.25°S.</li>
+  <li><b>A warm-reboot bench test of the Honeywell satellite data unit's oscillator</b>, to rule out a non-descent explanation of the final BFO. That decides the glide weight.</li>
+  <li><b>CTBTO HA01 and HA08 recordings for 8 March 2014</b>, which would turn a weak acoustic factor into a strong one.</li>
+  <li><b>Isotope sclerochronology of the oldest flaperon barnacles</b>, which would fix the water temperature at the start of the drift.</li>
 </ol>
 
-<div class="prevnext">
-  <a class="prev" href="08-three-cases-two-refusals.html"><small>← Earlier in the series</small><b>Part 8 · Three cases, two refusals</b></a>
-  <a class="next" href="index.html"><small>Back to →</small><b>ABYSSAL overview and all 9 parts</b></a>
-</div>
+<h2 id="ch-method"><span class="num">17</span>Method and reproducibility</h2>
+
+<p>All code is in the ABYSSAL repository:</p>
+
+<ul>
+  <li><b>General engines</b> in <code>abyssal/signal/</code>: <code>satcom</code>, <code>upper_air</code>, <code>flightpath</code>, <code>aircraft_fuel</code>, <code>nonsteady_flight</code>, <code>tphase</code>, <code>drift_markov</code>, <code>corridor_fusion</code>, <code>sofar_blocking</code> and <code>bubble_pulse</code>; plus <code>abyssal/detect/anomaly</code>.</li>
+  <li><b>Case drivers and results</b> in <code>cases/reference/mh370/investigation/</code> and <code>data/mh370/investigation/</code>.</li>
+  <li><b>The ABYSSAL case itself</b> is built by <code>abyssal_case_plan.py</code> and <code>abyssal_case_build.py</code>, through the public HTTP API only. Anyone running the workbench can rebuild it and get the same map.</li>
+</ul>
+
+<p>Every download has a receipt (URL, time, size, SHA-256, licence), and every result records its model version, code commit and input hashes. Nothing here has been admitted to any reference case.</p>
+
+<p class="small"><b>Sources.</b> Malaysian ICAO Annex 13 Safety Investigation Team, <i>Safety Investigation Report MH370 (9M-MRO)</i>, 2018 · ATSB, <i>The Operational Search for MH370</i>, AE-2014-054, 2017 · Ashton, Shuster Bruce, Colledge and Dickinson, “The Search for MH370”, <i>Journal of Navigation</i> 68(1), 2015 · Davey, Gordon, Holland, Rutten and Williams, <i>Bayesian Methods in the Search for MH370</i>, Springer, 2016 · Geoscience Australia MH370 Phase 2 data (CC BY 4.0) · IMOS passive acoustic observatories (CC BY 4.0) · NOAA Global Drifter Program · NOAA OISST v2.1 · NOAA ETOPO 2022 · ECMWF ERA5 via ARCO-ERA5 · NASA GIBS (MODIS) · NOAA NCEI Jason-2 GDR · NOAA CoastWatch ERDDAP (OSCAR, NAVGEM) · EarthScope/IRIS and GEOFON FDSN · WSPRnet.</p>
+
+<h2 id="ch-appendix"><span class="num">A</span>Appendix: every stage, three ways</h2>
+
+<p>Every capture from the build, in order: the workspace, the corridor view and the core view after each step. Click any image for the full-resolution original.</p>
+
+<div class="mh-grid three gallery" id="mh-appendix">
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s00-checklist.webp" alt="ABYSSAL MH370 case after stage: Empty case, checklist view." loading="lazy"><figcaption><b>00 · Empty case</b> · checklist</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s00-empty-map.webp" alt="ABYSSAL MH370 case after stage: Empty case, map view." loading="lazy"><figcaption><b>00 · Empty case</b> · map</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s00-empty-ui.webp" alt="ABYSSAL MH370 case after stage: Empty case, workspace view." loading="lazy"><figcaption><b>00 · Empty case</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s01-library-corridor.webp" alt="ABYSSAL MH370 case after stage: Sources, corridor view." loading="lazy"><figcaption><b>01 · Sources</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s01-library-ui.webp" alt="ABYSSAL MH370 case after stage: Sources, workspace view." loading="lazy"><figcaption><b>01 · Sources</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s02-radar-corridor.webp" alt="ABYSSAL MH370 case after stage: Radar draft, corridor view." loading="lazy"><figcaption><b>02 · Radar draft</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s02-radar-ui.webp" alt="ABYSSAL MH370 case after stage: Radar draft, workspace view." loading="lazy"><figcaption><b>02 · Radar draft</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s03-arc7-core.webp" alt="ABYSSAL MH370 case after stage: 7th arc, core view." loading="lazy"><figcaption><b>03 · 7th arc</b> · core</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s03-arc7-corridor.webp" alt="ABYSSAL MH370 case after stage: 7th arc, corridor view." loading="lazy"><figcaption><b>03 · 7th arc</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s03-arc7-ui.webp" alt="ABYSSAL MH370 case after stage: 7th arc, workspace view." loading="lazy"><figcaption><b>03 · 7th arc</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s04-bfo-core.webp" alt="ABYSSAL MH370 case after stage: Doppler, core view." loading="lazy"><figcaption><b>04 · Doppler</b> · core</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s04-bfo-corridor.webp" alt="ABYSSAL MH370 case after stage: Doppler, corridor view." loading="lazy"><figcaption><b>04 · Doppler</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s04-bfo-ui.webp" alt="ABYSSAL MH370 case after stage: Doppler, workspace view." loading="lazy"><figcaption><b>04 · Doppler</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s05-flight-core.webp" alt="ABYSSAL MH370 case after stage: Flight engine, core view." loading="lazy"><figcaption><b>05 · Flight engine</b> · core</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s05-flight-corridor.webp" alt="ABYSSAL MH370 case after stage: Flight engine, corridor view." loading="lazy"><figcaption><b>05 · Flight engine</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s05-flight-ui.webp" alt="ABYSSAL MH370 case after stage: Flight engine, workspace view." loading="lazy"><figcaption><b>05 · Flight engine</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s06-drift-core.webp" alt="ABYSSAL MH370 case after stage: Debris drift, core view." loading="lazy"><figcaption><b>06 · Debris drift</b> · core</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s06-drift-corridor.webp" alt="ABYSSAL MH370 case after stage: Debris drift, corridor view." loading="lazy"><figcaption><b>06 · Debris drift</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s06-drift-ui.webp" alt="ABYSSAL MH370 case after stage: Debris drift, workspace view." loading="lazy"><figcaption><b>06 · Debris drift</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s07-wa-core.webp" alt="ABYSSAL MH370 case after stage: No WA debris, core view." loading="lazy"><figcaption><b>07 · No WA debris</b> · core</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s07-wa-corridor.webp" alt="ABYSSAL MH370 case after stage: No WA debris, corridor view." loading="lazy"><figcaption><b>07 · No WA debris</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s07-wa-ui.webp" alt="ABYSSAL MH370 case after stage: No WA debris, workspace view." loading="lazy"><figcaption><b>07 · No WA debris</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s08-barnacle-core.webp" alt="ABYSSAL MH370 case after stage: Barnacles, core view." loading="lazy"><figcaption><b>08 · Barnacles</b> · core</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s08-barnacle-corridor.webp" alt="ABYSSAL MH370 case after stage: Barnacles, corridor view." loading="lazy"><figcaption><b>08 · Barnacles</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s08-barnacle-ui.webp" alt="ABYSSAL MH370 case after stage: Barnacles, workspace view." loading="lazy"><figcaption><b>08 · Barnacles</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s09-surface-core.webp" alt="ABYSSAL MH370 case after stage: Surface search, core view." loading="lazy"><figcaption><b>09 · Surface search</b> · core</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s09-surface-corridor.webp" alt="ABYSSAL MH370 case after stage: Surface search, corridor view." loading="lazy"><figcaption><b>09 · Surface search</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s09-surface-ui.webp" alt="ABYSSAL MH370 case after stage: Surface search, workspace view." loading="lazy"><figcaption><b>09 · Surface search</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s10-acoustic-core.webp" alt="ABYSSAL MH370 case after stage: Hydrophones, core view." loading="lazy"><figcaption><b>10 · Hydrophones</b> · core</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s10-acoustic-corridor.webp" alt="ABYSSAL MH370 case after stage: Hydrophones, corridor view." loading="lazy"><figcaption><b>10 · Hydrophones</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s10-acoustic-ui.webp" alt="ABYSSAL MH370 case after stage: Hydrophones, workspace view." loading="lazy"><figcaption><b>10 · Hydrophones</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s11-oceanshield-core.webp" alt="ABYSSAL MH370 case after stage: Ocean Shield, core view." loading="lazy"><figcaption><b>11 · Ocean Shield</b> · core</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s11-oceanshield-corridor.webp" alt="ABYSSAL MH370 case after stage: Ocean Shield, corridor view." loading="lazy"><figcaption><b>11 · Ocean Shield</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s11-oceanshield-ui.webp" alt="ABYSSAL MH370 case after stage: Ocean Shield, workspace view." loading="lazy"><figcaption><b>11 · Ocean Shield</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s12-atsb-flat-core.webp" alt="ABYSSAL MH370 case after stage: ATSB flat, core view." loading="lazy"><figcaption><b>12 · ATSB flat</b> · core</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s12-atsb-flat-corridor.webp" alt="ABYSSAL MH370 case after stage: ATSB flat, corridor view." loading="lazy"><figcaption><b>12 · ATSB flat</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s12-atsb-flat-ui.webp" alt="ABYSSAL MH370 case after stage: ATSB flat, workspace view." loading="lazy"><figcaption><b>12 · ATSB flat</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s13-atsb-moderate-core.webp" alt="ABYSSAL MH370 case after stage: ATSB moderate, core view." loading="lazy"><figcaption><b>13 · ATSB moderate</b> · core</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s13-atsb-moderate-corridor.webp" alt="ABYSSAL MH370 case after stage: ATSB moderate, corridor view." loading="lazy"><figcaption><b>13 · ATSB moderate</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s13-atsb-moderate-ui.webp" alt="ABYSSAL MH370 case after stage: ATSB moderate, workspace view." loading="lazy"><figcaption><b>13 · ATSB moderate</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s14-atsb-steep-core.webp" alt="ABYSSAL MH370 case after stage: ATSB steep, core view." loading="lazy"><figcaption><b>14 · ATSB steep</b> · core</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s14-atsb-steep-corridor.webp" alt="ABYSSAL MH370 case after stage: ATSB steep, corridor view." loading="lazy"><figcaption><b>14 · ATSB steep</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s14-atsb-steep-ui.webp" alt="ABYSSAL MH370 case after stage: ATSB steep, workspace view." loading="lazy"><figcaption><b>14 · ATSB steep</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s15-atsb-walls-core.webp" alt="ABYSSAL MH370 case after stage: ATSB walls, core view." loading="lazy"><figcaption><b>15 · ATSB walls</b> · core</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s15-atsb-walls-corridor.webp" alt="ABYSSAL MH370 case after stage: ATSB walls, corridor view." loading="lazy"><figcaption><b>15 · ATSB walls</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s15-atsb-walls-ui.webp" alt="ABYSSAL MH370 case after stage: ATSB walls, workspace view." loading="lazy"><figcaption><b>15 · ATSB walls</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s16-oi2018-core.webp" alt="ABYSSAL MH370 case after stage: OI 2018, core view." loading="lazy"><figcaption><b>16 · OI 2018</b> · core</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s16-oi2018-corridor.webp" alt="ABYSSAL MH370 case after stage: OI 2018, corridor view." loading="lazy"><figcaption><b>16 · OI 2018</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s16-oi2018-ui.webp" alt="ABYSSAL MH370 case after stage: OI 2018, workspace view." loading="lazy"><figcaption><b>16 · OI 2018</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s17-oi2025-core.webp" alt="ABYSSAL MH370 case after stage: OI 2025–26, core view." loading="lazy"><figcaption><b>17 · OI 2025–26</b> · core</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s17-oi2025-corridor.webp" alt="ABYSSAL MH370 case after stage: OI 2025–26, corridor view." loading="lazy"><figcaption><b>17 · OI 2025–26</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s17-oi2025-ui.webp" alt="ABYSSAL MH370 case after stage: OI 2025–26, workspace view." loading="lazy"><figcaption><b>17 · OI 2025–26</b> · workspace</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s18-context-corridor.webp" alt="ABYSSAL MH370 case after stage: Context, corridor view." loading="lazy"><figcaption><b>18 · Context</b> · corridor</figcaption></figure>
+<figure class="shot reveal"><img src="../assets/abyssal/mh370x-s18-context-ui.webp" alt="ABYSSAL MH370 case after stage: Context, workspace view." loading="lazy"><figcaption><b>18 · Context</b> · workspace</figcaption></figure>
+</div><!--/mh-appendix-->

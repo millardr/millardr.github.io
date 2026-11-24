@@ -743,3 +743,29 @@ p code, li code, td code, dd code, .callout code { overflow-wrap: anywhere; }
 
 /* intrinsic width/height reserve space; the box still scales with its column */
 img[width][height] { height: auto; max-width: 100%; }
+
+/* MH370 case study: full-bleed figures, two-up galleries, step rail and verdict table */
+/* Full-width figures and grids (MH370 case study). They span the viewport less a 16px gutter, centred on
+   the viewport rather than on the text column, and sit above the sticky contents list while they pass. */
+.prose figure.bleed, .prose .mh-grid { width: min(1600px, calc(100vw - 32px)); max-width: none; margin-left: calc(50% - min(800px, 50vw - 16px)); margin-top: 34px; margin-bottom: 34px; }
+.prose figure.bleed figcaption { max-width: var(--measure); margin-left: 8px; }
+.prose .mh-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.prose .mh-grid.three { grid-template-columns: repeat(3, 1fr); }
+.prose .mh-grid figure { margin: 0; width: auto; max-width: none; }
+@media (min-width: 1180px) {
+  .prose figure.bleed, .prose .mh-grid { position: relative; z-index: 3; background: var(--bg); padding-top: 8px; padding-bottom: 8px; margin-left: calc(50% - min(800px, 50vw - 16px) - max(22px, 642px - 50vw)); }
+  .prose figure.bleed figcaption { margin-left: calc(min(800px, 50vw - 16px) + max(22px, 642px - 50vw) - 350px); }
+}
+@media (max-width: 860px) { .prose .mh-grid, .prose .mh-grid.three { grid-template-columns: 1fr; } .prose .mh-grid.gallery { grid-template-columns: 1fr 1fr; gap: 10px; } }
+.mh-step { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 2.2em 0 0.4em; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.mh-step b { font-family: var(--sans); font-size: 13px; letter-spacing: 0; text-transform: none; color: var(--ink); font-weight: 650; }
+.mh-step .km { color: var(--ink-2); letter-spacing: 0.04em; }
+.prose table.mh-verdicts td:first-child { white-space: nowrap; font-weight: 600; }
+.prose table.mh-verdicts .v { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
+.prose table.mh-verdicts .v.yes { color: var(--good); }
+.prose table.mh-verdicts .v.weak { color: var(--amber); }
+.prose table.mh-verdicts .v.no { color: var(--muted); }
+.tldr { border: 1px solid var(--line); border-left: 4px solid var(--accent); background: var(--surface); border-radius: 12px; padding: 20px 24px; margin: 1.6em 0 2.2em; }
+.tldr .t { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+.tldr ul { margin: 0; padding-left: 1.1em; }
+.tldr li { margin: 0.35em 0; }
