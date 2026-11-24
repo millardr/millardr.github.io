@@ -234,46 +234,6 @@
   ],
   "w": 2000
  },
- "mh370-dossier-ledger": {
-  "h": 965,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-dossier-map": {
-  "h": 1989,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-dossier-marginal": {
-  "h": 1282,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-dossier-paths": {
-  "h": 1989,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-dossier-zones": {
-  "h": 1051,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
  "mh370-essay-view": {
   "h": 1280,
   "variants": [
@@ -289,6 +249,118 @@
    1280
   ],
   "w": 2000
+ },
+ "mh370-ui-evidence-toggled": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-ui-fusion-graph": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-ui-model-pane": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-ui-ops-currents": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-ui-particles": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-ui-plan-studio": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-ui-satellite-view": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-ui-signal-dark-tracks": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-ui-signal-debris": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-ui-signal-sar": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-ui-signal-seabed": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-ui-signal-sofar": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-ui-signal-spectral": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-ui-watchlist": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
  },
  "mh370-workspace-2026": {
   "h": 1280,

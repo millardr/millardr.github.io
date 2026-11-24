@@ -99,8 +99,8 @@
  },
  {
   "slug": "abyssal-mh370-case-study",
-  "title": "MH370: Rebuilding the Search from Raw Data — ABYSSAL Case Study",
-  "desc": "An independent raw-data reanalysis of Malaysia Airlines flight 370 in ABYSSAL: validated Inmarsat BTO/BFO physics, ERA5 winds, 5,040-cell timing-only flight scans, pixel-measured sonar coverage, 36 years of NOAA drifters, raw IMOS hydrophones, WSPR null tests, and a revised search plan.",
+  "title": "MH370 in ABYSSAL: Live Evidence Fusion, Signal Lab & Residual Search",
+  "desc": "Running Malaysia Airlines flight 370 inside ABYSSAL's general-purpose workspace: live evidence toggling, provenance fusion graphs, particle transport, seabed sonar, SOFAR acoustics, Sentinel-2 spectral screening, SAR/AIS dark-fleet tracking, Plan Studio allocation, and a raw-data reanalysis of the 7th arc.",
   "kicker": "ABYSSAL",
   "theme": "abyssal"
  },
