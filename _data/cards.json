@@ -99,8 +99,8 @@
  },
  {
   "slug": "abyssal-mh370-case-study",
-  "title": "MH370 in ABYSSAL: From Zero Data to Full-Physics Fuel & Terrain Fusion v3",
-  "desc": "A complete progressive raw-data investigation of Malaysia Airlines flight 370 inside ABYSSAL's native workbench: starting from 0 observations (30.7M km²), adding ACARS, Inmarsat BTO/BFO, and CSIRO drift; 3D probability and seabed surfaces; 4,400 autopilot paths; Trent 892 fuel-burn physics; 155,000 non-steady trajectories; 252 IMOS hydrophone transients recovering Curtin's 01:33 UTC events; 3D ETOPO SOFAR ray-blocking; NOAA OISST barnacle SST; and terrain-aware sonar POD.",
+  "title": "MH370 inside ABYSSAL: from an empty map to a 2,600 km² target",
+  "desc": "A complete, progressive reconstruction of the search for Malaysia Airlines flight 370 inside ABYSSAL's ordinary workbench: every public dataset with receipts, every engine including the ones that failed, satellite rings, a calibrated Boeing 777 fuel model, 155,000 manoeuvring flights, debris drift, barnacle temperatures, hydrophones, seismometers, sonar mosaics, satellites and altimeters, fused into one auditable probability map.",
   "kicker": "ABYSSAL",
   "theme": "abyssal"
  },

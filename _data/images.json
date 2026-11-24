@@ -262,28 +262,7 @@
   ],
   "w": 1400
  },
- "mh370-chart-imos-calibration-pings": {
-  "h": 780,
-  "variants": [
-   640
-  ],
-  "w": 1400
- },
- "mh370-chart-imos-portland-bands": {
-  "h": 780,
-  "variants": [
-   640
-  ],
-  "w": 1400
- },
  "mh370-chart-jason2-altimeter-passes": {
-  "h": 780,
-  "variants": [
-   640
-  ],
-  "w": 1400
- },
- "mh370-chart-noaa-drifter-regions": {
   "h": 780,
   "variants": [
    640
@@ -304,55 +283,7 @@
   ],
   "w": 1400
  },
- "mh370-ember-01-full-map": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-ember-02-tilted-arc": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
  "mh370-ember-03-3d-surface": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-ember-04-evidence-toggle": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-ember-05-fusion-graph": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-ember-06-model-uncertainty": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-ember-07-movement-time": {
   "h": 1200,
   "variants": [
    640,
@@ -368,78 +299,6 @@
   ],
   "w": 1920
  },
- "mh370-ember-09-satellite-view": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-ember-10-plan-studio": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-ember-11-where-next": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-ember-12-fuel-peak-zoom": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-ember-13-probe-arc": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-ember-14-measure-arc": {
-  "h": 1000,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1600
- },
- "mh370-ember-15-outside-area": {
-  "h": 1000,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1600
- },
- "mh370-ember-16-plan-assets": {
-  "h": 1000,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1600
- },
- "mh370-essay-view": {
-  "h": 1280,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
  "mh370-live": {
   "h": 1250,
   "variants": [
@@ -447,202 +306,6 @@
    1280
   ],
   "w": 2000
- },
- "mh370-prog-01-no-data": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-prog-02-add-acars": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-prog-03-add-bto": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-prog-04-add-csiro": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-prog-3d-seabed": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-prog-etopo-data": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-prog-ops-quakes-sat": {
-  "h": 1200,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-real-bathy-barnacle-v3": {
-  "h": 791,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-real-drift-bto": {
-  "h": 791,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-real-flight-families": {
-  "h": 1186,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-real-fuel-nonsteady": {
-  "h": 791,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-real-hydrophone-seismic": {
-  "h": 791,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-real-imos-transients": {
-  "h": 791,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-real-ledger-28-sweeps": {
-  "h": 1186,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-real-sat-wspr-nulls": {
-  "h": 1186,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-real-searched-corridors": {
-  "h": 1186,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-real-sonar-scan": {
-  "h": 791,
-  "variants": [
-   640,
-   1280
-  ],
-  "w": 1920
- },
- "mh370-sonar-cand-01": {
-  "h": 512,
-  "variants": [],
-  "w": 512
- },
- "mh370-sonar-cand-02": {
-  "h": 512,
-  "variants": [],
-  "w": 512
- },
- "mh370-sonar-cand-03": {
-  "h": 512,
-  "variants": [],
-  "w": 512
- },
- "mh370-sonar-cand-04": {
-  "h": 512,
-  "variants": [],
-  "w": 512
- },
- "mh370-sonar-cand-05": {
-  "h": 512,
-  "variants": [],
-  "w": 512
- },
- "mh370-sonar-cand-06": {
-  "h": 512,
-  "variants": [],
-  "w": 512
- },
- "mh370-sonar-cand-07": {
-  "h": 512,
-  "variants": [],
-  "w": 512
- },
- "mh370-sonar-cand-08": {
-  "h": 512,
-  "variants": [],
-  "w": 512
- },
- "mh370-sonar-cand-09": {
-  "h": 512,
-  "variants": [],
-  "w": 512
- },
- "mh370-sonar-cand-10": {
-  "h": 512,
-  "variants": [],
-  "w": 512
- },
- "mh370-sonar-cand-11": {
-  "h": 512,
-  "variants": [],
-  "w": 512
- },
- "mh370-sonar-cand-12": {
-  "h": 512,
-  "variants": [],
-  "w": 512
  },
  "mh370-sonar-escarpment-37-81s": {
   "h": 640,
@@ -654,61 +317,1348 @@
   "variants": [],
   "w": 640
  },
- "mh370-ui-evidence-toggled": {
-  "h": 1200,
+ "mh370x-aqua-night": {
+  "h": 533,
   "variants": [
-   640,
-   1280
+   640
   ],
-  "w": 1920
+  "w": 1300
  },
- "mh370-ui-fusion-graph": {
-  "h": 1200,
+ "mh370x-chart-app-vs-pipeline": {
+  "h": 1038,
   "variants": [
    640,
    1280
   ],
-  "w": 1920
+  "w": 2082
  },
- "mh370-ui-model-pane": {
-  "h": 1200,
+ "mh370x-chart-arcs": {
+  "h": 1745,
   "variants": [
    640,
    1280
   ],
-  "w": 1920
+  "w": 1926
  },
- "mh370-ui-ops-currents": {
-  "h": 1200,
+ "mh370x-chart-barnacle": {
+  "h": 1038,
   "variants": [
    640,
    1280
   ],
-  "w": 1920
+  "w": 1927
  },
- "mh370-ui-plan-studio": {
-  "h": 1200,
+ "mh370x-chart-contacts": {
+  "h": 1443,
   "variants": [
    640,
    1280
   ],
-  "w": 1920
+  "w": 2099
  },
- "mh370-ui-satellite-view": {
-  "h": 1200,
+ "mh370x-chart-coverage": {
+  "h": 1065,
   "variants": [
    640,
    1280
   ],
-  "w": 1920
+  "w": 1981
  },
- "mh370-workspace-2026": {
-  "h": 1280,
+ "mh370x-chart-drift": {
+  "h": 1038,
   "variants": [
    640,
    1280
   ],
-  "w": 1920
+  "w": 2039
+ },
+ "mh370x-chart-families": {
+  "h": 1117,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1831
+ },
+ "mh370x-chart-final-map": {
+  "h": 1586,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2129
+ },
+ "mh370x-chart-fuel": {
+  "h": 1091,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2077
+ },
+ "mh370x-chart-hydrophones": {
+  "h": 1510,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2036
+ },
+ "mh370x-chart-massif": {
+  "h": 1745,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2163
+ },
+ "mh370x-chart-nonsteady": {
+  "h": 1038,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1972
+ },
+ "mh370x-chart-seismic": {
+  "h": 1096,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2138
+ },
+ "mh370x-chart-sofar": {
+  "h": 1012,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1937
+ },
+ "mh370x-chart-stepwise": {
+  "h": 2217,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1831
+ },
+ "mh370x-chart-wspr": {
+  "h": 1012,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2284
+ },
+ "mh370x-chart-zones": {
+  "h": 1041,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1927
+ },
+ "mh370x-contacts-z15": {
+  "h": 1236,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1536
+ },
+ "mh370x-contrail-gridsat": {
+  "h": 630,
+  "variants": [
+   640
+  ],
+  "w": 1400
+ },
+ "mh370x-f-add": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-add-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-evidence-geometry": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-evidence-geometry-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-evidence-map": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-evidence-map-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-fusion-graph": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-fusion-graph-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-layers": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-layers-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-map-layers": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-map-layers-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-model": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-model-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-movement": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-movement-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-ops": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-ops-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-outside-area": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-outside-area-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-particles": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-particles-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-plan-studio": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-plan-studio-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-satellite": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-satellite-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-search-health": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-search-health-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-search-info": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-search-info-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-signal-lab": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-signal-lab-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-sketch": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-sketch-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-sources": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-sources-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-surface3d": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-surface3d-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-tilt": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-tilt-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-where-next": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-f-where-next-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-gibs-sheet": {
+  "h": 1180,
+  "variants": [
+   640
+  ],
+  "w": 1140
+ },
+ "mh370x-imos-overview": {
+  "h": 720,
+  "variants": [
+   640
+  ],
+  "w": 1080
+ },
+ "mh370x-overflight-ipm": {
+  "h": 416,
+  "variants": [
+   640
+  ],
+  "w": 960
+ },
+ "mh370x-overflight-kum": {
+  "h": 416,
+  "variants": [
+   640
+  ],
+  "w": 960
+ },
+ "mh370x-portland-calib": {
+  "h": 736,
+  "variants": [
+   640
+  ],
+  "w": 960
+ },
+ "mh370x-portland-spectrograms": {
+  "h": 1104,
+  "variants": [
+   640
+  ],
+  "w": 960
+ },
+ "mh370x-s00-checklist": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s00-empty-map": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s00-empty-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s01-library-corridor": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s01-library-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s02-radar-corridor": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s02-radar-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s03-arc7-core": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s03-arc7-corridor": {
+  "h": 1806,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 3440
+ },
+ "mh370x-s03-arc7-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s04-bfo-core": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s04-bfo-corridor": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s04-bfo-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s05-flight-core": {
+  "h": 1806,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 3440
+ },
+ "mh370x-s05-flight-corridor": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s05-flight-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s06-drift-core": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s06-drift-corridor": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s06-drift-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s07-wa-core": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s07-wa-corridor": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s07-wa-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s08-barnacle-core": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s08-barnacle-corridor": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s08-barnacle-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s09-surface-core": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s09-surface-corridor": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s09-surface-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s10-acoustic-core": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s10-acoustic-corridor": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s10-acoustic-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s11-oceanshield-core": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s11-oceanshield-corridor": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s11-oceanshield-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s12-atsb-flat-core": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s12-atsb-flat-corridor": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s12-atsb-flat-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s13-atsb-moderate-core": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s13-atsb-moderate-corridor": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s13-atsb-moderate-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s14-atsb-steep-core": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s14-atsb-steep-corridor": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s14-atsb-steep-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s15-atsb-walls-core": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s15-atsb-walls-corridor": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s15-atsb-walls-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s16-oi2018-core": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s16-oi2018-corridor": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s16-oi2018-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s17-oi2025-core": {
+  "h": 1806,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 3440
+ },
+ "mh370x-s17-oi2025-corridor": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s17-oi2025-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s18-context-corridor": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s18-context-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-s19-final-escarpment": {
+  "h": 1806,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 3440
+ },
+ "mh370x-scan-candidates": {
+  "h": 1070,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1600
+ },
+ "mh370x-scan-zoom": {
+  "h": 788,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1520
+ },
+ "mh370x-seismic-waves": {
+  "h": 1050,
+  "variants": [
+   640
+  ],
+  "w": 1120
+ },
+ "mh370x-slick-best": {
+  "h": 678,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1680
+ },
+ "mh370x-slick-stretch": {
+  "h": 339,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1680
+ },
+ "mh370x-x-case-checklist": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-change-my-mind": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-dossier": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-final-australia": {
+  "h": 1806,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 3440
+ },
+ "mh370x-x-final-core": {
+  "h": 1806,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 3440
+ },
+ "mh370x-x-final-core-satellite": {
+  "h": 1806,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 3440
+ },
+ "mh370x-x-final-corridor": {
+  "h": 1806,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 3440
+ },
+ "mh370x-x-final-domain": {
+  "h": 1806,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 3440
+ },
+ "mh370x-x-final-escarpment": {
+  "h": 1806,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 3440
+ },
+ "mh370x-x-final-massif": {
+  "h": 1806,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 3440
+ },
+ "mh370x-x-no-arc7-after": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-no-arc7-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-no-atsb-flat-after": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-no-atsb-flat-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-no-atsb-walls-after": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-no-atsb-walls-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-no-flight-after": {
+  "h": 1512,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-no-flight-ui": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-observations-time": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-ops-wind-currents": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-probe-massif": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-replay-0": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-replay-1": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-replay-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-replay-3": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-replay-4": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-replay-5": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-replay-6": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-search-autopsy": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-signal-0": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-signal-1": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-signal-10": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-signal-2": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-signal-3": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-signal-4": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-signal-5": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-signal-6": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-signal-7": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-signal-8": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-signal-9": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
+ },
+ "mh370x-x-signal-dark-scenario": {
+  "h": 1800,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 2880
  },
  "movement": {
   "h": 1250,
