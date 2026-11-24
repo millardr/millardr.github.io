@@ -744,19 +744,163 @@ p code, li code, td code, dd code, .callout code { overflow-wrap: anywhere; }
 /* intrinsic width/height reserve space; the box still scales with its column */
 img[width][height] { height: auto; max-width: 100%; }
 
-/* MH370 case study: full-bleed figures, two-up galleries, step rail and verdict table */
-/* Full-width figures and grids (MH370 case study). They span the viewport less a 16px gutter, centred on
-   the viewport rather than on the text column, and sit above the sticky contents list while they pass. */
-.prose figure.bleed, .prose .mh-grid { width: min(1600px, calc(100vw - 32px)); max-width: none; margin-left: calc(50% - min(800px, 50vw - 16px)); margin-top: 34px; margin-bottom: 34px; }
-.prose figure.bleed figcaption { max-width: var(--measure); margin-left: 8px; }
-.prose .mh-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
-.prose .mh-grid.three { grid-template-columns: repeat(3, 1fr); }
-.prose .mh-grid figure { margin: 0; width: auto; max-width: none; }
+/* MH370 case study: disciplined 2-column layout, zero TOC overlap, equal-height framed figure cards */
 @media (min-width: 1180px) {
-  .prose figure.bleed, .prose .mh-grid { position: relative; z-index: 3; background: var(--bg); padding-top: 8px; padding-bottom: 8px; margin-left: calc(50% - min(800px, 50vw - 16px) - max(22px, 642px - 50vw)); }
-  .prose figure.bleed figcaption { margin-left: calc(min(800px, 50vw - 16px) + max(22px, 642px - 50vw) - 350px); }
+  .article-grid:has(.tldr) {
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 52px;
+  }
+  .article-grid:has(.tldr) > div:empty {
+    display: none;
+  }
+  .article-grid:has(.tldr) .toc {
+    padding-right: 16px;
+    border-right: 1px solid var(--line);
+    z-index: 2;
+  }
+  .article-grid:has(.tldr) .prose {
+    max-width: none;
+    width: 100%;
+    min-width: 0;
+  }
 }
-@media (max-width: 860px) { .prose .mh-grid, .prose .mh-grid.three { grid-template-columns: 1fr; } .prose .mh-grid.gallery { grid-template-columns: 1fr 1fr; gap: 10px; } }
+
+.prose:has(.tldr) .reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+.prose:has(.tldr) > p,
+.prose:has(.tldr) > ul,
+.prose:has(.tldr) > ol,
+.prose:has(.tldr) > h2,
+.prose:has(.tldr) > h3,
+.prose:has(.tldr) > .callout,
+.prose:has(.tldr) > .tldr,
+.prose:has(.tldr) > .eq,
+.prose:has(.tldr) > .mh-step,
+.prose:has(.tldr) > .prevnext {
+  max-width: var(--measure);
+}
+.prose:has(.tldr) > h2 {
+  margin-top: 3em;
+  padding-top: 1.6em;
+  border-top: 1px solid var(--line);
+}
+.prose:has(.tldr) > table {
+  max-width: 100%;
+  width: 100%;
+  display: block;
+  overflow-x: auto;
+}
+
+/* Standalone full-column figures stay strictly inside the content column — never covering .toc or overflowing */
+.prose:has(.tldr) figure.bleed,
+.prose:has(.tldr) figure.wide {
+  width: 100%;
+  max-width: 100%;
+  margin: 1.9em 0;
+  margin-left: 0;
+  position: static;
+  z-index: auto;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  padding: 0;
+}
+.prose:has(.tldr) figure.bleed img,
+.prose:has(.tldr) figure.wide img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: #0c0e14;
+}
+.prose:has(.tldr) figure.bleed figcaption,
+.prose:has(.tldr) figure.wide figcaption {
+  max-width: none;
+  margin: 0;
+  padding: 13px 18px 15px;
+  border-top: 1px solid var(--line);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* Equal-height side-by-side grids — strictly aligned inside the content column */
+.prose .mh-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: stretch;
+  width: 100%;
+  max-width: 100%;
+  margin: 1.9em 0;
+  margin-left: 0;
+  position: static;
+  z-index: auto;
+  padding: 0;
+  background: transparent;
+}
+.prose .mh-grid.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.prose .mh-grid.gallery {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.prose .mh-grid figure {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.prose .mh-grid figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: contain;
+  background: #0c0e14;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.prose .mh-grid.three figure img {
+  aspect-ratio: 16 / 9;
+}
+.prose .mh-grid:has(> figure > img[width="640"][height="640"]) figure img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+.prose .mh-grid figure figcaption {
+  flex: 1;
+  max-width: none;
+  margin: 0;
+  padding: 12px 15px 14px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+@media (max-width: 860px) {
+  .prose .mh-grid,
+  .prose .mh-grid.three { grid-template-columns: 1fr; }
+  .prose .mh-grid.gallery { grid-template-columns: 1fr 1fr; gap: 10px; }
+}
+
 .mh-step { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 2.2em 0 0.4em; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
 .mh-step b { font-family: var(--sans); font-size: 13px; letter-spacing: 0; text-transform: none; color: var(--ink); font-weight: 650; }
 .mh-step .km { color: var(--ink-2); letter-spacing: 0.04em; }
