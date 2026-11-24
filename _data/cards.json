@@ -99,8 +99,8 @@
  },
  {
   "slug": "abyssal-mh370-case-study",
-  "title": "MH370 in ABYSSAL: Live Evidence Fusion, Signal Lab & Residual Search",
-  "desc": "Running Malaysia Airlines flight 370 inside ABYSSAL's general-purpose workspace: live evidence toggling, provenance fusion graphs, particle transport, seabed sonar, SOFAR acoustics, Sentinel-2 spectral screening, SAR/AIS dark-fleet tracking, Plan Studio allocation, and a raw-data reanalysis of the 7th arc.",
+  "title": "MH370 in ABYSSAL: Live Evidence Fusion, Raw Physics & Residual Search",
+  "desc": "Running Malaysia Airlines flight 370 inside ABYSSAL's general-purpose workspace on real public data: live evidence toggling, provenance fusion graphs, BTO particle filtering, pixel-measured ATSB sonar coverage, 36 years of NOAA drifters, IMOS hydrophones, FDSN seismometers, MODIS/Jason-2/WSPR null tests, and Plan Studio allocation.",
   "kicker": "ABYSSAL",
   "theme": "abyssal"
  },
