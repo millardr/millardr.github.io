@@ -234,6 +234,76 @@
   ],
   "w": 2000
  },
+ "mh370-chart-era5-wind-field": {
+  "h": 780,
+  "variants": [
+   640
+  ],
+  "w": 1400
+ },
+ "mh370-chart-escarpment-shadow-audit": {
+  "h": 780,
+  "variants": [
+   640
+  ],
+  "w": 1400
+ },
+ "mh370-chart-fuel-family-d-altitudes": {
+  "h": 780,
+  "variants": [
+   640
+  ],
+  "w": 1400
+ },
+ "mh370-chart-fuel-sensitivity-bounds": {
+  "h": 780,
+  "variants": [
+   640
+  ],
+  "w": 1400
+ },
+ "mh370-chart-imos-calibration-pings": {
+  "h": 780,
+  "variants": [
+   640
+  ],
+  "w": 1400
+ },
+ "mh370-chart-imos-portland-bands": {
+  "h": 780,
+  "variants": [
+   640
+  ],
+  "w": 1400
+ },
+ "mh370-chart-jason2-altimeter-passes": {
+  "h": 780,
+  "variants": [
+   640
+  ],
+  "w": 1400
+ },
+ "mh370-chart-noaa-drifter-regions": {
+  "h": 780,
+  "variants": [
+   640
+  ],
+  "w": 1400
+ },
+ "mh370-chart-terrain-pod-1arcmin": {
+  "h": 780,
+  "variants": [
+   640
+  ],
+  "w": 1400
+ },
+ "mh370-chart-tphase-seismic-spikes": {
+  "h": 780,
+  "variants": [
+   640
+  ],
+  "w": 1400
+ },
  "mh370-ember-01-full-map": {
   "h": 1200,
   "variants": [
@@ -337,6 +407,30 @@
    1280
   ],
   "w": 1920
+ },
+ "mh370-ember-14-measure-arc": {
+  "h": 1000,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1600
+ },
+ "mh370-ember-15-outside-area": {
+  "h": 1000,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1600
+ },
+ "mh370-ember-16-plan-assets": {
+  "h": 1000,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1600
  },
  "mh370-essay-view": {
   "h": 1280,
@@ -489,6 +583,76 @@
    1280
   ],
   "w": 1920
+ },
+ "mh370-sonar-cand-01": {
+  "h": 512,
+  "variants": [],
+  "w": 512
+ },
+ "mh370-sonar-cand-02": {
+  "h": 512,
+  "variants": [],
+  "w": 512
+ },
+ "mh370-sonar-cand-03": {
+  "h": 512,
+  "variants": [],
+  "w": 512
+ },
+ "mh370-sonar-cand-04": {
+  "h": 512,
+  "variants": [],
+  "w": 512
+ },
+ "mh370-sonar-cand-05": {
+  "h": 512,
+  "variants": [],
+  "w": 512
+ },
+ "mh370-sonar-cand-06": {
+  "h": 512,
+  "variants": [],
+  "w": 512
+ },
+ "mh370-sonar-cand-07": {
+  "h": 512,
+  "variants": [],
+  "w": 512
+ },
+ "mh370-sonar-cand-08": {
+  "h": 512,
+  "variants": [],
+  "w": 512
+ },
+ "mh370-sonar-cand-09": {
+  "h": 512,
+  "variants": [],
+  "w": 512
+ },
+ "mh370-sonar-cand-10": {
+  "h": 512,
+  "variants": [],
+  "w": 512
+ },
+ "mh370-sonar-cand-11": {
+  "h": 512,
+  "variants": [],
+  "w": 512
+ },
+ "mh370-sonar-cand-12": {
+  "h": 512,
+  "variants": [],
+  "w": 512
+ },
+ "mh370-sonar-escarpment-37-81s": {
+  "h": 640,
+  "variants": [],
+  "w": 640
+ },
+ "mh370-sonar-escarpment-38-20s": {
+  "h": 640,
+  "variants": [],
+  "w": 640
  },
  "mh370-ui-evidence-toggled": {
   "h": 1200,
