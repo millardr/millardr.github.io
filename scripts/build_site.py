@@ -111,11 +111,11 @@ PERSON = {
     "name": "Rory Millard",
     "url": f"{SITE}/about.html",
     "jobTitle": "Engineer",
-    "description": "Engineer working where probability meets the physical world: Bayesian search, physics-based sensing and decisions under uncertainty.",
+    "description": "MEng Engineering Science, University of Oxford (First Class, ranked 1st of ~180). AI, robotics, aerospace, quantum sensing, weak-signal detection, and ABYSSAL.",
     "alumniOf": {"@type": "CollegeOrUniversity", "name": "University of Oxford", "sameAs": "https://www.ox.ac.uk/"},
-    "knowsAbout": ["Bayesian inference", "Search theory", "Bayesian search", "Search and rescue", "Remote sensing",
-                   "Synthetic aperture radar", "Ocean acoustics", "Information theory", "Optimisation",
-                   "Signal processing", "Estimation and tracking", "Decision making under uncertainty"],
+    "knowsAbout": ["Artificial intelligence", "Robotics", "Aerospace engineering", "Quantum sensing",
+                   "Signal processing", "Weak-signal detection", "Bayesian inference", "Search theory",
+                   "Remote sensing", "Synthetic aperture radar", "Ocean acoustics", "Optimisation"],
     "sameAs": [LINKEDIN, "https://github.com/millardr"],
 }
 AUTHOR = {"@type": "Person", "@id": PERSON_ID, "name": "Rory Millard", "url": f"{SITE}/about.html"}
@@ -372,7 +372,8 @@ def head(title: str, desc: str, image: str, depth: str, maths: bool = True, them
 NAV = {
     "site": [("work", "projects.html", "Work"), ("writing", "writing.html", "Writing"),
              ("about", "about.html", "About"), ("contact", "contact.html", "Contact")],
-    "abyssal": [("overview", "abyssal/index.html", "Overview"), ("machine", "abyssal/engines.html", "The machine"),
+    "abyssal": [("overview", "abyssal/index.html", "Overview"), ("mh370", "abyssal/mh370-case-study.html", "MH370"),
+                ("machine", "abyssal/engines.html", "The machine"),
                 ("evidence", "abyssal/evidence.html", "Real data"), ("series", "abyssal/01-a-tour.html", "Series"),
                 ("labs", "abyssal/index.html#labs", "Labs")],
 }
@@ -422,8 +423,8 @@ def topbar(depth: str, crumb: str, active: str, theme: str = "abyssal") -> str:
 
 
 def foot(depth: str, theme: str = "abyssal") -> str:
-    tag = ("ABYSSAL is a research prototype by Rory Millard: a Bayesian workbench for finding lost aircraft, ships and people."
-           if theme == "abyssal" else "Engineer working where probability meets the physical world.")
+    tag = ("ABYSSAL is a research workbench by Rory Millard: Bayesian search and physical signal extraction."
+           if theme == "abyssal" else "MEng Engineering Science, University of Oxford · AI, robotics, aerospace, quantum sensing.")
     return f"""
   <footer class="foot">
     <div class="in">
@@ -641,8 +642,8 @@ def page_seo(meta: dict, parts: list[dict]) -> dict:
     name = short_title(title)
     if out == "index.html":
         return build_seo(out, src, title, desc, image, "home", [],
-                         {"card_kicker": "Rory Millard · Engineer", "priority": 1.0,
-                          "card_title": "Engineer working where probability meets the physical world."})
+                         {"card_kicker": "Rory Millard · MEng Oxford", "priority": 1.0,
+                          "card_title": "Physics, mathematics, and hard engineering."})
     if out in TOP:
         label, kind = TOP[out]
         return build_seo(out, src, title, desc, image, kind, [home, (label, None)],

@@ -5,9 +5,9 @@
   "sha": "26080aee72e2c9de"
  },
  "_pages/about.html": {
-  "modified": "2026-11-23",
+  "modified": "2026-11-24",
   "published": "2026-11-21",
-  "sha": "4cfd1ed30e2752aa"
+  "sha": "c812e4d3ef2ae79a"
  },
  "_pages/abyssal/engines.html": {
   "modified": "2026-11-23",
@@ -19,15 +19,20 @@
   "published": "2026-11-23",
   "sha": "977c462c9ef2e69b"
  },
+ "_pages/abyssal/mh370-case-study.html": {
+  "modified": "2026-11-24",
+  "published": "2026-11-24",
+  "sha": "d0c99f5540eb6f53"
+ },
  "_pages/contact.html": {
-  "modified": "2026-11-22",
+  "modified": "2026-11-24",
   "published": "2026-11-21",
-  "sha": "f78f1ca8d3c98b74"
+  "sha": "61cc4dff0065fc93"
  },
  "_pages/index.html": {
-  "modified": "2026-11-23",
+  "modified": "2026-11-24",
   "published": "2026-11-21",
-  "sha": "6aac866e1f6628a2"
+  "sha": "a524ef36b13849b2"
  },
  "_pages/notes/the-fifth-miss.html": {
   "modified": "2026-11-21",
@@ -35,14 +40,14 @@
   "sha": "8d1baf960b22d3ba"
  },
  "_pages/projects.html": {
-  "modified": "2026-11-23",
+  "modified": "2026-11-24",
   "published": "2026-11-21",
-  "sha": "cb57be538eecddca"
+  "sha": "53613fb9586fc5c1"
  },
  "_pages/writing.html": {
-  "modified": "2026-11-23",
+  "modified": "2026-11-24",
   "published": "2026-11-21",
-  "sha": "5042c39251b97d57"
+  "sha": "29020608ce9a3f1a"
  },
  "_series/01-a-tour.html": {
   "modified": "2026-11-23",
@@ -80,9 +85,9 @@
   "sha": "730cc86eb669ee3f"
  },
  "_series/08-three-cases-two-refusals.html": {
-  "modified": "2026-11-21",
+  "modified": "2026-11-24",
   "published": "2026-11-21",
-  "sha": "4ef9d3234a2034ee"
+  "sha": "898fd487724fc28d"
  },
  "_series/09-building-it-honestly.html": {
   "modified": "2026-11-23",

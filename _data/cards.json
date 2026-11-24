@@ -78,8 +78,8 @@
  },
  {
   "slug": "about",
-  "title": "Mathematics, where it meets real systems.",
-  "desc": "About Rory Millard: Engineering Science at the University of Oxford (First Class, ranked first of about 180), working on Bayesian inference, physics-based sensing and decisions under uncertainty.",
+  "title": "Rory Millard",
+  "desc": "Rory Millard — MEng Engineering Science, University of Oxford (First Class, ranked 1st of ~180). AI, robotics, aerospace, quantum sensing, and weak-signal detection.",
   "kicker": "Rory Millard · About",
   "theme": "site"
  },
@@ -98,17 +98,24 @@
   "theme": "abyssal"
  },
  {
+  "slug": "abyssal-mh370-case-study",
+  "title": "MH370: Rebuilding the Search from Raw Data — ABYSSAL Case Study",
+  "desc": "An independent raw-data reanalysis of Malaysia Airlines flight 370 in ABYSSAL: validated Inmarsat BTO/BFO physics, ERA5 winds, 5,040-cell timing-only flight scans, pixel-measured sonar coverage, 36 years of NOAA drifters, raw IMOS hydrophones, WSPR null tests, and a revised search plan.",
+  "kicker": "ABYSSAL",
+  "theme": "abyssal"
+ },
+ {
   "slug": "contact",
-  "title": "Get in touch",
-  "desc": "Contact Rory Millard about roles, research collaborations, or a hard search problem.",
+  "title": "Contact",
+  "desc": "Contact Rory Millard.",
   "kicker": "Rory Millard · Contact",
   "theme": "site"
  },
  {
   "slug": "home",
-  "title": "Engineer working where probability meets the physical world.",
-  "desc": "Rory Millard is an engineer working where probability meets the physical world: Bayesian search, physics-based sensing and decisions under uncertainty. Home of ABYSSAL, a Bayesian workbench for finding lost aircraft, ships and people.",
-  "kicker": "Rory Millard · Engineer",
+  "title": "Physics, mathematics, and hard engineering.",
+  "desc": "Rory Millard: Engineering Science, University of Oxford (First Class, ranked 1st of ~180). AI, robotics, aerospace, quantum sensing, weak-signal detection, and ABYSSAL.",
+  "kicker": "Rory Millard · MEng Oxford",
   "theme": "site"
  },
  {
@@ -121,14 +128,14 @@
  {
   "slug": "projects",
   "title": "Work",
-  "desc": "Work by Rory Millard: ABYSSAL, a Bayesian workbench for finding lost aircraft, ships and people, and directions in AI evaluation, multi-agent autonomy and design optimisation.",
+  "desc": "Selected engineering and research work by Rory Millard: MH370 raw-data reanalysis, ABYSSAL, supersonic nozzle optimisation (GPPS 2026), and core research areas.",
   "kicker": "Rory Millard · Work",
   "theme": "site"
  },
  {
   "slug": "writing",
   "title": "Writing",
-  "desc": "Essays, derivations, interactive models and walkthroughs by Rory Millard, including the nine-part ABYSSAL series.",
+  "desc": "Case studies, technical derivations, interactive models, and the nine-part ABYSSAL series by Rory Millard.",
   "kicker": "Rory Millard · Writing",
   "theme": "site"
  }

@@ -1,26 +1,39 @@
 <!--meta
-{"out": "projects.html", "title": "Work — Rory Millard", "desc": "Work by Rory Millard: ABYSSAL, a Bayesian workbench for finding lost aircraft, ships and people, and directions in AI evaluation, multi-agent autonomy and design optimisation.", "active": "work", "layout": "page", "kicker": "Work", "h1": "Work", "dek": "One substantial system, built to a standard, and the directions I am working toward. The second list is labelled for what it is."}
+{"out": "projects.html", "title": "Work — Rory Millard", "desc": "Selected engineering and research work by Rory Millard: MH370 raw-data reanalysis, ABYSSAL, supersonic nozzle optimisation (GPPS 2026), and core research areas.", "active": "work", "layout": "page", "kicker": "Work", "h1": "Work", "dek": "Selected engineering systems, investigations, and published research."}
 -->
-<header class="sh"><span class="no">01</span><h2>ABYSSAL</h2><a href="abyssal/index.html">Project overview →</a></header>
+<header class="sh"><span class="no">01</span><h2>MH370 Investigation</h2><a href="abyssal/mh370-case-study.html">Full case study →</a></header>
 <article class="xcard reveal">
   <div class="tx">
-    <div class="tag"><span>ABYSSAL</span><span>Research prototype · ongoing</span></div>
-    <h3>Finding what is lost, with probability that cannot overclaim.<small>A Bayesian workbench for searching for aircraft, ships and people. It keeps an honest map of where the target could be, learns from every empty search, and says where the next hour should go.</small></h3>
+    <div class="tag"><span>Case Study</span><span>Raw public data · Nov 2026</span></div>
+    <h3>Rebuilding the MH370 search from raw physical measurements.<small>Independent Bayesian evidence fusion inside ABYSSAL: validated Classic Aero BTO/BFO physics, ERA5 winds, 5,040-cell timing-only flight scans, pixel-measured sonar coverage, 36 years of NOAA drifters, raw IMOS hydrophones, and null tests of WSPR, seismometers, MODIS, and Jason-2.</small></h3>
     <dl>
-      <dt>Belief</dt><dd>Log-space Bayes over space and time, with provenance pooling, human admission of evidence and exact undo.</dd>
-      <dt>Signals</dt><dd>Sixteen physics engines: Sentinel-1 radar, wakes and wind, sonar and bathymetry, ocean acoustics, magnetics, debris drift, and on land Sentinel-2 imagery and line of sight.</dd>
-      <dt>Decisions</dt><dd>Multi-asset allocation, expected value of the next search, and stopping rules.</dd>
-      <dt>Picture</dt><dd>A live operating picture of aircraft, ships, satellites, weather and terrain around the search.</dd>
+      <dt>Coverage</dt><dd>120,522 km² measured from Geoscience Australia mosaic pixels (~60 m); 99.67% core imaged (0.013% mass in gaps).</dd>
+      <dt>Result</dt><dd>Under steady flight (supported independently by BTO and BFO), 39.45°S–40.5°S holds 36% of the posterior (~29% after second-round nulls); 37.5°S–38.6°S AUV re-look leads if fuel trims Mach 0.84–0.85 tracks.</dd>
     </dl>
-    <div class="go"><a href="abyssal/index.html">Overview →</a><a href="abyssal/engines.html">Inside the machine</a><a href="abyssal/01-a-tour.html">The series</a></div>
+    <div class="go"><a href="abyssal/mh370-case-study.html">Read case study →</a></div>
   </div>
-  <div class="im"><img src="assets/abyssal/evidence-map-live.webp" alt="ABYSSAL's Evidence Map over terrain" loading="lazy"></div>
+  <div class="im"><img src="assets/abyssal/mh370-dossier-paths.webp" alt="MH370 7th arc residual probability map with best-fit trajectories" loading="lazy"></div>
 </article>
 
-<header class="sh"><span class="no">02</span><h2>Directions</h2><span class="r">Directions, not claims</span></header>
+<header class="sh"><span class="no">02</span><h2>ABYSSAL</h2><a href="abyssal/index.html">Project overview →</a></header>
+<article class="xcard reveal">
+  <div class="tx">
+    <div class="tag"><span>ABYSSAL</span><span>Research workbench · ongoing</span></div>
+    <h3>Probabilistic search and physical signal extraction.<small>Local-first workstation combining log-space Bayesian inference, provenance pooling, sixteen physical signal engines, search economics, and an operational map.</small></h3>
+    <dl>
+      <dt>Belief</dt><dd>Log-space Bayes over space and time, provenance-root pooling, human admission, and exact undo.</dd>
+      <dt>Signals</dt><dd>Sixteen physical engines across SAR, ship wakes, sonar, ocean acoustics, magnetics, drift, optical change, and land viewshed.</dd>
+      <dt>Validation</dt><dd>Tested against real buoys, MarineCadastre AIS, BlueTopo wrecks, Sentinel-1/2 scenes, and ARA <em>San Juan</em>.</dd>
+    </dl>
+    <div class="go"><a href="abyssal/index.html">Overview →</a><a href="abyssal/evidence.html">Real-data validation</a><a href="abyssal/engines.html">16 engines</a><a href="abyssal/01-a-tour.html">9-part series</a></div>
+  </div>
+  <div class="im"><img src="assets/abyssal/evidence-map-live.webp" alt="ABYSSAL Evidence Map over terrain" loading="lazy"></div>
+</article>
+
+<header class="sh"><span class="no">03</span><h2>Published research &amp; focus areas</h2><a href="about.html">About →</a></header>
 <div class="dirs">
-  <article><div class="k">AI · evaluation</div><h3>When can a model's confidence be trusted?</h3><p>Calibration and evaluation of learning systems: how they behave, how they fail, and how to measure the difference between a confident model and a correct one.</p><p class="q">Is a model's 90% really 90%?</p></article>
-  <article><div class="k">Autonomy · multi-agent</div><h3>Many sensors, many targets, little time</h3><p>Tasking by expected information gain, and coordination that stays sound when agents' observations are correlated rather than independent.</p><p class="q">Which sensor should look where, next?</p></article>
-  <article><div class="k">Optimisation · design</div><h3>High-dimensional design, efficiently</h3><p>Methods that find good designs in few expensive evaluations, building on my master's research into the optimisation of supersonic nozzle geometries.</p><p class="q">How few simulations find a good shape?</p></article>
+  <article><div class="k">Aerospace · GPPS 2026</div><h3>Supersonic nozzle optimisation</h3><p>Efficient hybrid methods for high-dimensional aerodynamic shape optimisation. Millard, Ogawa &amp; Povey, presented at GPPS Montreal (September 2026).</p></article>
+  <article><div class="k">AI &amp; Robotics</div><h3>Calibration &amp; physical autonomy</h3><p>Reliability of learning systems, autonomous perception, and multi-agent sensing under physical constraints.</p></article>
+  <article><div class="k">Quantum Sensing &amp; Weak Signals</div><h3>Extraction from the noise floor</h3><p>Signal processing, matched filtering, and estimation near physical sensitivity limits across radar, acoustics, magnetics, and quantum metrology.</p></article>
 </div>
 <div style="height:70px"></div>

@@ -234,6 +234,54 @@
   ],
   "w": 2000
  },
+ "mh370-dossier-ledger": {
+  "h": 965,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-dossier-map": {
+  "h": 1989,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-dossier-marginal": {
+  "h": 1282,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-dossier-paths": {
+  "h": 1989,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-dossier-zones": {
+  "h": 1051,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-essay-view": {
+  "h": 1280,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
  "mh370-live": {
   "h": 1250,
   "variants": [
@@ -241,6 +289,14 @@
    1280
   ],
   "w": 2000
+ },
+ "mh370-workspace-2026": {
+  "h": 1280,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
  },
  "movement": {
   "h": 1250,
