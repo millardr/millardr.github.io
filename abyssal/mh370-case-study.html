@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>MH370 in ABYSSAL: From Zero Data to the Final Fused Search Map — Rory Millard</title>
-  <meta name="description" content="A complete progressive raw-data investigation of Malaysia Airlines flight 370 inside ABYSSAL&#x27;s Ember workspace: starting from 0 observations (30.7M km²), adding ACARS, Inmarsat BTO/BFO, and CSIRO drift step by step; 3D probability and seabed surfaces; 4,400 autopilot paths; 5,040 BTO-only timing scans; 36 years of NOAA drifters; pixel-measured ATSB sonar coverage and 2,024-tile re-scan; IMOS hydrophones; 22 FDSN seismometers; MODIS/Jason-2/WSPR nulls; and the final fused 7th-arc map.">
+  <title>MH370 in ABYSSAL: From Zero Data to Full-Physics Fuel &amp; Terrain Fusion v3 — Rory Millard</title>
+  <meta name="description" content="A complete progressive raw-data investigation of Malaysia Airlines flight 370 inside ABYSSAL&#x27;s native workbench: starting from 0 observations (30.7M km²), adding ACARS, Inmarsat BTO/BFO, and CSIRO drift; 3D probability and seabed surfaces; 4,400 autopilot paths; Trent 892 fuel-burn physics; 155,000 non-steady trajectories; 252 IMOS hydrophone transients recovering Curtin&#x27;s 01:33 UTC events; 3D ETOPO SOFAR ray-blocking; NOAA OISST barnacle SST; and terrain-aware sonar POD.">
   <link rel="canonical" href="https://millardr.github.io/abyssal/mh370-case-study.html">
   <meta name="author" content="Rory Millard">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -12,13 +12,13 @@
   <meta property="og:locale" content="en_GB">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://millardr.github.io/abyssal/mh370-case-study.html">
-  <meta property="og:title" content="MH370 in ABYSSAL: From Zero Data to the Final Fused Search Map — Rory Millard">
-  <meta property="og:description" content="A complete progressive raw-data investigation of Malaysia Airlines flight 370 inside ABYSSAL&#x27;s Ember workspace: starting from 0 observations (30.7M km²), adding ACARS, Inmarsat BTO/BFO, and CSIRO drift step by step; 3D probability and seabed surfaces; 4,400 autopilot paths; 5,040 BTO-only timing scans; 36 years of NOAA drifters; pixel-measured ATSB sonar coverage and 2,024-tile re-scan; IMOS hydrophones; 22 FDSN seismometers; MODIS/Jason-2/WSPR nulls; and the final fused 7th-arc map.">
+  <meta property="og:title" content="MH370 in ABYSSAL: From Zero Data to Full-Physics Fuel &amp; Terrain Fusion v3 — Rory Millard">
+  <meta property="og:description" content="A complete progressive raw-data investigation of Malaysia Airlines flight 370 inside ABYSSAL&#x27;s native workbench: starting from 0 observations (30.7M km²), adding ACARS, Inmarsat BTO/BFO, and CSIRO drift; 3D probability and seabed surfaces; 4,400 autopilot paths; Trent 892 fuel-burn physics; 155,000 non-steady trajectories; 252 IMOS hydrophone transients recovering Curtin&#x27;s 01:33 UTC events; 3D ETOPO SOFAR ray-blocking; NOAA OISST barnacle SST; and terrain-aware sonar POD.">
   <meta property="og:image" content="https://millardr.github.io/assets/cards/abyssal-mh370-case-study.jpg">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="MH370 in ABYSSAL: From Zero Data to the Final Fused Search Map: Rory Millard">
+  <meta property="og:image:alt" content="MH370 in ABYSSAL: From Zero Data to Full-Physics Fuel &amp; Terrain Fusion v3: Rory Millard">
   <meta property="article:published_time" content="2026-11-24">
   <meta property="article:modified_time" content="2026-11-24">
   <meta property="article:author" content="https://millardr.github.io/about.html">
@@ -28,12 +28,12 @@
   <meta property="article:tag" content="signal processing">
   <meta property="article:tag" content="validation">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="MH370 in ABYSSAL: From Zero Data to the Final Fused Search Map — Rory Millard">
-  <meta name="twitter:description" content="A complete progressive raw-data investigation of Malaysia Airlines flight 370 inside ABYSSAL&#x27;s Ember workspace: starting from 0 observations (30.7M km²), adding ACARS, Inmarsat BTO/BFO, and CSIRO drift step by step; 3D probability and seabed surfaces; 4,400 autopilot paths; 5,040 BTO-only timing scans; 36 years of NOAA drifters; pixel-measured ATSB sonar coverage and 2,024-tile re-scan; IMOS hydrophones; 22 FDSN seismometers; MODIS/Jason-2/WSPR nulls; and the final fused 7th-arc map.">
+  <meta name="twitter:title" content="MH370 in ABYSSAL: From Zero Data to Full-Physics Fuel &amp; Terrain Fusion v3 — Rory Millard">
+  <meta name="twitter:description" content="A complete progressive raw-data investigation of Malaysia Airlines flight 370 inside ABYSSAL&#x27;s native workbench: starting from 0 observations (30.7M km²), adding ACARS, Inmarsat BTO/BFO, and CSIRO drift; 3D probability and seabed surfaces; 4,400 autopilot paths; Trent 892 fuel-burn physics; 155,000 non-steady trajectories; 252 IMOS hydrophone transients recovering Curtin&#x27;s 01:33 UTC events; 3D ETOPO SOFAR ray-blocking; NOAA OISST barnacle SST; and terrain-aware sonar POD.">
   <meta name="twitter:image" content="https://millardr.github.io/assets/cards/abyssal-mh370-case-study.jpg">
-  <meta name="twitter:image:alt" content="MH370 in ABYSSAL: From Zero Data to the Final Fused Search Map: Rory Millard">
+  <meta name="twitter:image:alt" content="MH370 in ABYSSAL: From Zero Data to Full-Physics Fuel &amp; Terrain Fusion v3: Rory Millard">
   <link rel="alternate" type="application/rss+xml" title="Rory Millard — writing" href="https://millardr.github.io/feed.xml">
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://millardr.github.io/abyssal/mh370-case-study.html#webpage","url":"https://millardr.github.io/abyssal/mh370-case-study.html","name":"MH370 in ABYSSAL: From Zero Data to the Final Fused Search Map — Rory Millard","isPartOf":{"@id":"https://millardr.github.io/#website"},"breadcrumb":{"@id":"https://millardr.github.io/abyssal/mh370-case-study.html#breadcrumb"},"inLanguage":"en-GB"},{"@type":"TechArticle","@id":"https://millardr.github.io/abyssal/mh370-case-study.html#article","headline":"MH370 in ABYSSAL: From Zero Data to the Final Fused Search Map","name":"MH370 in ABYSSAL: From Zero Data to the Final Fused Search Map","description":"A complete progressive raw-data investigation of Malaysia Airlines flight 370 inside ABYSSAL's Ember workspace: starting from 0 observations (30.7M km²), adding ACARS, Inmarsat BTO/BFO, and CSIRO drift step by step; 3D probability and seabed surfaces; 4,400 autopilot paths; 5,040 BTO-only timing scans; 36 years of NOAA drifters; pixel-measured ATSB sonar coverage and 2,024-tile re-scan; IMOS hydrophones; 22 FDSN seismometers; MODIS/Jason-2/WSPR nulls; and the final fused 7th-arc map.","url":"https://millardr.github.io/abyssal/mh370-case-study.html","mainEntityOfPage":{"@id":"https://millardr.github.io/abyssal/mh370-case-study.html#webpage"},"image":["https://millardr.github.io/assets/cards/abyssal-mh370-case-study.jpg"],"datePublished":"2026-11-24","dateModified":"2026-11-24","author":[{"@type":"Person","@id":"https://millardr.github.io/#person","name":"Rory Millard","url":"https://millardr.github.io/about.html"}],"publisher":{"@id":"https://millardr.github.io/#person"},"inLanguage":"en-GB","isAccessibleForFree":true,"keywords":["ABYSSAL","Bayesian search","remote sensing","signal processing","validation"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Rory Millard","item":"https://millardr.github.io/"},{"@type":"ListItem","position":2,"name":"ABYSSAL","item":"https://millardr.github.io/abyssal/"},{"@type":"ListItem","position":3,"name":"MH370 case study"}],"@id":"https://millardr.github.io/abyssal/mh370-case-study.html#breadcrumb"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://millardr.github.io/abyssal/mh370-case-study.html#webpage","url":"https://millardr.github.io/abyssal/mh370-case-study.html","name":"MH370 in ABYSSAL: From Zero Data to Full-Physics Fuel & Terrain Fusion v3 — Rory Millard","isPartOf":{"@id":"https://millardr.github.io/#website"},"breadcrumb":{"@id":"https://millardr.github.io/abyssal/mh370-case-study.html#breadcrumb"},"inLanguage":"en-GB"},{"@type":"TechArticle","@id":"https://millardr.github.io/abyssal/mh370-case-study.html#article","headline":"MH370 in ABYSSAL: From Zero Data to Full-Physics Fuel & Terrain Fusion v3","name":"MH370 in ABYSSAL: From Zero Data to Full-Physics Fuel & Terrain Fusion v3","description":"A complete progressive raw-data investigation of Malaysia Airlines flight 370 inside ABYSSAL's native workbench: starting from 0 observations (30.7M km²), adding ACARS, Inmarsat BTO/BFO, and CSIRO drift; 3D probability and seabed surfaces; 4,400 autopilot paths; Trent 892 fuel-burn physics; 155,000 non-steady trajectories; 252 IMOS hydrophone transients recovering Curtin's 01:33 UTC events; 3D ETOPO SOFAR ray-blocking; NOAA OISST barnacle SST; and terrain-aware sonar POD.","url":"https://millardr.github.io/abyssal/mh370-case-study.html","mainEntityOfPage":{"@id":"https://millardr.github.io/abyssal/mh370-case-study.html#webpage"},"image":["https://millardr.github.io/assets/cards/abyssal-mh370-case-study.jpg"],"datePublished":"2026-11-24","dateModified":"2026-11-24","author":[{"@type":"Person","@id":"https://millardr.github.io/#person","name":"Rory Millard","url":"https://millardr.github.io/about.html"}],"publisher":{"@id":"https://millardr.github.io/#person"},"inLanguage":"en-GB","isAccessibleForFree":true,"keywords":["ABYSSAL","Bayesian search","remote sensing","signal processing","validation"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Rory Millard","item":"https://millardr.github.io/"},{"@type":"ListItem","position":2,"name":"ABYSSAL","item":"https://millardr.github.io/abyssal/"},{"@type":"ListItem","position":3,"name":"MH370 case study"}],"@id":"https://millardr.github.io/abyssal/mh370-case-study.html#breadcrumb"}]}</script>
   <meta name="theme-color" content="#0d0d0d">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <script>try{var t=localStorage.getItem('theme-abyssal')||'dark';if(t)document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme='dark';}</script>
@@ -67,12 +67,12 @@
   <section class="hero short">
     <canvas class="field" aria-hidden="true"></canvas>
     <div class="in">
-      <div class="kicker"><span class="dot"></span><span>ABYSSAL · Case Study</span><span class="lv">Real Investigation · 26 Figures</span></div>
-      <h1>MH370 inside ABYSSAL: from zero data to the final fused map</h1>
-      <p class="dek">Building the entire public investigation step by step inside ABYSSAL's general-purpose workbench — starting from an empty 30.7 million km² prior, admitting each observation one by one, inspecting 3D probability and seabed surfaces, running every acoustic, seismic, optical, radio, and sonar test, and arriving at the residual 7th-arc search map.</p>
-      <div class="meta"><span><b>30 min</b> read · 26 live UI &amp; raw-data figures · 100% real public data (SHA-256)</span><span>Status: not found · evidence fusion, not a detection</span></div>
+      <div class="kicker"><span class="dot"></span><span>ABYSSAL · Case Study</span><span class="lv">Real Investigation · Full-Physics Fusion v3</span></div>
+      <h1>MH370 inside ABYSSAL: from zero data to full-physics fusion</h1>
+      <p class="dek">Building the entire public investigation step by step inside ABYSSAL's native workbench — starting from an empty 30.7 million km² prior, admitting each observation, running custom fuel, non-steady, hydrophone bubble-pulse, SOFAR ray-blocking, barnacle SST, and sonar-shadow engines, and converging natively on the 37.7°S–38.25°S escarpment core.</p>
+      <div class="meta"><span><b>35 min</b> read · 28 live UI &amp; custom-engine figures · 100% real public data (SHA-256)</span><span>Status: not found · evidence fusion, not a detection</span></div>
       
-      <figure class="figure-peek reveal"><img  src="../assets/abyssal/mh370-real-final-fused-map.webp" srcset="../assets/abyssal/mh370-real-final-fused-map-640.webp 640w, ../assets/abyssal/mh370-real-final-fused-map-1280.webp 1280w, ../assets/abyssal/mh370-real-final-fused-map.webp 1920w" sizes="(max-width: 900px) 100vw, 1100px" width="1920" height="1186" decoding="async" alt="Final fused residual probability map of the MH370 7th arc across 481 by 121 arc cells showing searched ATSB and Ocean Infinity corridors alongside Zone S, Core re-look, and North arc" fetchpriority="high"></figure>
+      <figure class="figure-peek reveal"><img  src="../assets/abyssal/mh370-ember-12-fuel-peak-zoom.webp" srcset="../assets/abyssal/mh370-ember-12-fuel-peak-zoom-640.webp 640w, ../assets/abyssal/mh370-ember-12-fuel-peak-zoom-1280.webp 1280w, ../assets/abyssal/mh370-ember-12-fuel-peak-zoom.webp 1920w" sizes="(max-width: 900px) 100vw, 1100px" width="1920" height="1200" decoding="async" alt="Native ABYSSAL workspace zoomed into the MH370 7th-arc fuel-peak core showing the glowing Ember posterior and dashed 90% contour" fetchpriority="high"></figure>
     </div>
   </section>
   <main class="page" id="main">
@@ -84,8 +84,8 @@
 <p>Everything here uses <strong>real public data</strong> with cryptographic receipts (URL, timestamp, byte length, SHA-256 digest, licence). Every forward model is calibrated against independent physical truth — ground-station calibrations, the aircraft's own ACARS weather reports, catalogued Indian Ocean earthquakes, published ATSB sonar contacts — before it is allowed to score MH370. Nothing synthetic or simulated is admitted.</p>
 
 <div class="callout">
-  <div class="t">Headline result · status 24 November 2026</div>
-  <p><strong>Not found.</strong> Two independent satellite channels — timing alone (Doppler discarded) and timing plus Doppler — both place the end of a steady autopilot flight between <strong>37.4°S and 39.7°S</strong> on the 7th arc. Measuring the published ATSB Phase 2 sonar mosaic directly from pixels (~60 m resolution) shows <strong>99.67%</strong> of the ±25 NM band across 36.0°S–39.45°S is imaged: coverage gaps can hide a 250 m debris field for only <strong>0.013%</strong> of the prior. If the flight was steady, the wreck is in one of three places: <strong>just south of the searched limit</strong> (39.45°S–40.5°S, never searched — <strong>36.0%</strong> of the steady posterior, ~29% after second-round acoustic and altimeter nulls, ~3× the density per km² of any alternative), <strong>inside the densest searched core</strong> (37.5°S–38.6°S) imaged but unrecognised in shadowed terrain, or beyond ±25 NM after a glide that the final two Doppler measurements argue against (glide posterior weight <strong>0.17</strong>).</p>
+  <div class="t">Headline result · Full-Physics Fusion v3 (24 November 2026)</div>
+  <p><strong>Not found.</strong> Coupling a validated Boeing 777-200ER / Trent 892 fuel-burn model (<code>abyssal/signal/aircraft_fuel.py</code>, matching 9M-MRO's ACARS cruise burn to <strong>0.2%</strong>) and a 155,000-trajectory non-steady scan (<code>abyssal/signal/nonsteady_flight.py</code>) eliminates both extreme ends of the 7th arc: the South Extension (39.45°S–40.5°S) collapses 400×–900× to <strong>0.08%</strong> (out of fuel and too cold for <em>Lepas anatifera</em> barnacle colonisation at 15.15–15.39°C), and the North Arc (18°S–30°S) collapses from 46.5% to <strong>0.00%</strong>. With 99.67% of the ATSB Phase 2 sonar mosaic imaged, 3D ETOPO 2022 terrain analysis identifies steep fracture-zone escarpments dead-centre on the fuel-constrained 7th-arc peak (<code>-37.81°S, 88.47°E</code> and <code>-38.20°S, 88.15°E</code>, up to 16.0° slope and <strong>8.8% deep acoustic shadow</strong> — 2.4× flat seabed). The fuel-peak core re-look (<strong>36.8°S–38.8°S, ±15 NM</strong>) ranks #1 in every sweep at <strong>43.4%</strong> (<strong>1.90% per 1,000 km²</strong>), with the top four precision escarpment targets (~2,600 km²) carrying <strong>12.1%</strong> (~4.6% per 1,000 km²).</p>
 </div>
 
 <h2><span class="num">01</span>Starting from zero data: building the belief map step by step</h2>
@@ -183,11 +183,19 @@
 
 <figure class="shot wide reveal"><img  src="../assets/abyssal/mh370-real-sonar-scan.webp" srcset="../assets/abyssal/mh370-real-sonar-scan-640.webp 640w, ../assets/abyssal/mh370-real-sonar-scan-1280.webp 1280w, ../assets/abyssal/mh370-real-sonar-scan.webp 1920w" sizes="(max-width: 900px) 100vw, 1100px" width="1920" height="791" decoding="async" alt="Two-panel real ATSB Phase 2 sonar mosaic audit showing 0.013% hidden prior mass in gaps and 16 of 43 ATSB positive-control contacts flagged across 2,024 zoom-15 tiles" loading="lazy"><figcaption><b>ATSB Phase 2 Mosaic Gaps &amp; 2,024-Tile Re-Scan.</b> Left: mosaic holes hide just `0.013%` of a 250 m debris field. Right: positive control on 43 published ATSB contacts (`16` flagged) vs the top 200 mosaic clusters (candidate coordinates withheld).</figcaption></figure>
 
-<h2><span class="num">06</span>Hydrophones, 22 seismometers, MODIS, Jason-2, and WSPR null tests</h2>
+<h2><span class="num">06</span>Custom acoustic, SOFAR, barnacle SST, and seismic engines</h2>
 
-<p>Every public acoustic, seismic, radio, optical, and altimeter lead was rebuilt from primary archives and calibrated on real physical controls — documenting every inconclusive or null result transparently:</p>
+<p>Every public acoustic, seismic, radio, optical, and altimeter lead was rebuilt from primary archives and run through ABYSSAL's custom physical detectors — recovering real published points of interest directly from raw waveforms while documenting every null result transparently.</p>
 
-<figure class="shot wide reveal"><img  src="../assets/abyssal/mh370-real-hydrophone-seismic.webp" srcset="../assets/abyssal/mh370-real-hydrophone-seismic-640.webp 640w, ../assets/abyssal/mh370-real-hydrophone-seismic-1280.webp 1280w, ../assets/abyssal/mh370-real-hydrophone-seismic.webp 1920w" sizes="(max-width: 900px) 100vw, 1100px" width="1920" height="791" decoding="async" alt="Two-panel real acoustic and seismic audit showing IMOS Perth Canyon duty-cycle blind band across 32.5 to 34.5 degrees south, flat 4-hydrophone stack, and 24 real calibration earthquakes versus null MH370 seismic T-phase windows" loading="lazy"><figcaption><b>IMOS Hydrophones (`1.05 GB` + `384` Portland files) &amp; 22-Station FDSN Seismometers.</b> Left: Perth Canyon's interleaved 5-in-15 minute duty cycle opens a `32.5°S–34.5°S` blind band while covered windows and the 4-station stack stay flat (`p ≈ 0.6` at Zone S). Right: 24 real earthquakes (`Carlsberg Ridge Mw 5.07`, `p = 0.0002`) calibrate the T-phase beam; capped MH370 windows stay null (`p = 0.29–0.97`).</figcaption></figure>
+<p>Running ABYSSAL's custom transient and cepstral bubble-pulse engine (<code>abyssal.signal.bubble_pulse</code>, `5–300 ms` period search) across `1.05 GB` of raw `6 kHz` IMOS CMST recordings (`00:00–03:30 UTC`, Perth Canyon `3315/3376` and Scott Reef `3250`) recovered <strong>252 impulsive transients</strong> — including <strong>5 exact detections matching Curtin University's `01:33:32–01:33:43 UTC` paper events</strong> (`10.7 dB` over median at Perth Canyon `3315`, `22.5 dB` at Scott Reef `3250`). Across all 252 transients, zero showed a corroborated second-harmonic implosion bubble pulse.</p>
+
+<figure class="shot wide reveal"><img  src="../assets/abyssal/mh370-real-imos-transients.webp" srcset="../assets/abyssal/mh370-real-imos-transients-640.webp 640w, ../assets/abyssal/mh370-real-imos-transients-1280.webp 1280w, ../assets/abyssal/mh370-real-imos-transients.webp 1920w" sizes="(max-width: 900px) 100vw, 1100px" width="1920" height="791" decoding="async" alt="252 impulsive transients recovered by ABYSSAL's custom hydrophone and bubble-pulse engine across IMOS Perth Canyon and Scott Reef recordings, highlighting 5 recovered detections matching Curtin University's 01:33 UTC paper events" loading="lazy"><figcaption><b>Custom Hydrophone Transient &amp; Bubble-Pulse Engine (`imos_transients.json`).</b> Out of `252` raw transients (`10–400 Hz`, `>10 dB` over median), the detector independently recovers Curtin's `01:33:32–43 UTC` reference events (amber) while ruling out implosion bubble-pulse trains.</figcaption></figure>
+
+<figure class="shot wide reveal"><img  src="../assets/abyssal/mh370-real-hydrophone-seismic.webp" srcset="../assets/abyssal/mh370-real-hydrophone-seismic-640.webp 640w, ../assets/abyssal/mh370-real-hydrophone-seismic-1280.webp 1280w, ../assets/abyssal/mh370-real-hydrophone-seismic.webp 1920w" sizes="(max-width: 900px) 100vw, 1100px" width="1920" height="791" decoding="async" alt="Two-panel real acoustic and seismic audit showing IMOS Perth Canyon duty-cycle blind band across 32.5 to 34.5 degrees south, flat 4-hydrophone stack, and 24 real calibration earthquakes versus null MH370 seismic T-phase windows" loading="lazy"><figcaption><b>IMOS Hydrophones (`1.05 GB` + `384` Portland files) &amp; 22-Station FDSN Seismometers.</b> Left: Perth Canyon's interleaved 5-in-15 minute duty cycle opens a `32.5°S–34.5°S` blind band while covered windows and the 4-station stack stay flat (`p ≈ 0.6`). Right: 24 real earthquakes (`Carlsberg Ridge Mw 5.07`, `p = 0.0002`) calibrate the T-phase beam; capped MH370 windows stay null (`p = 0.29–0.97`).</figcaption></figure>
+
+<p>To resolve open bathymetric caveats on both acoustics and ocean drift, ABYSSAL's 3D SOFAR ray-blocking engine (<code>abyssal/signal/sofar_blocking.py</code>) traced exact geodesic depth profiles across <strong>1- and 2-arcmin NOAA ETOPO 2022 bathymetry</strong>, proving that paths from `34°S–42°S` to Perth Canyon, Portland, and CTBTO HA01 remain deeper than `2,094 m` (`T = 1.00`, unobstructed), whereas <strong>Broken Ridge (`~32°S`)</strong> rises to `779–874 m` and blocks transmission (`T = 0.18–0.27`). Simultaneously, real <strong>2014–2015 NOAA OISST v2.1 paleothermometry</strong> checked against Poupin's Réunion barnacle growth (`24.81°C` vs `25.4 ± 1.0°C`) placed `40.0°S` at `15.15–15.39°C` — below <em>Lepas anatifera</em>'s `18–20°C` colonisation threshold.</p>
+
+<figure class="shot wide reveal"><img  src="../assets/abyssal/mh370-real-bathy-barnacle-v3.webp" srcset="../assets/abyssal/mh370-real-bathy-barnacle-v3-640.webp 640w, ../assets/abyssal/mh370-real-bathy-barnacle-v3-1280.webp 1280w, ../assets/abyssal/mh370-real-bathy-barnacle-v3.webp 1920w" sizes="(max-width: 900px) 100vw, 1100px" width="1920" height="791" decoding="async" alt="Two-panel real engine output: left showing 3D ETOPO 2022 SOFAR ray-blocking with Broken Ridge shadowing 32 degrees south to T=0.18; right showing 2014 NOAA OISST v2.1 barnacle SST below the 18-20 C threshold at 40 degrees south" loading="lazy"><figcaption><b>3D ETOPO 2022 SOFAR Ray-Blocking &amp; NOAA OISST v2.1 Barnacle SST.</b> Left: `34°S–42°S` is acoustically unobstructed to HA01/Perth Canyon (`T = 1.00`), while Broken Ridge (`~32°S`) blocks `T = 0.18`. Right: `40.0°S` sits at `15.15–15.39°C`, disfavouring southern origin for barnacle-colonised debris.</figcaption></figure>
 
 <figure class="shot wide reveal"><img  src="../assets/abyssal/mh370-ember-09-satellite-view.webp" srcset="../assets/abyssal/mh370-ember-09-satellite-view-640.webp 640w, ../assets/abyssal/mh370-ember-09-satellite-view-1280.webp 1280w, ../assets/abyssal/mh370-ember-09-satellite-view.webp 1920w" sizes="(max-width: 900px) 100vw, 1100px" width="1920" height="1200" decoding="async" alt="ABYSSAL Satellite View Time Machine draping live NASA GIBS VIIRS 250 metre satellite imagery over the Indian Ocean underneath the MH370 7th arc" loading="lazy"><figcaption><b>Satellite View Time Machine on MH370.</b> Full-width NASA GIBS / EOSDIS VIIRS 250 m imagery (+ Sentinel-2 30 m &amp; Landsat 8/9 30 m) directly beneath the 7th arc.</figcaption></figure>
 
@@ -198,15 +206,26 @@
   <li><strong>Maldives sighting, overflight seismometers, Gaofen-1, DART buoys &amp; 2014 SAR/AIS:</strong> Kudahuvadhoo sits ~2,000 km inside the 00:19:29 UTC 7th arc (BTO residual \(-13,200\;\mu\text{s}\)); MY.KUM and MY.IPM sample at 20 sps (10 Hz Nyquist, below jet noise); Gaofen-1 sits 732 km off-arc (0.85 m/s mean drift for 10 days); DART buoys filter out ~0.5 mm 10–30 s impact waves beneath metre-scale swell; and no public SAR (Sentinel-1A launched 3 April 2014) or public 2014 satellite AIS archive exists.</li>
 </ul>
 
-<h2><span class="num">07</span>Arriving at the final fused map, 28-run ledger, and Plan Studio</h2>
+<h2><span class="num">07</span>Full-physics fuel &amp; non-steady scan, native final map, and Plan Studio</h2>
 
-<p>Combining every calibrated likelihood in double-precision log space across the `481 × 121` arc-corridor grid (`42°S–18°S`, `±150 NM`) produces the final residual map and KL information ledger: seabed non-detections dominate by more than an order of magnitude (<strong>1.37 bits</strong> in dive mode, removing 80.1% of prior mass), followed by debris drift (`0.11 bits`), 2014 surface search (`0.06 bits`), Western Australia absence (`0.03 bits`), IMOS hydrophones (`0.01 bits`), and island seismometers (`0.00 bits`).</p>
+<p>In Revision 3 (<code>fusion_2026_v3.py</code>), replacing constant-Mach book approximations with a coupled <strong>Boeing 777-200ER / Trent 892 fuel-burn model</strong> (<code>abyssal/signal/aircraft_fuel.py</code>: clean drag polar + Korn/Lock transonic wave drag + RK2 weight depletion through ERA5 winds, validated to <strong>0.2%</strong> against 9M-MRO's own ACARS burn `6,955` vs `6,967 kg/h`, `-1.3%` on `5h 34m` KLIA–Beijing trip fuel `36,700` vs `37,200 kg`, and `+0.1%` on `7h 31m` endurance `49,150` vs `49,100 kg`) and a <strong>155,000-trajectory physics-constrained non-steady scan</strong> (<code>abyssal/signal/nonsteady_flight.py</code>) transforms the residual map:</p>
 
-<figure class="shot wide reveal"><img  src="../assets/abyssal/mh370-real-final-fused-map.webp" srcset="../assets/abyssal/mh370-real-final-fused-map-640.webp 640w, ../assets/abyssal/mh370-real-final-fused-map-1280.webp 1280w, ../assets/abyssal/mh370-real-final-fused-map.webp 1920w" sizes="(max-width: 900px) 100vw, 1100px" width="1920" height="1186" decoding="async" alt="High-resolution full-screen final fused residual probability map of the MH370 7th arc from fusion_2026_grid.npz showing Zone S, Core re-look, ATSB and Ocean Infinity searched corridors, and North arc" loading="lazy"><figcaption><b>THE FINAL FUSED RESIDUAL PROBABILITY MAP (24 November 2026 · `481 × 121` arc grid).</b> Square-root density across the entire 7th arc overlaid with pixel-measured ATSB and Ocean Infinity searched corridors, isolating the unsearched south extension (`36.0%` steady, `1.54%/1k km²`), core re-look (`34.4%` steady / `50.1%` with fuel trim), wide glide belt (`13.9%`), and diagnostic north arc (`46.5%` full mixture, `0.0%` steady).</figcaption></figure>
+<ul>
+  <li><strong>Pre-FMT fuel ledger &amp; 400×–900× collapse of the South Extension (`< -39.45°S`):</strong> Starting from `43,800 kg` at `17:06:43 UTC` minus `250 kg` unusable (`43,550 kg`, ZFW `174,369 kg`), the `597.0 NM` military radar leg (`17:06:43 → 18:22:12 UTC` via IGARI, Kota Bharu, Penang, Pulau Perak, VAMPI, `10 NM` past MEKAR) burns `8,249 kg` → `35,301 kg` usable at `18:22:12` (`~33,764 kg` at `18:36 FMT`). `P(< -39.45°S)` drops `3.92% → 0.01%` (Family A), `8.91% → 0.01%` (Family B), `7.46% → 0.02%` (Family C), and `2.49% → 0.00%` (Family D `FL350–FL410`, joint DSTG bias-marginalised BFO `σ_b = 25 Hz`); even at `-4%` optimistic book burn (`0.96`) or `σ_fuel = 1,800 kg`, `P(< -39.45°S)` stays `0.07–0.20%`.</li>
+  <li><strong>Altitude, mode &amp; per-burst forensic residuals:</strong> `FL300` drops to `0.00%` (runs dry ~1 h early); `FL390–FL410` captures `86%` of Family D weight; constant true track beats LNAV `68% vs 32%`; free `±25 Hz` BFO bias is pinned by the data to `-0.4 Hz`; and steady median shifts north to <strong>37.78°S</strong> (`90%` interval `37.18°S–38.65°S`). Top steady paths show level cruise at `00:11:00` (`BFO residual -1.7..-2.5 Hz`), a systematic `-21..-38 µs` negative BTO residual at `00:19:29` (~`3 NM` shorter range matching `~2.5 min` unpowered deceleration after `00:17` flameout), and at `37.5°S, 89.2°E` imply `-4,400 → -14,909 ft/min` (`~0.68 g` downward).</li>
+  <li><strong>North Arc (`18°S–30°S`) collapses from `46.5%` to `0.00%`:</strong> Non-steady trajectories hit a sharp physical cliff at `-32°S` (`tot_ll = -79.0`, `BTO chi2 = 42.0`, collapsing to `-100..-262` across `31–18°S`), while peaking dead-centre at `-37°S` (`FL392→410`, `M 0.84→0.79`, `tot_ll = -58.59`, `BTO chi2 = 0.3`, `BFO rms = 4.5 Hz`, `fuel_rem = +170 kg`) and `-36°S` (`FL346→406`, `BTO chi2 = 2.8`, `BFO rms = 3.2 Hz`, `fuel_rem = +83 kg`).</li>
+  <li><strong>1,452-tile northern fuel-peak sonar audit &amp; escarpment shadows:</strong> Scanning `4,447 km²` across `36.95°S–37.65°S` plus auditing real GA mosaic tiles over the steep fracture-zone escarpments at `(-37.81°S, 88.47°E)` (`1,045 m` relief) and `(-38.20°S, 88.15°E)` (`906 m` relief, `16.0°` slope) measures <strong>5.9% and 8.8% deep acoustic shadow (`1.6×` and `2.4×` the `3.7%` flat-seabed control at `-37.43°S, 89.43°E`)</strong> and `2.8×` wall clutter — explaining how towed side-scan missed the wreck without coverage gaps.</li>
+</ul>
 
-<figure class="shot wide reveal"><img  src="../assets/abyssal/mh370-real-ledger-28-sweeps.webp" srcset="../assets/abyssal/mh370-real-ledger-28-sweeps-640.webp 640w, ../assets/abyssal/mh370-real-ledger-28-sweeps-1280.webp 1280w, ../assets/abyssal/mh370-real-ledger-28-sweeps.webp 1920w" sizes="(max-width: 900px) 100vw, 1100px" width="1920" height="1186" decoding="async" alt="KL information ledger in bits alongside 28 one-at-a-time assumption sensitivity sweeps showing steady-flight median and 5-95% latitude stability" loading="lazy"><figcaption><b>KL Information Ledger &amp; 28 One-at-a-Time Assumption Sweeps.</b> Left: seabed searches dominate everything else (`1.37 bits`). Right: across 28 sensitivity perturbations, the steady-flight core stays anchored at `37°S–40.3°S` unless forced exclusively by unstretched drifter windage or zero uniform mixture.</figcaption></figure>
+<figure class="shot wide reveal"><img  src="../assets/abyssal/mh370-real-fuel-nonsteady.webp" srcset="../assets/abyssal/mh370-real-fuel-nonsteady-640.webp 640w, ../assets/abyssal/mh370-real-fuel-nonsteady-1280.webp 1280w, ../assets/abyssal/mh370-real-fuel-nonsteady.webp 1920w" sizes="(max-width: 900px) 100vw, 1100px" width="1920" height="791" decoding="async" alt="155,000-trajectory non-steady scan peaking at minus 37 degrees south alongside v2 to v3 posterior shifts collapsing South Extension to 0.08% and North Arc to 0.00% while elevating Fuel-Peak Core to 43.4%" loading="lazy"><figcaption><b>Trent 892 Fuel Model &amp; 155,000-Trajectory Non-Steady Scan (`v2 → v3`).</b> Left: joint 6-BTO + 7-BFO + fuel log-likelihood peaks at `37°S` and collapses south of `39°S` and north of `32°S`. Right: `v3` eliminates both the South Extension (`0.08%`) and North Arc (`0.00%`), concentrating `43.4%` in the fuel-peak core.</figcaption></figure>
 
-<p>Inside <strong>Plan Studio</strong> and <strong>Where next?</strong>, ABYSSAL translates the residual posterior directly into multi-asset sweep boxes and incremental cell rankings along the 7th-arc ridge:</p>
+<figure class="shot wide reveal"><img  src="../assets/abyssal/mh370-real-ledger-28-sweeps.webp" srcset="../assets/abyssal/mh370-real-ledger-28-sweeps-640.webp 640w, ../assets/abyssal/mh370-real-ledger-28-sweeps-1280.webp 1280w, ../assets/abyssal/mh370-real-ledger-28-sweeps.webp 1920w" sizes="(max-width: 900px) 100vw, 1100px" width="1920" height="1186" decoding="async" alt="KL information ledger in bits alongside one-at-a-time assumption sensitivity sweeps" loading="lazy"><figcaption><b>KL Information Ledger &amp; Sensitivity Sweeps.</b> Seabed non-detections dominate (`1.37 bits`), while sensitivity sweeps test stability across drift, POD, hydrophone, and fuel perturbations.</figcaption></figure>
+
+<p>Returning natively inside ABYSSAL's own workspace — zoomed straight into the 7th-arc core, inspecting individual cells with <strong>Probe</strong> (`Log Bayes factors relative to the prior`), allocating search tracks in <strong>Plan Studio</strong>, and ranking sweep boxes in <strong>Where next?</strong> — the operational conclusion is sharp:</p>
+
+<figure class="shot wide reveal"><img  src="../assets/abyssal/mh370-ember-12-fuel-peak-zoom.webp" srcset="../assets/abyssal/mh370-ember-12-fuel-peak-zoom-640.webp 640w, ../assets/abyssal/mh370-ember-12-fuel-peak-zoom-1280.webp 1280w, ../assets/abyssal/mh370-ember-12-fuel-peak-zoom.webp 1920w" sizes="(max-width: 900px) 100vw, 1100px" width="1920" height="1200" decoding="async" alt="Native ABYSSAL workspace zoomed into the MH370 7th-arc fuel-peak core showing the glowing Ember posterior and dashed 90% contour" loading="lazy"><figcaption><b>Native ABYSSAL Workspace · Zoomed on the 7th-Arc Core.</b> The live Ember posterior ridge rendered natively inside ABYSSAL at `~6.6 km` viewport detail with zero bespoke UI.</figcaption></figure>
+
+<figure class="shot wide reveal"><img  src="../assets/abyssal/mh370-ember-13-probe-arc.webp" srcset="../assets/abyssal/mh370-ember-13-probe-arc-640.webp 640w, ../assets/abyssal/mh370-ember-13-probe-arc-1280.webp 1280w, ../assets/abyssal/mh370-ember-13-probe-arc.webp 1920w" sizes="(max-width: 900px) 100vw, 1100px" width="1920" height="1200" decoding="async" alt="Native ABYSSAL Probe tool inspecting a cell near the 7th arc and displaying exact Log Bayes factors relative to the prior" loading="lazy"><figcaption><b>Native `Probe` Tool (`Why this cell?`).</b> Inspecting exact prior cell mass, posterior cell mass, and per-source log Bayes factors (`satcom-inmarsat`) directly on the map.</figcaption></figure>
 
 <figure class="shot wide reveal"><img  src="../assets/abyssal/mh370-ember-10-plan-studio.webp" srcset="../assets/abyssal/mh370-ember-10-plan-studio-640.webp 640w, ../assets/abyssal/mh370-ember-10-plan-studio-1280.webp 1280w, ../assets/abyssal/mh370-ember-10-plan-studio.webp 1920w" sizes="(max-width: 900px) 100vw, 1100px" width="1920" height="1200" decoding="async" alt="ABYSSAL Plan Studio open on the MH370 7th arc with Suggest routes placing search boxes directly along the glowing probability ridge" loading="lazy"><figcaption><b>Plan Studio (`Suggest routes`).</b> Multi-asset search allocation placing sweep boxes directly along the highest-density ridge of the 7th-arc posterior.</figcaption></figure>
 
@@ -215,54 +234,110 @@
 <table>
   <thead>
     <tr>
-      <th>Candidate zone</th>
+      <th>Candidate zone (Full-Physics Fusion v3)</th>
       <th class="n">Area (km²)</th>
-      <th class="n">Steady flight</th>
-      <th class="n">Steady + fuel trim (×0.2 S)</th>
-      <th class="n">Full mixture (+10% non-steady)</th>
+      <th class="n">v3 Posterior</th>
+      <th class="n">Density (% / 1,000 km²)</th>
+      <th class="n">17-Sweep Rank</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><strong>1. South extension</strong> (39.45°S–40.5°S, ±25 NM, unsearched)</td>
+      <td><strong>1. Fuel-peak core re-look</strong> (36.8°S–38.8°S, ±15 NM)</td>
+      <td class="n">22,842</td>
+      <td class="n"><strong>43.4%</strong></td>
+      <td class="n"><strong>1.90</strong></td>
+      <td class="n">#1 in all 17 sweeps</td>
+    </tr>
+    <tr>
+      <td><strong>↳ Top 4 escarpment targets</strong> (37.7°S–38.25°S, 88.0°E–88.6°E)</td>
+      <td class="n">~2,600</td>
+      <td class="n"><strong>12.1%</strong></td>
+      <td class="n"><strong>~4.6</strong></td>
+      <td class="n">25× glide belt</td>
+    </tr>
+    <tr>
+      <td><strong>2. Mid-core re-look</strong> (34.0°S–36.8°S, ±25 NM)</td>
+      <td class="n">45,261</td>
+      <td class="n">13.2%</td>
+      <td class="n">0.29</td>
+      <td class="n">Secondary</td>
+    </tr>
+    <tr>
+      <td><strong>3. Outer glide belt</strong> (34.0°S–39.45°S, +45..110 NM)</td>
+      <td class="n">122,693</td>
+      <td class="n">22.9%</td>
+      <td class="n">0.19</td>
+      <td class="n">Glide weight 36.4%</td>
+    </tr>
+    <tr>
+      <td><strong>4. South extension</strong> (39.45°S–40.5°S, ±25 NM)</td>
       <td class="n">23,395</td>
-      <td class="n"><strong>36.0%</strong> (1.54)</td>
-      <td class="n">10.6% (0.45)</td>
-      <td class="n">17.0% (0.73)</td>
+      <td class="n">0.08%</td>
+      <td class="n">0.003</td>
+      <td class="n">Out of fuel (0.04–0.14%)</td>
     </tr>
     <tr>
-      <td><strong>2. Core re-look</strong> (36.0°S–39.45°S, ±25 NM, imaged)</td>
-      <td class="n">63,708</td>
-      <td class="n">34.4% (0.54)</td>
-      <td class="n"><strong>50.1%</strong> (0.79)</td>
-      <td class="n">16.0% (0.25)</td>
-    </tr>
-    <tr>
-      <td><strong>3. Wide glide belt</strong> (60–110 NM outside arc)</td>
-      <td class="n">87,103</td>
-      <td class="n">13.9% (0.16)</td>
-      <td class="n">19.4% (0.22)</td>
-      <td class="n">6.5% (0.07)</td>
-    </tr>
-    <tr>
-      <td><strong>4. North arc</strong> (18°S–25°S, ±25 NM)</td>
+      <td><strong>5. North arc</strong> (18°S–30°S)</td>
       <td class="n">83,113</td>
-      <td class="n">0.0% (0.00)</td>
-      <td class="n">0.0% (0.00)</td>
-      <td class="n">46.5% (0.56)</td>
+      <td class="n">0.00%</td>
+      <td class="n">0.00</td>
+      <td class="n">0.00% in all 17 sweeps</td>
     </tr>
   </tbody>
 </table>
 
-<p><em>Values in parentheses are posterior percentage points per 1,000 km² of search area.</em></p>
+<h3>Precision AUV escarpment targets (`12.1%` of posterior in `~2,600 km²`)</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Target centre</th>
+      <th>Arc cell</th>
+      <th class="n">Posterior</th>
+      <th class="n">Density (% / 1k km²)</th>
+      <th>Terrain &amp; GA shadow audit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>1. 38.18°S, 88.14°E</strong></td>
+      <td>38.05–38.25°S, n 0..+5 NM</td>
+      <td class="n"><strong>3.74%</strong></td>
+      <td class="n"><strong>5.56</strong></td>
+      <td>848 m relief · 16.0° slope · 8.8% deep shadow</td>
+    </tr>
+    <tr>
+      <td><strong>2. 37.73°S, 88.40°E</strong></td>
+      <td>37.80–38.00°S, n -15..-10 NM</td>
+      <td class="n"><strong>3.11%</strong></td>
+      <td class="n"><strong>4.72</strong></td>
+      <td>949 m relief · 14.6° slope</td>
+    </tr>
+    <tr>
+      <td><strong>3. 37.83°S, 88.49°E</strong></td>
+      <td>37.80–38.00°S, n -7.5..-2.5 NM</td>
+      <td class="n"><strong>2.75%</strong></td>
+      <td class="n"><strong>4.16</strong></td>
+      <td>1,045 m relief · 5.9% deep shadow · 2.5% bright clutter</td>
+    </tr>
+    <tr>
+      <td><strong>4. 38.08°S, 88.04°E</strong></td>
+      <td>38.05–38.25°S, n -7.5..-2.5 NM</td>
+      <td class="n"><strong>2.51%</strong></td>
+      <td class="n"><strong>3.74</strong></td>
+      <td>952 m relief · 17.6° slope</td>
+    </tr>
+  </tbody>
+</table>
 
 <h3>Four measurements that would settle it</h3>
 
 <ol>
-  <li><strong>A high-fidelity 777-200ER fuel-burn model (Mach 0.84–0.85, 17:07–00:17 UTC):</strong> Decides directly between item 1 (the unsearched south extension, `36.0%` steady / `~29%` after Portland &amp; Jason-2 nulls) and item 2 (targeted AUV re-look of shadowed terrain in `37.5°S–38.6°S`, `50.1%` under fuel trim).</li>
-  <li><strong>ATSB and Ocean Infinity low-confidence and acoustic-shadow polygons:</strong> Pixel counting already eliminated mosaic gaps (`0.013%`). The remaining uncertainty inside searched ground is where rugged seabed degraded towed side-scan POD.</li>
-  <li><strong>Measured leeway windage on non-flaperon Boeing 777 debris items:</strong> Flap fairings, composite panels, and interior pieces govern how strongly the 27 finds pull north of `32°S`.</li>
-  <li><strong>2014 recordings from CTBTO hydroacoustic stations HA01 (Cape Leeuwin) and HA08 (Diego Garcia):</strong> Public FDSN archives currently start around 2020; applying the duty-cycle and calibration method built here to continuous 2014 SOFAR recordings would turn a weak acoustic constraint into a decisive one.</li>
+  <li><strong>High-resolution AUV re-survey of the `37.7°S–38.25°S, 88.0°E–88.6°E` escarpment massif:</strong> Auditing real GA tiles measured `5.9–8.8%` deep acoustic shadow (`1.6–2.4×` flat-seabed control); these `~2,600 km²` hold `12.1%` of the entire v3 posterior (`~4.6% / 1,000 km²`, `25×` denser than the outer glide belt).</li>
+  <li><strong>Raw sub-metre ATSB / Ocean Infinity shadow polygons &amp; Honeywell SDU OCXO warm-reboot bench test:</strong> Raw towfish shadow masks refine `terrain_pod_grid` directly, while an OCXO warm-reboot curve decides the remaining `36.4%` glide weight.</li>
+  <li><strong>Oldest-barnacle δ¹⁸O sclerochronology &amp; non-flaperon 777 leeway windage:</strong> Measures colonisation SST directly on the oldest flaperon barnacles and calibrates the remaining 27 debris items.</li>
+  <li><strong>2014 recordings from CTBTO hydroacoustic stations HA01 (Cape Leeuwin) and HA08 (Diego Garcia):</strong> 3D ETOPO 2022 ray-tracing confirms `34°S–42°S` is unobstructed (`T = 1.00`), so continuous 2014 SOFAR waveforms would decisively test the `36.8°S–38.8°S` fuel peak.</li>
 </ol>
 
 <div class="prevnext">

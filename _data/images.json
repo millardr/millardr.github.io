@@ -322,6 +322,22 @@
   ],
   "w": 1920
  },
+ "mh370-ember-12-fuel-peak-zoom": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-ember-13-probe-arc": {
+  "h": 1200,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
  "mh370-essay-view": {
   "h": 1280,
   "variants": [
@@ -394,7 +410,7 @@
   ],
   "w": 1920
  },
- "mh370-real-drift-bto": {
+ "mh370-real-bathy-barnacle-v3": {
   "h": 791,
   "variants": [
    640,
@@ -402,8 +418,8 @@
   ],
   "w": 1920
  },
- "mh370-real-final-fused-map": {
-  "h": 1186,
+ "mh370-real-drift-bto": {
+  "h": 791,
   "variants": [
    640,
    1280
@@ -418,7 +434,23 @@
   ],
   "w": 1920
  },
+ "mh370-real-fuel-nonsteady": {
+  "h": 791,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
  "mh370-real-hydrophone-seismic": {
+  "h": 791,
+  "variants": [
+   640,
+   1280
+  ],
+  "w": 1920
+ },
+ "mh370-real-imos-transients": {
   "h": 791,
   "variants": [
    640,
